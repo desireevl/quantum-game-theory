@@ -18,7 +18,7 @@ def is_within(x, y, pos):
 class GameTheoryApp:
     def __init__(self, width=160, height=120):
 
-        self.game_state = GameState.PLAYER1
+        self.game_state = GameState.INTRO
 
         self._width = width
         self._height = height
@@ -69,12 +69,18 @@ class GameTheoryApp:
 
     ### Pyxel screens ###
     def draw_introscreen(self):
-        None
+        pyxel.cls(0)
+        pyxel.text(40, 40, "Quantum Game Maker", pyxel.frame_count % 16)
+        x = 40
+        y = 60
+        w = 70
+        h = 20
+        pyxel.rectb(x, y, w, h, 7)
+        pyxel.text(47, 67, "Click to Start", 7)
 
     def draw_player1(self):
         pyxel.text(67, 25, "Gates", pyxel.frame_count % 16)
 
-        # gates_list = ['H', 'X', 'I', 'Y', 'Z']
         gates_list = ['H', 'X', 'I', 'Y', 'Z', 'A', 'B', 'C', 'D']
 
 
@@ -98,12 +104,12 @@ class GameTheoryApp:
                 new += spacing
 
         for x_pos, gate in zip(x_starting_pos, gate_labels):
-            self.pyxel_button(gate, x_pos, y, 15, 15, 13)
+            self.pyxel_button(gate, x_pos, y, 12, 12, 13)
 
         if len(gates_list) > 5:
             gates_len = 5
             gate_labels = gates_list[5:]
-            y += 20
+            y += 16
             spacing = (self._width - (2 * width_nomargin)) / gates_len
             x_starting_pos = []
             new = width_nomargin
@@ -116,7 +122,7 @@ class GameTheoryApp:
                     new += spacing
 
             for x_pos, gate in zip(x_starting_pos, gate_labels):
-                self.pyxel_button(gate, x_pos, y, 15, 15, 13)
+                self.pyxel_button(gate, x_pos, y, 12, 12, 13)
 
 
 
@@ -131,7 +137,8 @@ class GameTheoryApp:
     ### Event handlers ###
 
     def handle_intro_events(self):
-        None
+        if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON):
+            self.game_state = GameState.PLAYER1    
     
 
     def handle_player1(self):
@@ -156,7 +163,7 @@ class GameTheoryApp:
 
         try:
             pyxel.rect(x, y, width, height, colour)
-            pyxel.text(x + 6, y + 5, text, 0)
+            pyxel.text(x + 4, y + 3, text, 0)
         except AttributeError as e:
             pass
         return (x, y, x + width, y + height)
