@@ -2,7 +2,7 @@ import numpy as np
 
 
 class Game:
-    def __init__(self, type):
+    def __init__(self, type, payoff=None):
         # predefined games
         if type=="chicken":
             self.n_players = 2
@@ -20,9 +20,14 @@ class Game:
                               [[[(0,0,0,1), (0,0,0,0)], [(0,0,0,0), (0,0,1,0)]],
                                [[(0,0,0,0), (0,1,0,0)], [(1,0,0,0), (0,0,0,0)]]]]
             self.payoff = PayoffTable(self.n_players, self.n_choices, minority_table)
-
-    def play(self, player_choices):
-        return self.payoff.get_payoff(player_choices)
+        else:
+            if payoff==None:
+                raise ("The specified game type is not currently known, please implement the game object manually")
+            else:
+                shape = np.shape(payoff)
+                self.n_players = shape[-1]
+                self.n_choices = shape[0]
+                self.payoff = PayoffTable(self.n_players, self.n_choices, payoff)
 
 
 
@@ -39,14 +44,16 @@ class PayoffTable:
         else:
             self.payoff = np.reshape(payoff, (self.n_big, n_players))
 
-    def set_payoff(self, choice, payoff):
-        self.payoff[choice,:] = payoff
+    def set_payoff(self, tuple, payoff):
+        # sets the payoff value for a given tuple of player choices
+        self.payoff[self._get_index(tuple),:] = payoff
 
     def get_payoff(self, choices):
         # access the payoff tuple for a given tuple of choices
         return self.payoff[self._get_index(choices)]
 
     def _get_index(self, tuple):
+        # gets the index from a given tuple of player choices
         sum = 0
         for i in range(len(tuple)):
             sum += tuple[i] * self.n_choices**i
