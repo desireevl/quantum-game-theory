@@ -8,17 +8,16 @@ class GameState(Enum):
     INTRO = 0
     PLAYER1 = 1
     PLAYER2 = 2
-    RESULTS = 3
+    PLAYER3 = 3
+    PLAYER4 = 4
+    CIRCUIT = 5
+    RESULTS = 6
 
-
-def is_within(x, y, pos):
-    x1, y1, x2, y2 = pos
-    return x >= x1 and x <= x2 and y >= y1 and y <= y2
 
 class GameTheoryApp:
     def __init__(self, width=160, height=120):
 
-        self.game_state = GameState.INTRO
+        self.game_state = GameState.CIRCUIT
 
         self._width = width
         self._height = height
@@ -30,7 +29,7 @@ class GameTheoryApp:
         pyxel.init(160, 120, caption="Quantum Game Theory")
 
         pyxel.mouse(True)
-
+        pyxel.image(0).load(0, 0,'fring3.png')
         pyxel.run(self.update, self.draw)
 
     def update(self):
@@ -42,10 +41,14 @@ class GameTheoryApp:
 
         elif self.game_state == GameState.PLAYER1:
             self.handle_player1()
-
         elif self.game_state == GameState.PLAYER2:
             self.handle_player2()
-
+        elif self.game_state == GameState.PLAYER3:
+            self.handle_player3()
+        elif self.game_state == GameState.PLAYER4:
+            self.handle_player4()
+        elif self.game_state == GameState.CIRCUIT:
+            self.handle_circuit()
         elif self.game_state == GameState.RESULTS:
             self.handle_results()
 
@@ -55,13 +58,16 @@ class GameTheoryApp:
 
         if self.game_state == GameState.INTRO:
             self.draw_introscreen()
-
         elif self.game_state == GameState.PLAYER1:
             self.draw_player1()
-
         elif self.game_state == GameState.PLAYER2:
             self.draw_player2()
-            
+        elif self.game_state == GameState.PLAYER3:
+            self.draw_player3()
+        elif self.game_state == GameState.PLAYER4:
+            self.draw_player4()
+        elif self.game_state == GameState.CIRCUIT:
+            self.draw_circuit()
         elif self.game_state == GameState.RESULTS:
             self.draw_results()
 
@@ -161,6 +167,73 @@ class GameTheoryApp:
         for x_pos, gate in zip(x_starting_pos, gates_list):
             self.pyxel_button(gate, x_pos, y, 12, 12, 13)
 
+    def draw_player3(self):
+        pyxel.text(40, 45, "Gates - Player 3", pyxel.frame_count % 16)
+
+        pyxel.rectb(110, 110, 30, 10, 7)
+        pyxel.text(115, 112, "Next", 7)
+
+        gates_list = ['W', 'I', 'X']#'Y', 'Z', 'A', 'B', 'C', 'D']
+
+        width_nomargin = self._width / 4
+        gates_len = len(gates_list)
+        y = 65
+
+        gate_labels = []
+        if len(gates_list) > 5:
+            gate_labels = gates_list[:5]
+
+        spacing = (self._width - (2 * width_nomargin)) / gates_len
+        x_starting_pos = []
+        new = width_nomargin
+
+        for i in range(len(gates_list)):
+            if len(x_starting_pos) == 0:
+                x_starting_pos.append(new)
+            else:
+                x_starting_pos.append(new+spacing)
+                new += spacing
+
+        for x_pos, gate in zip(x_starting_pos, gates_list):
+            self.pyxel_button(gate, x_pos, y, 12, 12, 13)
+
+    def draw_player4(self):
+        pyxel.text(40, 45, "Gates - Player 4", pyxel.frame_count % 16)
+
+        pyxel.rectb(110, 110, 30, 10, 7)
+        pyxel.text(115, 112, "Run", 7)
+
+        gates_list = ['W', 'I', 'X']#'Y', 'Z', 'A', 'B', 'C', 'D']
+
+        width_nomargin = self._width / 4
+        gates_len = len(gates_list)
+        y = 65
+
+        gate_labels = []
+        if len(gates_list) > 5:
+            gate_labels = gates_list[:5]
+
+        spacing = (self._width - (2 * width_nomargin)) / gates_len
+        x_starting_pos = []
+        new = width_nomargin
+
+        for i in range(len(gates_list)):
+            if len(x_starting_pos) == 0:
+                x_starting_pos.append(new)
+            else:
+                x_starting_pos.append(new+spacing)
+                new += spacing
+
+        for x_pos, gate in zip(x_starting_pos, gates_list):
+            self.pyxel_button(gate, x_pos, y, 12, 12, 13)
+
+################RUNQISKIT###############################
+
+    def draw_circuit(self):
+        pyxel.rectb(110, 110, 30, 10, 7)
+        pyxel.text(115, 112, "Next", 7)
+        pyxel.blt(61, 66, 0, 0, 0, 50, 50)
+
 
     def draw_results(self):
         the_variable = ''.join(self.state_1)
@@ -210,9 +283,38 @@ class GameTheoryApp:
             print('x')
             self.state_2.append('x')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
+            self.game_state = GameState.PLAYER3
+
+    def handle_player3(self):
+        if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 32 and pyxel.mouse_x < 45 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
+            print("w")
+            self.state_3.append('w')
+        elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 64 and pyxel.mouse_x < 75 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
+            print('i')
+            self.state_3.append('i')
+        elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 95 and pyxel.mouse_x < 106 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
+            print('x')
+            self.state_3.append('x')
+        elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
+            self.game_state = GameState.PLAYER4
+
+    def handle_player4(self):
+        if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 32 and pyxel.mouse_x < 45 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
+            print("w")
+            self.state_4.append('w')
+        elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 64 and pyxel.mouse_x < 75 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
+            print('i')
+            self.state_4.append('i')
+        elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 95 and pyxel.mouse_x < 106 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
+            print('x')
+            self.state_4.append('x')
+        elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
+            self.game_state = GameState.CIRCUIT
+
+    def handle_circuit(self):
+        if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
             self.game_state = GameState.RESULTS
 
-    
     def handle_results(self):
         None
 
