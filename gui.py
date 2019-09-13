@@ -1,4 +1,5 @@
 import pyxel
+from enum import Enum
 
 
 class GameState(Enum):
@@ -13,8 +14,8 @@ class GameTheoryApp:
 
         self.game_state = GameState.INTRO
 
-        pyxel.init(160, 120, caption="Quantum Game Theory")
-        pyxel.image(0).load(0, 0, "assets/pyxel_logo_38x16.png")
+        # pyxel.init(160, 120, caption="Quantum Game Theory")
+        # pyxel.image(0).load(0, 0, "assets/pyxel_logo_38x16.png")
 
         pyxel.run(self.update, self.draw)
 
@@ -58,7 +59,6 @@ class GameTheoryApp:
     def draw_introscreen(self):
         None
 
-
     def draw_player1(self):
         None
 
@@ -89,4 +89,4 @@ class GameTheoryApp:
         None
 
 
-App()
+GameTheoryApp()
