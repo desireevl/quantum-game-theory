@@ -1,6 +1,7 @@
 import math
 import pyxel
 from enum import Enum
+from functools import partial
 
 
 class GameState(Enum):
@@ -10,16 +11,23 @@ class GameState(Enum):
     RESULTS = 3
 
 
-class GameTheoryApp:
-    def __init__(self, width=153, height=170):
+def is_within(x, y, pos):
+    x1, y1, x2, y2 = pos
+    return x >= x1 and x <= x2 and y >= y1 and y <= y2
 
-        self.game_state = GameState.INTRO
+class GameTheoryApp:
+    def __init__(self, width=160, height=120):
+
+        self.game_state = GameState.PLAYER1
 
         self._width = width
         self._height = height
 
-        # pyxel.init(160, 120, caption="Quantum Game Theory")
-        # pyxel.image(0).load(0, 0, "assets/pyxel_logo_38x16.png")
+        # self._h_gate = self.pyxel_button("H", 50, 45, 15, 15, 13)
+
+        pyxel.init(160, 120, caption="Quantum Game Theory")
+
+        pyxel.mouse(True)
 
         pyxel.run(self.update, self.draw)
 
@@ -61,10 +69,55 @@ class GameTheoryApp:
 
     ### Pyxel screens ###
     def draw_introscreen(self):
-        self.pyxel_button_centered('Play', 100)
+        None
 
     def draw_player1(self):
-        None
+        pyxel.text(67, 25, "Gates", pyxel.frame_count % 16)
+
+        # gates_list = ['H', 'X', 'I', 'Y', 'Z']
+        gates_list = ['H', 'X', 'I', 'Y', 'Z', 'A', 'B', 'C', 'D']
+
+
+        width_nomargin = self._width / 5
+        gates_len = len(gates_list)
+        y = 45
+
+        gate_labels = []
+        if len(gates_list) > 5:
+            gate_labels = gates_list[:5]
+
+        spacing = (self._width - (2 * width_nomargin)) / len(gate_labels)
+        x_starting_pos = []
+        new = width_nomargin
+
+        for i in range(len(gates_list)):
+            if len(x_starting_pos) == 0:
+                x_starting_pos.append(new)
+            else:
+                x_starting_pos.append(new+spacing)
+                new += spacing
+
+        for x_pos, gate in zip(x_starting_pos, gate_labels):
+            self.pyxel_button(gate, x_pos, y, 15, 15, 13)
+
+        if len(gates_list) > 5:
+            gates_len = 5
+            gate_labels = gates_list[5:]
+            y += 20
+            spacing = (self._width - (2 * width_nomargin)) / gates_len
+            x_starting_pos = []
+            new = width_nomargin
+
+            for i in range(len(gates_list)):
+                if len(x_starting_pos) == 0:
+                    x_starting_pos.append(new)
+                else:
+                    x_starting_pos.append(new+spacing)
+                    new += spacing
+
+            for x_pos, gate in zip(x_starting_pos, gate_labels):
+                self.pyxel_button(gate, x_pos, y, 15, 15, 13)
+
 
 
     def draw_player2(self):
@@ -82,6 +135,11 @@ class GameTheoryApp:
     
 
     def handle_player1(self):
+        # if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON):
+        #     mouse_within = partial(is_within, pyxel.mouse_x, pyxel.mouse_y)
+
+        # if mouse_within(self._h_gate):
+        #     print('hi')
         None
     
     
@@ -94,21 +152,20 @@ class GameTheoryApp:
 
     ### Pyxel Function Wrappers ###
 
-    def pyxel_button(self, text, x, y):
-        x_offset = (len(text) * 4) + 6
-        y_offset = 8
+    def pyxel_button(self, text, x, y, width, height, colour):
 
         try:
-            pyxel.rect(x, y, x + x_offset, y + y_offset, 14)
-            pyxel.text(x + 4, y + 2, text, 0)
+            pyxel.rect(x, y, width, height, colour)
+            pyxel.text(x + 6, y + 5, text, 0)
         except AttributeError as e:
             pass
-        return (x, y, x + x_offset, y + y_offset)
+        return (x, y, x + width, y + height)
 
-    def pyxel_button_centered(self, text, y):
-        offset = math.ceil(len(text) * 4 / 2) + 3
-        x = math.floor(self._width / 2) - offset
-        return self.pyxel_button(text, x, y)
+
+    # def pyxel_button_centered(self, text, y):
+    #     offset = math.ceil(len(text) * 4 / 2) + 3
+    #     x = math.floor(self._width / 2) - offset
+    #     return self.pyxel_button(text, x, y)
 
 
 GameTheoryApp()
