@@ -83,7 +83,6 @@ class GameTheoryApp:
 
         gates_list = ['H', 'X', 'I', 'Y', 'Z', 'A', 'B', 'C', 'D']
 
-
         width_nomargin = self._width / 5
         gates_len = len(gates_list)
         y = 45
@@ -124,6 +123,10 @@ class GameTheoryApp:
             for x_pos, gate in zip(x_starting_pos, gate_labels):
                 self.pyxel_button(gate, x_pos, y, 12, 12, 13)
 
+        s = "Elapsed frame count is {}\n" "Current mouse position is ({},{})".format(
+            pyxel.frame_count, pyxel.mouse_x, pyxel.mouse_y
+        )
+        pyxel.text(1, 1, s, 9)
 
 
     def draw_player2(self):
@@ -131,23 +134,31 @@ class GameTheoryApp:
 
 
     def draw_results(self):
-        None
+        pyxel.text(67, 15, "Results", pyxel.frame_count % 16)
+        pyxel.line(60,30,60,110,7)
+        pyxel.text(20,40,"Player 1", 7)
+        pyxel.text(80,40,"Result 1", 7)
+        pyxel.text(20,60,"Player 2", 7)
+        pyxel.text(80,60,"Result 2", 7)
+        pyxel.text(20,80,"Player 3", 7)
+        pyxel.text(80,80,"Result 3", 7)
+        pyxel.text(20,100,"Player 4", 7)
+        pyxel.text(80,100,"Result 4", 7)
 
 
     ### Event handlers ###
 
     def handle_intro_events(self):
         if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON):
-            self.game_state = GameState.PLAYER1    
+            self.game_state = GameState.PLAYER1  
     
 
     def handle_player1(self):
-        # if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON):
-        #     mouse_within = partial(is_within, pyxel.mouse_x, pyxel.mouse_y)
+        if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 31 and pyxel.mouse_x < 43 and pyxel.mouse_y < 56 and pyxel.mouse_y > 44:
+            print("h")
+            self.game_state = GameState.RESULTS  
 
-        # if mouse_within(self._h_gate):
-        #     print('hi')
-        None
+        
     
     
     def handle_player2(self):
