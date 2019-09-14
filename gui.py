@@ -2,6 +2,11 @@ import math
 import pyxel
 from enum import Enum
 from functools import partial
+from backend import Backend
+
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+
 
 
 class GameState(Enum):
@@ -16,21 +21,30 @@ class GameState(Enum):
 
 class GameTheoryApp:
     def __init__(self, width=160, height=120):
+        self.backend = Backend('minority')
+        
+        self.game_state = GameState.PLAYER1
 
-        self.game_state = GameState.INTRO
+        self.game_state = GameState.PLAYER4
 
         self._width = width
         self._height = height
-        self.state_1=[]
-        self.state_2=[]
-        self.state_3=[]
-        self.state_4=[]
+        self.state_1 = []
+        self.state_2 = []
+        self.state_3 = []
+        self.state_4 = []
+        
+        self.all_states = []
+        
+        self.circuit_img_str=''
+        self.RawGameResults=[]
 
-        self.pi = math.pi
+        self.circuit_img_str = ''
+        self.RawGameResults = []
+
         pyxel.init(160, 120, caption="Quantum Game Theory")
 
         pyxel.mouse(True)
-        pyxel.image(0).load(0, 0,'blt.jpg')
         pyxel.run(self.update, self.draw)
 
     def update(self):
@@ -132,10 +146,10 @@ class GameTheoryApp:
             for x_pos, gate in zip(x_starting_pos, gate_labels):
                 self.pyxel_button(gate, x_pos, y, 12, 12, 13)
 
-        s = "Elapsed frame count is {}\n" "Current mouse position is ({},{})".format(
-            pyxel.frame_count, pyxel.mouse_x, pyxel.mouse_y
-        )
-        pyxel.text(1, 1, s, 9)
+        # s = "Elapsed frame count is {}\n" "Current mouse position is ({},{})".format(
+        #     pyxel.frame_count, pyxel.mouse_x, pyxel.mouse_y
+        # )
+        # pyxel.text(1, 1, s, 9)
 
 
     def draw_player2(self):
@@ -186,10 +200,10 @@ class GameTheoryApp:
             for x_pos, gate in zip(x_starting_pos, gate_labels):
                 self.pyxel_button(gate, x_pos, y, 12, 12, 13)
 
-        s = "Elapsed frame count is {}\n" "Current mouse position is ({},{})".format(
-            pyxel.frame_count, pyxel.mouse_x, pyxel.mouse_y
-        )
-        pyxel.text(1, 1, s, 9)
+        # s = "Elapsed frame count is {}\n" "Current mouse position is ({},{})".format(
+        #     pyxel.frame_count, pyxel.mouse_x, pyxel.mouse_y
+        # )
+        # pyxel.text(1, 1, s, 9)
 
     
     def draw_player3(self):
@@ -299,6 +313,8 @@ class GameTheoryApp:
         # )
         # pyxel.text(1, 1, s, 9)
 
+        # call quantum logic file, input self.all_states
+
 
 
 ################RUNQISKIT###############################
@@ -306,36 +322,16 @@ class GameTheoryApp:
     def draw_circuit(self):
         pyxel.rectb(110, 110, 30, 10, 7)
         pyxel.text(115, 112, "Next", 7)
-        pyxel.blt(61, 66, 0, 0, 0, 50, 50)
+        # pyxel.blt(1, 1, 0, 0, 0, 200, 106)
+        img=mpimg.imread(self.circuit_img_str)
+        imgplot = plt.imshow(img)
+        plt.show()
 
 
     def draw_results(self):
-        state_1 = ''.join(self.state_1)
-        state_2 = ''.join(self.state_2)
-        state_3 = ''.join(self.state_3)
-        state_4 = ''.join(self.state_4)
 
-        game_result=[]
-        RawGameResults = [0,1,1,0]
-        
-        for i in RawGameResults:
-            game_result.append(str(i))
-        
-        P1_Result = game_result[0]
-        P2_Result = game_result[1]
-        P3_Result = game_result[2]
-        P4_Result = game_result[3]
 
-        victor=[]
-        for i in range(len(RawGameResults)):
-            if RawGameResults[i] == 0:
-                victor.append('You Lose')
-            elif RawGameResults[i] == 1:
-                victor.append('You Win')
-        P1_v = victor[0]
-        P2_v = victor[1]
-        P3_v = victor[2]
-        P4_v = victor[3]
+        the_variable = ''.join(self.state_1)
         pyxel.text(67, 15, "Results", pyxel.frame_count % 16)
         pyxel.line(40,30,40,110,7)
         pyxel.line(80,30,80,110,7)
@@ -478,6 +474,14 @@ class GameTheoryApp:
             self.state_4.append('T')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
             self.game_state = GameState.RESULTS
+            
+            self.all_states = [self.state_1, self.state_2, self.state_3, self.state_4]
+            
+            self.RawGameResults, self.circuit_img_str = self.backend.play(self.all_states)
+
+        self.all_states = [self.state_1, self.state_2, self.state_3, self.state_4]
+
+        self.RawGameResults, self.circuit_img_str = self.backend.play(self.all_states)
 
     def handle_circuit(self):
         if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
