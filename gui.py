@@ -21,10 +21,12 @@ class GameTheoryApp:
 
         self._width = width
         self._height = height
-        self.state_1=[]
-        self.state_2=[]
-        self.state_3=[]
-        self.state_4=[]
+        self.state_1 = []
+        self.state_2 = []
+        self.state_3 = []
+        self.state_4 = []
+        
+        self.all_states = [self.state_1, self.state_2, self.state_3, self.state_4]
 
         pyxel.init(160, 120, caption="Quantum Game Theory")
 
@@ -295,10 +297,12 @@ class GameTheoryApp:
             for x_pos, gate in zip(x_starting_pos, gate_labels):
                 self.pyxel_button(gate, x_pos, y, 12, 12, 13)
 
-        s = "Elapsed frame count is {}\n" "Current mouse position is ({},{})".format(
-            pyxel.frame_count, pyxel.mouse_x, pyxel.mouse_y
-        )
-        pyxel.text(1, 1, s, 9)
+#         s = "Elapsed frame count is {}\n" "Current mouse position is ({},{})".format(
+#             pyxel.frame_count, pyxel.mouse_x, pyxel.mouse_y
+#         )
+#         pyxel.text(1, 1, s, 9)
+
+        # call quantum logic file, input self.all_states
 
 
 
