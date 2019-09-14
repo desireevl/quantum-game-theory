@@ -35,7 +35,6 @@ class GameTheoryApp:
         self.all_states = []
         
         self.circuit_img_str=''
-        self.RawGameResults=[]
 
         self.circuit_img_str = ''
         self.RawGameResults = []
@@ -321,12 +320,15 @@ class GameTheoryApp:
         pyxel.rectb(110, 110, 30, 10, 7)
         pyxel.text(115, 112, "Next", 7)
         # pyxel.blt(1, 1, 0, 0, 0, 200, 106)
+
         img=mpimg.imread(self.circuit_img_str)
         imgplot = plt.imshow(img)
         plt.show()
 
 
     def draw_results(self):
+        self.quantum_results()
+
         state_1 = ''.join(self.state_1)
         state_2 = ''.join(self.state_2)
         state_3 = ''.join(self.state_3)
@@ -498,6 +500,7 @@ class GameTheoryApp:
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
             self.game_state = GameState.RESULTS
             
+
         self.all_states = [self.state_1, self.state_2, self.state_3, self.state_4]
 
         self.RawGameResults, self.circuit_img_str = self.backend.play(self.all_states)
