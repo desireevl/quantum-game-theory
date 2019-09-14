@@ -2,6 +2,7 @@ import math
 import pyxel
 from enum import Enum
 from functools import partial
+from backend import Backend
 
 
 class GameState(Enum):
@@ -16,7 +17,8 @@ class GameState(Enum):
 
 class GameTheoryApp:
     def __init__(self, width=160, height=120):
-
+        self.backend = Backend('minority')
+        
         self.game_state = GameState.PLAYER1
 
         self._width = width
@@ -26,7 +28,10 @@ class GameTheoryApp:
         self.state_3 = []
         self.state_4 = []
         
-        self.all_states = [self.state_1, self.state_2, self.state_3, self.state_4]
+        self.all_states = []
+        
+        self.circuit_img_str=''
+        self.RawGameResults=[]
 
         pyxel.init(160, 120, caption="Quantum Game Theory")
 
@@ -425,6 +430,10 @@ class GameTheoryApp:
             self.state_4.append('t')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
             self.game_state = GameState.CIRCUIT
+            
+            self.all_states = [self.state_1, self.state_2, self.state_3, self.state_4]
+            
+            self.RawGameResults, self.circuit_img_str = self.backend.play(self.all_states)
 
     def handle_circuit(self):
         if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
