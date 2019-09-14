@@ -17,7 +17,7 @@ class GameState(Enum):
 class GameTheoryApp:
     def __init__(self, width=160, height=120):
 
-        self.game_state = GameState.PLAYER1
+        self.game_state = GameState.INTRO
 
         self._width = width
         self._height = height
@@ -26,6 +26,7 @@ class GameTheoryApp:
         self.state_3=[]
         self.state_4=[]
 
+        self.pi = math.pi
         pyxel.init(160, 120, caption="Quantum Game Theory")
 
         pyxel.mouse(True)
@@ -136,8 +137,6 @@ class GameTheoryApp:
         )
         pyxel.text(1, 1, s, 9)
 
-        print(self.state_1)
-
 
     def draw_player2(self):
         pyxel.text(40, 45, "Gates - Player 2", pyxel.frame_count % 16)
@@ -241,10 +240,10 @@ class GameTheoryApp:
             for x_pos, gate in zip(x_starting_pos, gate_labels):
                 self.pyxel_button(gate, x_pos, y, 12, 12, 13)
 
-        s = "Elapsed frame count is {}\n" "Current mouse position is ({},{})".format(
-            pyxel.frame_count, pyxel.mouse_x, pyxel.mouse_y
-        )
-        pyxel.text(1, 1, s, 9)
+        # s = "Elapsed frame count is {}\n" "Current mouse position is ({},{})".format(
+        #     pyxel.frame_count, pyxel.mouse_x, pyxel.mouse_y
+        # )
+        # pyxel.text(1, 1, s, 9)
 
     
     def draw_player4(self):
@@ -295,10 +294,10 @@ class GameTheoryApp:
             for x_pos, gate in zip(x_starting_pos, gate_labels):
                 self.pyxel_button(gate, x_pos, y, 12, 12, 13)
 
-        s = "Elapsed frame count is {}\n" "Current mouse position is ({},{})".format(
-            pyxel.frame_count, pyxel.mouse_x, pyxel.mouse_y
-        )
-        pyxel.text(1, 1, s, 9)
+        # s = "Elapsed frame count is {}\n" "Current mouse position is ({},{})".format(
+        #     pyxel.frame_count, pyxel.mouse_x, pyxel.mouse_y
+        # )
+        # pyxel.text(1, 1, s, 9)
 
 
 
@@ -311,17 +310,54 @@ class GameTheoryApp:
 
 
     def draw_results(self):
-        the_variable = ''.join(self.state_1)
+        state_1 = ''.join(self.state_1)
+        state_2 = ''.join(self.state_2)
+        state_3 = ''.join(self.state_3)
+        state_4 = ''.join(self.state_4)
+
+        game_result=[]
+        RawGameResults = [0,1,1,0]
+        
+        for i in RawGameResults:
+            game_result.append(str(i))
+        
+        P1_Result = game_result[0]
+        P2_Result = game_result[1]
+        P3_Result = game_result[2]
+        P4_Result = game_result[3]
+
+        victor=[]
+        for i in range(len(RawGameResults)):
+            if RawGameResults[i] == 0:
+                victor.append('You Lose')
+            elif RawGameResults[i] == 1:
+                victor.append('You Win')
+        P1_v = victor[0]
+        P2_v = victor[1]
+        P3_v = victor[2]
+        P4_v = victor[3]
         pyxel.text(67, 15, "Results", pyxel.frame_count % 16)
-        pyxel.line(60,30,60,110,7)
-        pyxel.text(20,40,"Player 1", 7)
-        pyxel.text(80,40,the_variable, 7)
-        pyxel.text(20,60,"Player 2", 7)
-        pyxel.text(80,60,"Result 2", 7)
-        pyxel.text(20,80,"Player 3", 7)
-        pyxel.text(80,80,"Result 3", 7)
-        pyxel.text(20,100,"Player 4", 7)
-        pyxel.text(80,100,"Result 4", 7)
+        pyxel.line(40,30,40,110,7)
+        pyxel.line(80,30,80,110,7)
+        pyxel.line(115,37,115,110,7)
+        pyxel.text(45,25,"Strategy",7)
+        pyxel.text(95,25,"Game Results",7)
+        pyxel.text(5,40,"Player 1", 7)
+        pyxel.text(45,40,state_1, 7)
+        pyxel.text(90,40,P1_Result,7)
+        pyxel.text(120,40,P1_v,7)
+        pyxel.text(5,60,"Player 2", 7)
+        pyxel.text(45,60,state_2, 7)
+        pyxel.text(90,60,P2_Result,7)
+        pyxel.text(120,60,P2_v,7)
+        pyxel.text(5,80,"Player 3", 7)
+        pyxel.text(45,80,state_3, 7)
+        pyxel.text(90,80,P3_Result,7)
+        pyxel.text(120,80,P3_v,7)
+        pyxel.text(5,100,"Player 4", 7)
+        pyxel.text(45,100,state_4, 7)
+        pyxel.text(90,100,P4_Result,7)
+        pyxel.text(120,100,P4_v,7)
 
 
     ### Event handlers ###
@@ -334,118 +370,118 @@ class GameTheoryApp:
     def handle_player1(self):
         if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 32 and pyxel.mouse_x < 43 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print("w")
-            self.state_1.append('w')
+            self.state_1.append('W')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 51 and pyxel.mouse_x < 62 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('i')
-            self.state_1.append('i')
+            self.state_1.append('I')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 69 and pyxel.mouse_x < 81 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('x')
-            self.state_1.append('x')
+            self.state_1.append('X')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 89 and pyxel.mouse_x < 100 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('y')
-            self.state_1.append('y')
+            self.state_1.append('Y')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 107 and pyxel.mouse_x < 119 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('s')
-            self.state_1.append('s')
+            self.state_1.append('S')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 32 and pyxel.mouse_x < 43 and pyxel.mouse_y < 91 and pyxel.mouse_y > 81:
             print('z')
-            self.state_1.append('z')
+            self.state_1.append('Z')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 51 and pyxel.mouse_x < 61 and pyxel.mouse_y < 91 and pyxel.mouse_y > 81:
             print('h')
-            self.state_1.append('h')
+            self.state_1.append('H')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 70 and pyxel.mouse_x < 81 and pyxel.mouse_y < 91 and pyxel.mouse_y > 81:
             print('t')
-            self.state_1.append('t')
+            self.state_1.append('T')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
             self.game_state = GameState.PLAYER2
 
     def handle_player2(self):
         if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 32 and pyxel.mouse_x < 43 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print("w")
-            self.state_2.append('w')
+            self.state_2.append('W')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 51 and pyxel.mouse_x < 62 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('i')
-            self.state_2.append('i')
+            self.state_2.append('I')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 69 and pyxel.mouse_x < 81 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('x')
-            self.state_2.append('x')
+            self.state_2.append('X')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 89 and pyxel.mouse_x < 100 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('y')
-            self.state_2.append('y')
+            self.state_2.append('Y')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 107 and pyxel.mouse_x < 119 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('s')
-            self.state_2.append('s')
+            self.state_2.append('S')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 32 and pyxel.mouse_x < 43 and pyxel.mouse_y < 91 and pyxel.mouse_y > 81:
             print('z')
-            self.state_2.append('z')
+            self.state_2.append('Z')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 51 and pyxel.mouse_x < 61 and pyxel.mouse_y < 91 and pyxel.mouse_y > 81:
             print('h')
-            self.state_2.append('h')
+            self.state_2.append('H')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 70 and pyxel.mouse_x < 81 and pyxel.mouse_y < 91 and pyxel.mouse_y > 81:
             print('t')
-            self.state_2.append('t')
+            self.state_2.append('T')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
             self.game_state = GameState.PLAYER3
 
     def handle_player3(self):
         if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 32 and pyxel.mouse_x < 43 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print("w")
-            self.state_3.append('w')
+            self.state_3.append('W')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 51 and pyxel.mouse_x < 62 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('i')
-            self.state_3.append('i')
+            self.state_3.append('I')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 69 and pyxel.mouse_x < 81 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('x')
-            self.state_3.append('x')
+            self.state_3.append('X')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 89 and pyxel.mouse_x < 100 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('y')
-            self.state_3.append('y')
+            self.state_3.append('Y')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 107 and pyxel.mouse_x < 119 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('s')
-            self.state_3.append('s')
+            self.state_3.append('S')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 32 and pyxel.mouse_x < 43 and pyxel.mouse_y < 91 and pyxel.mouse_y > 81:
             print('z')
-            self.state_3.append('z')
+            self.state_3.append('Z')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 51 and pyxel.mouse_x < 61 and pyxel.mouse_y < 91 and pyxel.mouse_y > 81:
             print('h')
-            self.state_3.append('h')
+            self.state_3.append('H')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 70 and pyxel.mouse_x < 81 and pyxel.mouse_y < 91 and pyxel.mouse_y > 81:
             print('t')
-            self.state_3.append('t')
+            self.state_3.append('T')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
             self.game_state = GameState.PLAYER4
     
     def handle_player4(self):
         if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 32 and pyxel.mouse_x < 43 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print("w")
-            self.state_4.append('w')
+            self.state_4.append('W')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 51 and pyxel.mouse_x < 62 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('i')
-            self.state_4.append('i')
+            self.state_4.append('I')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 69 and pyxel.mouse_x < 81 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('x')
-            self.state_4.append('x')
+            self.state_4.append('X')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 89 and pyxel.mouse_x < 100 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('y')
-            self.state_4.append('y')
+            self.state_4.append('Y')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 107 and pyxel.mouse_x < 119 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('s')
-            self.state_4.append('s')
+            self.state_4.append('S')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 32 and pyxel.mouse_x < 43 and pyxel.mouse_y < 91 and pyxel.mouse_y > 81:
             print('z')
-            self.state_4.append('z')
+            self.state_4.append('Z')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 51 and pyxel.mouse_x < 61 and pyxel.mouse_y < 91 and pyxel.mouse_y > 81:
             print('h')
-            self.state_4.append('h')
+            self.state_4.append('H')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 70 and pyxel.mouse_x < 81 and pyxel.mouse_y < 91 and pyxel.mouse_y > 81:
             print('t')
-            self.state_4.append('t')
+            self.state_4.append('T')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
             self.game_state = GameState.RESULTS
 
     def handle_circuit(self):
         if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
-            self.game_state = GameState.RESULTS
+            self.game_state = GameState.CIRCUIT
 
     def handle_results(self):
         None
