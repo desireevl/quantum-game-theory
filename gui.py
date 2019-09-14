@@ -23,9 +23,7 @@ class GameTheoryApp:
     def __init__(self, width=160, height=120):
         self.backend = Backend('minority')
         
-        self.game_state = GameState.PLAYER1
-
-        self.game_state = GameState.PLAYER4
+        self.game_state = GameState.INTRO
 
         self._width = width
         self._height = height
@@ -329,7 +327,32 @@ class GameTheoryApp:
 
 
     def draw_results(self):
+        state_1 = ''.join(self.state_1)
+        state_2 = ''.join(self.state_2)
+        state_3 = ''.join(self.state_3)
+        state_4 = ''.join(self.state_4)
 
+        game_result=[]
+
+        for i in self.RawGameResults:
+            game_result.append(str(i))
+
+        P1_Result = game_result[0]
+        P2_Result = game_result[1]
+        P3_Result = game_result[2]
+        P4_Result = game_result[3]
+
+        victor=[]
+        for i in range(len(self.RawGameResults)):
+            if self.RawGameResults[i] == 0:
+                victor.append('You Lose')
+            elif self.RawGameResults[i] == 1:
+                victor.append('You Win')
+
+        P1_v = victor[0]
+        P2_v = victor[1]
+        P3_v = victor[2]
+        P4_v = victor[3]
 
         the_variable = ''.join(self.state_1)
         pyxel.text(67, 15, "Results", pyxel.frame_count % 16)
@@ -339,19 +362,19 @@ class GameTheoryApp:
         pyxel.text(45,25,"Strategy",7)
         pyxel.text(95,25,"Game Results",7)
         pyxel.text(5,40,"Player 1", 7)
-        pyxel.text(45,40,self.state_1, 7)
+        pyxel.text(45,40,state_1, 7)
         pyxel.text(90,40,P1_Result,7)
         pyxel.text(120,40,P1_v,7)
         pyxel.text(5,60,"Player 2", 7)
-        pyxel.text(45,60,self.state_2, 7)
+        pyxel.text(45,60,state_2, 7)
         pyxel.text(90,60,P2_Result,7)
         pyxel.text(120,60,P2_v,7)
         pyxel.text(5,80,"Player 3", 7)
-        pyxel.text(45,80,self.state_3, 7)
+        pyxel.text(45,80,state_3, 7)
         pyxel.text(90,80,P3_Result,7)
         pyxel.text(120,80,P3_v,7)
         pyxel.text(5,100,"Player 4", 7)
-        pyxel.text(45,100,self.state_4, 7)
+        pyxel.text(45,100,state_4, 7)
         pyxel.text(90,100,P4_Result,7)
         pyxel.text(120,100,P4_v,7)
 
@@ -475,10 +498,6 @@ class GameTheoryApp:
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
             self.game_state = GameState.RESULTS
             
-            self.all_states = [self.state_1, self.state_2, self.state_3, self.state_4]
-            
-            self.RawGameResults, self.circuit_img_str = self.backend.play(self.all_states)
-
         self.all_states = [self.state_1, self.state_2, self.state_3, self.state_4]
 
         self.RawGameResults, self.circuit_img_str = self.backend.play(self.all_states)
