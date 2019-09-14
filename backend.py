@@ -48,4 +48,5 @@ class Backend():
         choices = self._simulation(qgc)
         game_result = self.game.get_result(choices)
 
-        return game_result, self.img_path
+
+        return game_result[::-1], self.img_path

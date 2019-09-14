@@ -34,8 +34,6 @@ class GameTheoryApp:
         
         self.all_states = []
         
-        self.circuit_img_str=''
-
         self.circuit_img_str = ''
         self.RawGameResults = []
 
@@ -317,9 +315,10 @@ class GameTheoryApp:
 ################RUNQISKIT###############################
 
     def draw_circuit(self):
-        pyxel.rectb(110, 110, 30, 10, 7)
-        pyxel.text(115, 112, "Next", 7)
+        # pyxel.rectb(110, 110, 30, 10, 7)
+        # pyxel.text(115, 112, "Next", 7)
         # pyxel.blt(1, 1, 0, 0, 0, 200, 106)
+
 
         img=mpimg.imread(self.circuit_img_str)
         imgplot = plt.imshow(img)
@@ -328,6 +327,9 @@ class GameTheoryApp:
 
     def draw_results(self):
         self.quantum_results()
+
+        pyxel.rectb(110, 110, 30, 10, 7)
+        pyxel.text(115, 112, "Next", 7)
 
         state_1 = ''.join(self.state_1)
         state_2 = ''.join(self.state_2)
@@ -501,16 +503,20 @@ class GameTheoryApp:
             self.game_state = GameState.RESULTS
             
 
+    def quantum_results(self):
         self.all_states = [self.state_1, self.state_2, self.state_3, self.state_4]
 
         self.RawGameResults, self.circuit_img_str = self.backend.play(self.all_states)
 
+
     def handle_circuit(self):
-        if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
-            self.game_state = GameState.CIRCUIT
+        # if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
+        #     self.game_state = GameState.CIRCUIT
+        None
 
     def handle_results(self):
-        None
+        if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 119 and pyxel.mouse_x < 139 and pyxel.mouse_y < 119 and pyxel.mouse_y > 110:
+            self.game_state = GameState.CIRCUIT
 
     ### Pyxel Function Wrappers ###
 
