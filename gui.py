@@ -99,7 +99,7 @@ class GameTheoryApp:
         pyxel.rectb(110, 110, 30, 10, 7)
         pyxel.text(115, 112, "Next", 7)
 
-        gates_list = ['W', 'I', 'X', 'Y', 'S', 'Z', 'H', 'T']
+        gates_list = ['W', 'Rz1', 'X', 'Ry1', 'Rz2', 'Z', 'H', 'T']
 
         width_nomargin = self._width / 5
         gates_len = len(gates_list)
@@ -153,7 +153,7 @@ class GameTheoryApp:
         pyxel.rectb(110, 110, 30, 10, 7)
         pyxel.text(115, 112, "Next", 7)
 
-        gates_list = ['W', 'I', 'X', 'Y', 'S', 'Z', 'H', 'T']
+        gates_list = ['W', 'Rz1', 'X', 'Ry1', 'Rz2', 'Z', 'H', 'T']
 
         width_nomargin = self._width / 5
         gates_len = len(gates_list)
@@ -207,7 +207,7 @@ class GameTheoryApp:
         pyxel.rectb(110, 110, 30, 10, 7)
         pyxel.text(115, 112, "Next", 7)
 
-        gates_list = ['W', 'I', 'X', 'Y', 'S', 'Z', 'H', 'T']
+        gates_list = ['W', 'Rz1', 'X', 'Ry1', 'Rz2', 'Z', 'H', 'T']
 
         width_nomargin = self._width / 5
         gates_len = len(gates_list)
@@ -261,7 +261,7 @@ class GameTheoryApp:
         pyxel.rectb(110, 110, 30, 10, 7)
         pyxel.text(115, 112, "Next", 7)
 
-        gates_list = ['W', 'I', 'X', 'Y', 'S', 'Z', 'H', 'T']
+        gates_list = ['W', 'Rz1', 'X', 'Ry1', 'Rz2', 'Z', 'H', 'T']
 
         width_nomargin = self._width / 5
         gates_len = len(gates_list)
@@ -396,16 +396,16 @@ class GameTheoryApp:
             self.state_1.append('W')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 51 and pyxel.mouse_x < 62 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('i')
-            self.state_1.append('I')
+            self.state_1.append('Rz1')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 69 and pyxel.mouse_x < 81 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('x')
             self.state_1.append('X')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 89 and pyxel.mouse_x < 100 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('y')
-            self.state_1.append('Y')
+            self.state_1.append('Ry1')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 107 and pyxel.mouse_x < 119 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('s')
-            self.state_1.append('S')
+            self.state_1.append('Rz2')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 32 and pyxel.mouse_x < 43 and pyxel.mouse_y < 91 and pyxel.mouse_y > 81:
             print('z')
             self.state_1.append('Z')
@@ -424,16 +424,16 @@ class GameTheoryApp:
             self.state_2.append('W')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 51 and pyxel.mouse_x < 62 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('i')
-            self.state_2.append('I')
+            self.state_2.append('Rz1')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 69 and pyxel.mouse_x < 81 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('x')
             self.state_2.append('X')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 89 and pyxel.mouse_x < 100 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('y')
-            self.state_2.append('Y')
+            self.state_2.append('Ry1')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 107 and pyxel.mouse_x < 119 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('s')
-            self.state_2.append('S')
+            self.state_2.append('Rz2')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 32 and pyxel.mouse_x < 43 and pyxel.mouse_y < 91 and pyxel.mouse_y > 81:
             print('z')
             self.state_2.append('Z')
@@ -452,16 +452,16 @@ class GameTheoryApp:
             self.state_3.append('W')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 51 and pyxel.mouse_x < 62 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('i')
-            self.state_3.append('I')
+            self.state_3.append('Rz1')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 69 and pyxel.mouse_x < 81 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('x')
             self.state_3.append('X')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 89 and pyxel.mouse_x < 100 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('y')
-            self.state_3.append('Y')
+            self.state_3.append('Ry1')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 107 and pyxel.mouse_x < 119 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('s')
-            self.state_3.append('S')
+            self.state_3.append('Rz2')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 32 and pyxel.mouse_x < 43 and pyxel.mouse_y < 91 and pyxel.mouse_y > 81:
             print('z')
             self.state_3.append('Z')
@@ -480,16 +480,16 @@ class GameTheoryApp:
             self.state_4.append('W')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 51 and pyxel.mouse_x < 62 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('i')
-            self.state_4.append('I')
+            self.state_4.append('Rz1')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 69 and pyxel.mouse_x < 81 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('x')
             self.state_4.append('X')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 89 and pyxel.mouse_x < 100 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('y')
-            self.state_4.append('Y')
+            self.state_4.append('Ry1')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 107 and pyxel.mouse_x < 119 and pyxel.mouse_y < 76 and pyxel.mouse_y > 64:
             print('s')
-            self.state_4.append('S')
+            self.state_4.append('Rz2')
         elif pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON) and pyxel.mouse_x > 32 and pyxel.mouse_x < 43 and pyxel.mouse_y < 91 and pyxel.mouse_y > 81:
             print('z')
             self.state_4.append('Z')
