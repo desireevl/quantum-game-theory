@@ -3,6 +3,7 @@ from qiskit import Aer, execute
 from qiskit.quantum_info import Operator
 from qiskit.extensions import XGate, YGate, SGate, ZGate, HGate, TGate, RZGate, RYGate
 import numpy as np
+from protocols import Protocol
 
 class Backend():
     def __init__(self, type):
@@ -35,15 +36,15 @@ class Backend():
         counts = res_sim.get_counts(qgc.circ)
         return [int(s) for s in list(counts.keys())[0]]
 
-    def play(self, player_gates):
-
+    def play(self, player_gates, protocol: str):
+        protocol = Protocol[protocol]
         player_gate_objects = []
         for i in range(len(player_gates)):
             player_gate_objects.append([])
             for j in player_gates[i]:
                 player_gate_objects[i].append(self.lookup_table[j])
 
-        qgc = QuantumGameCircuit(player_gate_objects)
+        qgc = QuantumGameCircuit(player_gate_objects, protocol)
         qgc.draw_circuit(self.img_path)
         choices = self._simulation(qgc)
         game_result = self.game.get_result(choices)

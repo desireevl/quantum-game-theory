@@ -1,7 +1,7 @@
 import numpy as np
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import Operator
-
+from protocols import Protocol
 import numpy as np
 
 
@@ -67,7 +67,8 @@ class PayoffTable:
 
 
 class QuantumGameCircuit:
-    def __init__(self, player_gates):
+    def __init__(self, player_gates, protocol: Protocol = Protocol.EWL):
+        self.protocol = protocol
         self.player_gates = player_gates
         self.num_players = len(player_gates)
         self.J, self.Jdg = self._make_J_operators()
@@ -93,8 +94,9 @@ class QuantumGameCircuit:
         for i in range(self.num_players):
             circ = self._add_player_gates(circ, i, player_gates[i])
         circ.barrier()
-        circ.append(self.Jdg, range(self.num_players))
-        circ.barrier()
+        if self.protocol == Protocol.EWL:
+            circ.append(self.Jdg,range(self.num_players))
+            circ.barrier()
         circ.measure(range(self.num_players), range(self.num_players))
         return circ
 
