@@ -506,7 +506,7 @@ class GameTheoryApp:
     def quantum_results(self):
         self.all_states = [self.state_1, self.state_2, self.state_3, self.state_4]
 
-        self.RawGameResults, self.circuit_img_str = self.backend.play(self.all_states)
+        self.RawGameResults, self.circuit_img_str = self.backend.play(self.all_states, 'MW')
 
 
     def handle_circuit(self):
