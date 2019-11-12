@@ -34,7 +34,7 @@ class Backend():
         job_sim = execute(qgc.circ, self.backend, shots=1)
         res_sim = job_sim.result()
         counts = res_sim.get_counts(qgc.circ)
-        return [int(s) for s in list(counts.keys())[0]]
+        return counts, [int(s) for s in list(counts.keys())[0]]
 
     def play(self, player_gates, protocol: str):
         protocol = Protocol[protocol]
@@ -46,8 +46,7 @@ class Backend():
 
         qgc = QuantumGameCircuit(player_gate_objects, protocol)
         qgc.draw_circuit(self.img_path)
-        choices = self._simulation(qgc)
+        counts, choices = self._simulation(qgc)
         game_result = self.game.get_result(choices)
 
-
-        return game_result[::-1], self.img_path
+        return counts, game_result[::-1]
