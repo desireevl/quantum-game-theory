@@ -98,6 +98,7 @@ class QuantumGameCircuit:
             circ.append(self.Jdg,range(self.num_players))
             circ.barrier()
         circ.measure(range(self.num_players), range(self.num_players))
+        print(circ)
         return circ
 
     def _add_player_gates(self, circ, player_num, gates):
@@ -107,4 +108,3 @@ class QuantumGameCircuit:
 
     def draw_circuit(self, filepath):
         self.circ.draw(filename=filepath, output='mpl')
-

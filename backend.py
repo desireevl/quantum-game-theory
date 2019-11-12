@@ -17,7 +17,7 @@ class Backend():
         op1 = RZGate(-3 * np.pi / 8)
         op2 = RYGate(np.pi / 2)
         op3 = RZGate(np.pi / 2)
-        result = {"X": XGate(), "Y": YGate(), "S": SGate(), "Z": ZGate, "H": HGate(), "T": TGate(), "W": self._gen_w_gate(),
+        result = {"X": XGate(), "Y": YGate(), "S": SGate(), "Z": ZGate(), "H": HGate(), "T": TGate(), "W": self._gen_w_gate(),
                   "Rz1": RZGate(-3 * np.pi / 8), "Rz2": RZGate(np.pi/2), "Ry1": RYGate(np.pi/2)}
         return result
 
