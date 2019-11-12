@@ -8,30 +8,35 @@ import numpy as np
 class Game:
     def __init__(self, type, payoff=None):
         # predefined games
-        if type=="chicken":
+        if type == "chicken":
             self.n_players = 2
             self.n_choices = 2
-            self.payoff = PayoffTable(self.n_players, self.n_choices, [[(0,0), (1,-1)], [(-1,1), (-10,-10)]])
-        elif type=="prisoner":
+            self.payoff = PayoffTable(self.n_players, self.n_choices, [
+                                      [(0, 0), (1, -1)], [(-1, 1), (-10, -10)]])
+        elif type == "prisoner":
             self.n_players = 2
             self.n_choices = 2
-            self.payoff = PayoffTable(self.n_players, self.n_choices, [[(-1, -1), (0, -3)], [(-3, 0), (-2, -2)]])
-        elif type=="minority":
+            self.payoff = PayoffTable(self.n_players, self.n_choices, [
+                                      [(-1, -1), (0, -3)], [(-3, 0), (-2, -2)]])
+        elif type == "minority":
             self.n_players = 4
             self.n_choices = 2
-            minority_table = [[[[(0,0,0,0), (1,0,0,0)], [(0,1,0,0), (0,0,0,0)]],
-                               [[(0,0,1,0), (0,0,0,0)], [(0,0,0,0), (0,0,0,1)]]],
-                              [[[(0,0,0,1), (0,0,0,0)], [(0,0,0,0), (0,0,1,0)]],
-                               [[(0,0,0,0), (0,1,0,0)], [(1,0,0,0), (0,0,0,0)]]]]
-            self.payoff = PayoffTable(self.n_players, self.n_choices, minority_table)
+            minority_table = [[[[(0, 0, 0, 0), (1, 0, 0, 0)], [(0, 1, 0, 0), (0, 0, 0, 0)]],
+                               [[(0, 0, 1, 0), (0, 0, 0, 0)], [(0, 0, 0, 0), (0, 0, 0, 1)]]],
+                              [[[(0, 0, 0, 1), (0, 0, 0, 0)], [(0, 0, 0, 0), (0, 0, 1, 0)]],
+                               [[(0, 0, 0, 0), (0, 1, 0, 0)], [(1, 0, 0, 0), (0, 0, 0, 0)]]]]
+            self.payoff = PayoffTable(
+                self.n_players, self.n_choices, minority_table)
         else:
-            if payoff==None:
-                raise ("The specified game type is not currently known, please implement the game object manually")
+            if payoff == None:
+                raise (
+                    "The specified game type is not currently known, please implement the game object manually")
             else:
                 shape = np.shape(payoff)
                 self.n_players = shape[-1]
                 self.n_choices = shape[0]
-                self.payoff = PayoffTable(self.n_players, self.n_choices, payoff)
+                self.payoff = PayoffTable(
+                    self.n_players, self.n_choices, payoff)
 
     def get_result(self, choices):
         return self.payoff.get_payoff(choices)
@@ -52,7 +57,7 @@ class PayoffTable:
 
     def set_payoff(self, tuple, payoff):
         # sets the payoff value for a given tuple of player choices
-        self.payoff[self._get_index(tuple),:] = payoff
+        self.payoff[self._get_index(tuple), :] = payoff
 
     def get_payoff(self, choices):
         # access the payoff tuple for a given tuple of choices
@@ -95,7 +100,7 @@ class QuantumGameCircuit:
             circ = self._add_player_gates(circ, i, player_gates[i])
         circ.barrier()
         if self.protocol == Protocol.EWL:
-            circ.append(self.Jdg,range(self.num_players))
+            circ.append(self.Jdg, range(self.num_players))
             circ.barrier()
         circ.measure(range(self.num_players), range(self.num_players))
         print(circ)

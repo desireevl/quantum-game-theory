@@ -5,6 +5,7 @@ from qiskit.extensions import XGate, YGate, SGate, ZGate, HGate, TGate, RZGate, 
 import numpy as np
 from protocols import Protocol
 
+
 class Backend():
     def __init__(self, type):
         self.lookup_table = self._gen_lookup_table()
@@ -27,7 +28,8 @@ class Backend():
         Y = np.matrix('0 -1j; 1j 0')
         Z = np.matrix('1 0; 0 -1')
 
-        a = (1 / np.sqrt(2)) * np.cos(np.pi / 16) * (I + 1j * X) - (1j / np.sqrt(2)) * np.sin(np.pi / 16) * (Y + Z)
+        a = (1 / np.sqrt(2)) * np.cos(np.pi / 16) * (I + 1j * X) - \
+            (1j / np.sqrt(2)) * np.sin(np.pi / 16) * (Y + Z)
         return Operator(a)
 
     def _simulation(self, qgc):
