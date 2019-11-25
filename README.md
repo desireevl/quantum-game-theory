@@ -13,5 +13,5 @@ Game theory is the study of mathematical models of strategies that players take 
 
 ## References
 
-[1] Rosenstock, Sarita & O’Connor, Cailin. (2018). When It’s Good to Feel Bad: An Evolutionary Model of Guilt and Apology. Frontiers in Robotics and AI. 5. 10.3389/frobt.2018.00009.
-[2] Benjamin, Simon C., and Patrick M. Hayden. “Multiplayer Quantum Games.” Physical Review A, vol. 64, no. 3, 2001, doi:10.1103/physreva.64.030301.
+* [1] Rosenstock, Sarita & O’Connor, Cailin. (2018). When It’s Good to Feel Bad: An Evolutionary Model of Guilt and Apology. Frontiers in Robotics and AI. 5. 10.3389/frobt.2018.00009.
+* [2] Benjamin, Simon C., and Patrick M. Hayden. “Multiplayer Quantum Games.” Physical Review A, vol. 64, no. 3, 2001, doi:10.1103/physreva.64.030301.
