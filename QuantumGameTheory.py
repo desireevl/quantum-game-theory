@@ -1,45 +1,10 @@
 import numpy as np
-from qiskit import QuantumCircuit
+from utils import predefined_games, unitary_gates, Protocol
+from enum import Enum
+from qiskit import QuantumCircuit, Aer, execute
 from qiskit.quantum_info import Operator
-from protocols import Protocol
 import numpy as np
-
-
-class Game:
-    def __init__(self, type, payoff=None):
-        # predefined games
-        if type == "chicken":
-            self.n_players = 2
-            self.n_choices = 2
-            self.payoff = PayoffTable(self.n_players, self.n_choices, [
-                                      [(0, 0), (1, -1)], [(-1, 1), (-10, -10)]])
-        elif type == "prisoner":
-            self.n_players = 2
-            self.n_choices = 2
-            self.payoff = PayoffTable(self.n_players, self.n_choices, [
-                                      [(-1, -1), (0, -3)], [(-3, 0), (-2, -2)]])
-        elif type == "minority":
-            self.n_players = 4
-            self.n_choices = 2
-            minority_table = [[[[(0, 0, 0, 0), (1, 0, 0, 0)], [(0, 1, 0, 0), (0, 0, 0, 0)]],
-                               [[(0, 0, 1, 0), (0, 0, 0, 0)], [(0, 0, 0, 0), (0, 0, 0, 1)]]],
-                              [[[(0, 0, 0, 1), (0, 0, 0, 0)], [(0, 0, 0, 0), (0, 0, 1, 0)]],
-                               [[(0, 0, 0, 0), (0, 1, 0, 0)], [(1, 0, 0, 0), (0, 0, 0, 0)]]]]
-            self.payoff = PayoffTable(
-                self.n_players, self.n_choices, minority_table)
-        else:
-            if payoff == None:
-                raise (
-                    "The specified game type is not currently known, please implement the game object manually")
-            else:
-                shape = np.shape(payoff)
-                self.n_players = shape[-1]
-                self.n_choices = shape[0]
-                self.payoff = PayoffTable(
-                    self.n_players, self.n_choices, payoff)
-
-    def get_result(self, choices):
-        return self.payoff.get_payoff(choices)
+import pandas as pd
 
 
 class PayoffTable:
@@ -49,6 +14,7 @@ class PayoffTable:
         self.n_players = n_players
         self.n_choices = n_choices
         self.n_big = n_choices**n_players
+        self.display_table = payoff
 
         if payoff == None:
             self.payoff = np.zeros((self.n_big, n_players))
@@ -59,7 +25,7 @@ class PayoffTable:
         # sets the payoff value for a given tuple of player choices
         self.payoff[self._get_index(tuple), :] = payoff
 
-    def get_payoff(self, choices):
+    def get_payoffs(self, choices):
         # access the payoff tuple for a given tuple of choices
         return self.payoff[self._get_index(choices)]
 
@@ -71,7 +37,7 @@ class PayoffTable:
         return sum
 
 
-class QuantumGameCircuit:
+class QuantumGame:
     def __init__(self, player_gates, protocol: Protocol = Protocol.EWL):
         self.protocol = protocol
         self.player_gates = player_gates
@@ -103,7 +69,6 @@ class QuantumGameCircuit:
             circ.append(self.Jdg, range(self.num_players))
             circ.barrier()
         circ.measure(range(self.num_players), range(self.num_players))
-        print(circ)
         return circ
 
     def _add_player_gates(self, circ, player_num, gates):
@@ -113,3 +78,74 @@ class QuantumGameCircuit:
 
     def draw_circuit(self, filepath):
         self.circ.draw(filename=filepath, output='mpl')
+
+class Game:
+    
+    def __init__(self, game_name, protocol, payoff_table=None):
+        self._game_name = game_name
+        self._n_players, self._n_choices, self._payoff_table = self._generate_payoff_table(game_name, payoff_table)
+        self._protocol = Protocol[protocol]
+        self._quantum_game = None
+        self._final_results = None
+    
+    def _generate_payoff_table(self, game_name, payoff_table):
+        if payoff_table == None:
+            payoff_table = predefined_games[game_name]
+        shape = np.shape(payoff_table)
+        n_players = shape[-1]
+        n_choices = shape[0]
+        payoff_table = PayoffTable(n_players, n_choices, payoff_table)
+        return n_players, n_choices, payoff_table
+    
+    def payoff_table(self):
+        print(self._game_name)
+        return self._payoff_table.display_table
+    
+    def _generate_quantum_circuit(self, player_gates):
+        if self._protocol == Protocol.Classical:
+            return None
+        player_gate_objects = []
+        for i in range(len(player_gates)):
+            player_gate_objects.append([])
+            for j in player_gates[i]:
+                player_gate_objects[i].append(unitary_gates[j])        
+        self._quantum_game = QuantumGame(player_gate_objects, self._protocol) 
+        return self._quantum_game.circ
+    
+    def _generate_final_choices(self, player_choices, n_times):
+        if self._protocol == Protocol.Classical:
+            player_choices_str=''
+            for player_choice in player_choices:
+                for choice in player_choice:
+                    player_choices_str += str(choice)
+            return {player_choices_str: n_times}
+        else:
+            backend = Aer.get_backend("qasm_simulator")
+            job_sim = execute(self._quantum_game.circ, backend, shots=n_times)
+            res_sim = job_sim.result()
+            return res_sim.get_counts(self._quantum_game.circ)
+    
+    def _get_payoffs(self, choices):
+        choices_int=[]
+        for choice in choices:
+            choices_int.append(int(choice))
+        return self._payoff_table.get_payoffs(choices_int)
+    
+    def _generate_final_results(self, final_choices):
+        choices = []
+        num_times = []
+        payoffs = []
+        for curr_choices, curr_num_times in final_choices.items():
+            choices.append(curr_choices)
+            num_times.append(curr_num_times)
+            payoffs.append(self._get_payoffs(curr_choices))
+        return pd.DataFrame({'choices':choices, 'payoffs':payoffs, 'num_times':num_times})
+         
+    
+    def play_game(self, player_choices, n_times=1):
+        final_payoffs = []
+        self.quantum_circuit = self._generate_quantum_circuit(player_choices)
+        final_choices = self._generate_final_choices(player_choices, n_times)    
+        self._final_results = self._generate_final_results(final_choices)
+        return self._final_results
+        

@@ -1,9 +1,9 @@
-from backend import Backend
+from QuantumGameTheory import Game
 
-GAME = 'minority'
-PROTOCOL = 'MW'
+GAME = '4-minority'
+PROTOCOL = 'EWL'
 
-backend_game = Backend(GAME)
+game = Game(GAME, PROTOCOL)
 
 print(f'Running game: {GAME}')
 print('-'*25)
@@ -28,10 +28,7 @@ state_4 = [x.strip() for x in state_4_input.split(',')]
 
 all_states = [state_1, state_2, state_3, state_4]
 
-
-counts, raw_game_results = backend_game.play(all_states, PROTOCOL)
-
-print('Counts')
-print(counts)
-print('Results')
-print(raw_game_results)
+results = game.play_game(all_states)
+print('Game: '+ GAME)
+print('Results:')
+print(results)
