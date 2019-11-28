@@ -108,6 +108,15 @@ class Game:
         payoff_table = pd.DataFrame({'choices': choices, 'payoffs': payoffs})
         return payoff_table
     
+    def format_choices(self, player_choices):
+        formatted_player_choices = []
+        for choice in player_choices:
+            if isinstance(choice, list):
+                formatted_player_choices.append(choice)
+            else:
+                formatted_player_choices.append([choice])
+        return formatted_player_choices
+    
     def _generate_quantum_circuit(self, player_gates):
         if self._protocol == Protocol.Classical:
             return None
@@ -162,6 +171,7 @@ class Game:
          
     
     def play_game(self, player_choices, n_times=1):
+        player_choices = self.format_choices(player_choices)
         final_payoffs = []
         self.quantum_circuit = self._generate_quantum_circuit(player_choices)
         final_choices = self._generate_final_choices(player_choices, n_times)    
