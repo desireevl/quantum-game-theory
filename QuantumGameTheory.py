@@ -133,6 +133,8 @@ class Game:
     
     def _get_winners(self,payoffs):
         argmaxes = np.argwhere(payoffs==np.max(payoffs)).flatten()
+        if len(argmaxes)==len(payoffs):
+            return 'no winners'
         winners = ''
         for i in argmaxes:
             winners += 'P' + str(i+1) + ' '
@@ -149,8 +151,6 @@ class Game:
             curr_payoffs = self._get_payoffs(curr_choices)
             payoffs.append(curr_payoffs)
             winners.append(self._get_winners(curr_payoffs))
-            print({'curr_payoffs':curr_payoffs,
-                   'winners': self._get_winners(curr_payoffs)})
         return pd.DataFrame({'choices':choices, 'payoffs':payoffs, 'winners': winners, 'num_times':num_times})
          
     
