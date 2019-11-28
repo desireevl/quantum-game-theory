@@ -14,7 +14,6 @@ class PayoffTable:
         self.n_players = n_players
         self.n_choices = n_choices
         self.n_big = n_choices**n_players
-        self.display_table = payoff
 
         if payoff == None:
             self.payoff = np.zeros((self.n_big, n_players))
@@ -97,9 +96,17 @@ class Game:
         payoff_table = PayoffTable(n_players, n_choices, payoff_table)
         return n_players, n_choices, payoff_table
     
-    def payoff_table(self):
-        print(self._game_name)
-        return self._payoff_table.display_table
+    def display_payoffs(self):
+        print('Game: ' + self._game_name)
+        print('Payoffs: ')
+        choices=[]
+        payoffs=[]
+        bin_len_str = '{0:0' + str(self._n_players)+ 'b}'
+        for i in range(len(self._payoff_table.payoff)):          
+            choices.append(bin_len_str.format(i))
+            payoffs.append(self._payoff_table.payoff[i])
+        payoff_table = pd.DataFrame({'choices': choices, 'payoffs': payoffs})
+        return payoff_table
     
     def _generate_quantum_circuit(self, player_gates):
         if self._protocol == Protocol.Classical:
