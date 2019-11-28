@@ -13,12 +13,7 @@ class PayoffTable:
     def __init__(self, n_players=2, n_choices=2, payoff=None):
         self.n_players = n_players
         self.n_choices = n_choices
-        self.n_big = n_choices**n_players
-
-        if payoff == None:
-            self.payoff = np.zeros((self.n_big, n_players))
-        else:
-            self.payoff = np.reshape(payoff, (self.n_big, n_players))
+        self.payoff = payoff
 
     def set_payoff(self, tuple, payoff):
         # sets the payoff value for a given tuple of player choices
@@ -28,12 +23,10 @@ class PayoffTable:
         # access the payoff tuple for a given tuple of choices
         return self.payoff[self._get_index(choices)]
 
-    def _get_index(self, tuple):
+    def _get_index(self, choices):
         # gets the index from a given tuple of player choices
-        sum = 0
-        for i in range(len(tuple)):
-            sum += tuple[i] * self.n_choices**i
-        return sum
+        bin_string = ''.join(str(i) for i in choices)
+        return int(bin_string, self.n_choices)
 
 
 class QuantumGame:
@@ -91,8 +84,8 @@ class Game:
         if payoff_table == None:
             payoff_table = predefined_games[game_name]
         shape = np.shape(payoff_table)
-        n_players = shape[-1]
-        n_choices = shape[0]
+        n_players = shape[1]
+        n_choices = int(len(payoff_table)**(1/n_players))
         payoff_table = PayoffTable(n_players, n_choices, payoff_table)
         return n_players, n_choices, payoff_table
     
@@ -105,7 +98,8 @@ class Game:
         for i in range(len(self._payoff_table.payoff)):          
             choices.append(bin_len_str.format(i))
             payoffs.append(self._payoff_table.payoff[i])
-        payoff_table = pd.DataFrame({'choices': choices, 'payoffs': payoffs})
+        payoff_table = pd.DataFrame({'outcome': choices, 'payoffs': payoffs})
+        payoff_table = payoff_table.sort_values(by=['outcome'])
         return payoff_table
     
     def format_choices(self, player_choices):
@@ -118,6 +112,7 @@ class Game:
         return formatted_player_choices
     
     def _generate_quantum_circuit(self, player_gates):
+        self._protocol
         if self._protocol == Protocol.Classical:
             return None
         player_gate_objects = []
@@ -142,10 +137,7 @@ class Game:
             return res_sim.get_counts(self._quantum_game.circ)
     
     def _get_payoffs(self, choices):
-        choices_int=[]
-        for choice in choices:
-            choices_int.append(int(choice))
-        return self._payoff_table.get_payoffs(choices_int)
+        return self._payoff_table.get_payoffs(choices)
     
     def _get_winners(self,payoffs):
         argmaxes = np.argwhere(payoffs==np.max(payoffs)).flatten()
@@ -167,14 +159,14 @@ class Game:
             curr_payoffs = self._get_payoffs(curr_choices)
             payoffs.append(curr_payoffs)
             winners.append(self._get_winners(curr_payoffs))
-        return pd.DataFrame({'choices':choices, 'payoffs':payoffs, 'winners': winners, 'num_times':num_times})
+        return pd.DataFrame({'outcome':choices, 'payoffs':payoffs, 'winners': winners, 'num_times':num_times})
          
     
     def play_game(self, player_choices, n_times=1):
         player_choices = self.format_choices(player_choices)
         final_payoffs = []
         self.quantum_circuit = self._generate_quantum_circuit(player_choices)
-        final_choices = self._generate_final_choices(player_choices, n_times)    
+        final_choices = self._generate_final_choices(player_choices, n_times)
         self._final_results = self._generate_final_results(final_choices)
         return self._final_results
         
