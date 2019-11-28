@@ -21,7 +21,7 @@ class PayoffTable:
 
     def get_payoffs(self, choices):
         # access the payoff tuple for a given tuple of choices
-        return self.payoff[self._get_index(choices)]
+        return self.payoff[choices]
 
     def _get_index(self, choices):
         # gets the index from a given tuple of player choices
@@ -83,8 +83,7 @@ class Game:
     def _generate_payoff_table(self, game_name, payoff_table):
         if payoff_table == None:
             payoff_table = predefined_games[game_name]
-        shape = np.shape(payoff_table)
-        n_players = shape[1]
+        n_players = len(list(payoff_table.keys())[0])
         n_choices = int(len(payoff_table)**(1/n_players))
         payoff_table = PayoffTable(n_players, n_choices, payoff_table)
         return n_players, n_choices, payoff_table
@@ -92,12 +91,8 @@ class Game:
     def display_payoffs(self):
         print('Game: ' + self._game_name)
         print('Payoffs: ')
-        choices=[]
-        payoffs=[]
-        bin_len_str = '{0:0' + str(self._n_players)+ 'b}'
-        for i in range(len(self._payoff_table.payoff)):          
-            choices.append(bin_len_str.format(i))
-            payoffs.append(self._payoff_table.payoff[i])
+        choices=list(self._payoff_table.payoff.keys())
+        payoffs=list(self._payoff_table.payoff.values())
         payoff_table = pd.DataFrame({'outcome': choices, 'payoffs': payoffs})
         payoff_table = payoff_table.sort_values(by=['outcome'])
         return payoff_table
