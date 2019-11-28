@@ -131,15 +131,27 @@ class Game:
             choices_int.append(int(choice))
         return self._payoff_table.get_payoffs(choices_int)
     
+    def _get_winners(self,payoffs):
+        argmaxes = np.argwhere(payoffs==np.max(payoffs)).flatten()
+        winners = ''
+        for i in argmaxes:
+            winners += 'P' + str(i+1) + ' '
+        return winners
+    
     def _generate_final_results(self, final_choices):
         choices = []
         num_times = []
         payoffs = []
+        winners = []
         for curr_choices, curr_num_times in final_choices.items():
             choices.append(curr_choices)
             num_times.append(curr_num_times)
-            payoffs.append(self._get_payoffs(curr_choices))
-        return pd.DataFrame({'choices':choices, 'payoffs':payoffs, 'num_times':num_times})
+            curr_payoffs = self._get_payoffs(curr_choices)
+            payoffs.append(curr_payoffs)
+            winners.append(self._get_winners(curr_payoffs))
+            print({'curr_payoffs':curr_payoffs,
+                   'winners': self._get_winners(curr_payoffs)})
+        return pd.DataFrame({'choices':choices, 'payoffs':payoffs, 'winners': winners, 'num_times':num_times})
          
     
     def play_game(self, player_choices, n_times=1):
