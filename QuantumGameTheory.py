@@ -1,7 +1,7 @@
 import numpy as np
 from utils import predefined_games, unitary_gates, Protocol
 from enum import Enum
-from qiskit import QuantumCircuit, Aer, execute
+from qiskit import QuantumCircuit, Aer, execute, IBMQ
 from qiskit.quantum_info import Operator
 import numpy as np
 import pandas as pd
@@ -73,12 +73,26 @@ class QuantumGame:
 
 class Game:
     
-    def __init__(self, game_name, protocol, payoff_table=None):
+    def __init__(self, game_name, protocol, payoff_table=None, group = 'open', backend = "qasm_simulator"):
         self._game_name = game_name
         self._n_players, self._n_choices, self._payoff_table = self._generate_payoff_table(game_name, payoff_table)
         self._protocol = Protocol[protocol]
         self._quantum_game = None
         self._final_results = None
+        self._backend = self._set_backend(group, backend)
+    
+    def set_protocol(self, protocol):
+        self._protocol = Protocol[protocol]
+    
+    def _set_backend(self, group, backend):
+        if self._protocol == Protocol.Classical:
+            return "Classical"
+        if backend == "qasm_simulator":
+            return Aer.get_backend("qasm_simulator")
+        else:
+            IBMQ.load_account()
+            provider = IBMQ.get_provider(group=group)
+            return provider.get_backend(backend)
     
     def _generate_payoff_table(self, game_name, payoff_table):
         if payoff_table == None:
@@ -115,7 +129,8 @@ class Game:
             player_gate_objects.append([])
             for j in player_gates[i]:
                 player_gate_objects[i].append(unitary_gates[j])        
-        self._quantum_game = QuantumGame(player_gate_objects, self._protocol) 
+        self._quantum_game = QuantumGame(player_gate_objects, self._protocol)
+        self._quantum_game.circ.draw()
         return self._quantum_game.circ
     
     def _generate_final_choices(self, player_choices, n_times):
@@ -126,8 +141,7 @@ class Game:
                     player_choices_str += str(choice)
             return {player_choices_str: n_times}
         else:
-            backend = Aer.get_backend("qasm_simulator")
-            job_sim = execute(self._quantum_game.circ, backend, shots=n_times)
+            job_sim = execute(self._quantum_game.circ, self._backend, shots=n_times)
             res_sim = job_sim.result()
             return res_sim.get_counts(self._quantum_game.circ)
     
@@ -154,7 +168,7 @@ class Game:
             curr_payoffs = self._get_payoffs(curr_choices)
             payoffs.append(curr_payoffs)
             winners.append(self._get_winners(curr_payoffs))
-        return pd.DataFrame({'outcome':choices, 'payoffs':payoffs, 'winners': winners, 'num_times':num_times})
+        return pd.DataFrame({'outcome':choices, 'payoffs':payoffs, 'winners': winners, 'num_times':num_times, 'backend':str(self._backend)})
          
     
     def play_game(self, player_choices, n_times=1):
@@ -163,5 +177,5 @@ class Game:
         self.quantum_circuit = self._generate_quantum_circuit(player_choices)
         final_choices = self._generate_final_choices(player_choices, n_times)
         self._final_results = self._generate_final_results(final_choices)
-        return self._final_results
+        return final_choices, self._final_results
         
