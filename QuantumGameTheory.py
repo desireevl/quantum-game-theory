@@ -163,7 +163,7 @@ class Game:
         return payoff_table
 
     def format_choices(self, player_choices):
-        """ """
+        """ Ensures that different ways of inputting single choices (e.g. [['H'], ['H']] and ['H', 'H']) are all treated the same"""
         formatted_player_choices = []
         for choice in player_choices:
             if isinstance(choice, list):
@@ -173,6 +173,7 @@ class Game:
         return formatted_player_choices
 
     def _generate_quantum_circuit(self, player_gates):
+        """generates the quantum circuit for the game in qiskit (or returns None if it is a classical game)"""
         self._protocol
         if self._protocol == Protocol.Classical:
             return None
