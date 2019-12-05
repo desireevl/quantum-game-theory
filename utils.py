@@ -3,15 +3,15 @@ from enum import Enum
 import numpy as np
 import math
 
-predefined_games = {"chicken": {'00': ( 0 ,   0), 
-                                '01': ( -1,   1), 
-                                '10': (  1,  -1), 
+predefined_games = {"chicken": {'00': (0, 0),
+                                '01': (-1, 1),
+                                '10': (1, -1),
                                 '11': (-10, -10)},
-                    "prisoner": {'00': (-1, -1), 
-                                 '01': (-3,  0), 
-                                 '10': (0 , -3), 
+                    "prisoner": {'00': (-1, -1),
+                                 '01': (-3, 0),
+                                 '10': (0, -3),
                                  '11': (-2, -2)},
-                    "4-minority": {'0000': (0, 0, 0, 0), 
+                    "4-minority": {'0000': (0, 0, 0, 0),
                                    '0001': (0, 0, 0, 1),
                                    '0010': (0, 0, 1, 0),
                                    '0011': (0, 0, 0, 0),
@@ -28,16 +28,17 @@ predefined_games = {"chicken": {'00': ( 0 ,   0),
                                    '1110': (0, 0, 0, 1),
                                    '1111': (0, 0, 0, 0)}}
 
-unitary_gates = {"X": XGate(), 
-                 "Y": YGate(), 
-                 "S": SGate(), 
-                 "Z": ZGate(), 
-                 "H": HGate(), 
-                 "T": TGate(), 
-                 #"W": self._gen_w_gate(),
+unitary_gates = {"X": XGate(),
+                 "Y": YGate(),
+                 "S": SGate(),
+                 "Z": ZGate(),
+                 "H": HGate(),
+                 "T": TGate(),
+                 # "W": self._gen_w_gate(),
                  "Rz1": RZGate(-3 * np.pi / 8),
                  "Rz2": RZGate(np.pi/2),
                  "Ry1": RYGate(np.pi/2)}
+
 
 class Protocol(Enum):
     """
@@ -46,7 +47,7 @@ class Protocol(Enum):
     EWL = "EWL quantization protocol"
     MW = "MW quantization protocol"
     Classical = "Classical protocol"
-    
+
     def describe(self):
         # self is the member here
         return self.name, self.value
