@@ -102,9 +102,9 @@ class QuantumGame:
             circ.append(gates[i], [player_num])
         return circ
 
-    def draw_circuit(self, filepath):
+    def draw_circuit(self):
         """ Saves the circuit image to specified filepath """
-        self.circ.draw(filename=filepath, output='mpl')
+        self.circ.draw(output='mpl')
 
 
 class Game:
@@ -129,8 +129,9 @@ class Game:
         self._final_results = None
         self._backend = self._set_backend(group, backend)
 
-    def set_protocol(self, protocol):
+    def set_protocol(self, protocol, group='open',backend='qasm_simulator'):
         self._protocol = Protocol[protocol]
+        self._backend = self._set_backend(group, backend)
 
     def _set_backend(self, group, backend):
         if self._protocol == Protocol.Classical:
@@ -199,7 +200,12 @@ class Game:
             job_sim = execute(self._quantum_game.circ,
                               self._backend, shots=n_times)
             res_sim = job_sim.result()
-            return res_sim.get_counts(self._quantum_game.circ)
+            counts = res_sim.get_counts(self._quantum_game.circ)
+            #now we need to invert the order of the counts because our convention is [P1,P2]
+            counts_inverted={}
+            for key, value in counts.items():
+                counts_inverted[key[::-1]]=value
+            return counts_inverted
 
     def _get_payoffs(self, choices):
         return self._payoff_table.get_payoffs(choices)

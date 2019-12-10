@@ -1,4 +1,4 @@
-from qiskit.extensions import XGate, YGate, SGate, ZGate, HGate, TGate, RZGate, RYGate
+from qiskit.extensions import XGate, YGate, SGate, ZGate, HGate, TGate, RZGate, RYGate, IdGate
 from enum import Enum
 import numpy as np
 import math
@@ -38,6 +38,7 @@ unitary_gates = {"X": XGate(),
                  "Z": ZGate(),
                  "H": HGate(),
                  "T": TGate(),
+                 "I": IdGate(),
                  # "W": self._gen_w_gate(),
                  "Rz1": RZGate(-3 * np.pi / 8),
                  "Rz2": RZGate(np.pi/2),
