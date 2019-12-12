@@ -69,16 +69,6 @@ class QuantumGame:
 
         return J, Jdg
 
-    def _gen_w_gate(self):
-        """ Creates the custom w gate """
-        I = np.matrix('1 0; 0 1')
-        X = np.matrix('0 1; 1 0')
-        Y = np.matrix('0 -1j; 1j 0')
-        Z = np.matrix('1 0; 0 -1')
-
-        w = (1 / np.sqrt(2)) * np.cos(np.pi / 16) * (I + 1j * X) - \
-            (1j / np.sqrt(2)) * np.sin(np.pi / 16) * (Y + Z)
-        return Operator(w)
 
     def _make_circuit(self, player_gates):
         """ Generates the base circuit """

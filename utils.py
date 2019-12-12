@@ -1,7 +1,8 @@
 from qiskit.extensions import XGate, YGate, SGate, ZGate, HGate, TGate, RZGate, RYGate, IdGate
 from enum import Enum
 import numpy as np
-import math
+from qiskit.circuit import Gate
+from qiskit.circuit import QuantumRegister
 
 predefined_games = {"chicken": {'00': (0, 0),
                                 '01': (-1, 1),
@@ -32,6 +33,31 @@ predefined_games = {"chicken": {'00': (0, 0),
                                    '1110': (0, 0, 0, 1),
                                    '1111': (0, 0, 0, 0)}}
 
+class WGate(Gate):
+    """ Creates the custom W gate """
+
+    def __init__(self):
+        """Create new W gate."""
+        super().__init__("W", 1, [])
+
+    def _define(self):
+        """
+        gate W a {
+        Rz(-3*pi/8) a; Rz(pi/2) a; Ry(pi/2)
+        }
+        """
+        definition = []
+        q = QuantumRegister(1, "q")
+        rule = [
+            (RZGate(-3 * np.pi / 8), [q[0]], []),
+            (RZGate(np.pi / 2), [q[0]], []),
+            (RYGate(np.pi / 2), [q[0]], [])
+        ]
+        for inst in rule:
+            definition.append(inst)
+        self.definition = definition
+
+
 unitary_gates = {"X": XGate(),
                  "Y": YGate(),
                  "S": SGate(),
@@ -39,7 +65,7 @@ unitary_gates = {"X": XGate(),
                  "H": HGate(),
                  "T": TGate(),
                  "I": IdGate(),
-                 # "W": self._gen_w_gate(),
+                 "W": WGate(),
                  "Rz1": RZGate(-3 * np.pi / 8),
                  "Rz2": RZGate(np.pi/2),
                  "Ry1": RYGate(np.pi/2)}
