@@ -1,25 +1,47 @@
 import React from 'react';
-import logo from './logo.svg';
+
+import HomePage from './pages/Home.js'
+import InstructionPage from './pages/Instructions.js'
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
+
+import { Container, Row, Col } from 'reactstrap';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
-function App() {
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit banana <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Row>
+        <Col sm="12" md={{ size: 6, offset: 3 }}>
+          <Router>
+            Insert navigation bar here
+          </Router>
+        </Col>
+      </Row>
+      <Row>
+        <Col sm="12" md={{ size: 6, offset: 3 }}>
+          <Router>
+            <div>
+              <Switch>
+                <Route exact path="/">
+                  <HomePage />
+                </Route>
+                <Route path="/instructions">
+                  <InstructionPage />
+                </Route>
+              </Switch>
+            </div>
+          </Router>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
