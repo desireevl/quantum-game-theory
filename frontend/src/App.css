@@ -1,0 +1,35 @@
+* {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 200;
+}
+
+h1 {
+    color: #212529;
+    font-weight: 300;
+}
+
+h2, h3, h4, h5 {
+    color: #6c6c6d;
+    font-weight: 200;
+}
+
+
+li {
+    font-size: 20px;
+    padding-top: 6px;
+}
+
+ul {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 1.2em;
+    text-indent: -1.2em;
+}
+
+li:before {
+    content: "-";
+    display: block;
+    float: left;
+    width: 1.3em;
+    color: #6c6c6d;
+}

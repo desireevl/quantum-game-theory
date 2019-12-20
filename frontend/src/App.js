@@ -12,23 +12,16 @@ import {
 import { Container, Row, Col } from 'reactstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'font-awesome/css/font-awesome.min.css';
 import './App.css';
 
 
 const App = () => {
   return (
     <Container>
-      <Row>
-        <Col sm="12" md={{ size: 6, offset: 3 }}>
-          <Router>
-            Insert navigation bar here
-          </Router>
-        </Col>
-      </Row>
-      <Row>
-        <Col sm="12" md={{ size: 6, offset: 3 }}>
-          <Router>
-            <div>
+        <Row>
+          <Col sm="12" md={{ size: 8, offset: 2 }}>
+            <Router>
               <Switch>
                 <Route exact path="/">
                   <HomePage />
@@ -37,10 +30,9 @@ const App = () => {
                   <InstructionPage />
                 </Route>
               </Switch>
-            </div>
-          </Router>
-        </Col>
-      </Row>
+            </Router>
+          </Col>
+        </Row>
     </Container>
   );
 }

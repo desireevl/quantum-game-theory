@@ -5,14 +5,23 @@ import { Button } from 'reactstrap';
 
 const Home = () => {
   return (
-    <div>
-      Home <br />
-
-      <Link to="/instructions">
-        <Button color="primary">
-          Goto instructions
-        </Button>
-      </Link>
+    <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "100vh"}}>
+      <div>
+        <h1 style={{ textAlign: "center"}}>Quantum Game Theory</h1>
+        <br />
+        <h5 style={{ textAlign: "center"}}>Rajiv Krishnakumar, Severin Tschui, Desiree Vogt-Lee, <br /> George Woodman, Jansen Zhao</h5>
+        <br />
+        <br />
+        <br />
+        <br />
+        <div style={{textAlign: "center"}}>
+          <Link to="/instructions">
+            <Button color="link" style={{color: "#212529"}}>
+              Start
+            </Button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
