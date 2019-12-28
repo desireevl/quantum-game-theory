@@ -4,30 +4,29 @@ import { Link } from 'react-router-dom'
 import { Button } from 'reactstrap';
 import FontAwesome from 'react-fontawesome'
 
-const Instructions = () => {
+const Player3 = () => {
   return (
     <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "100vh"}}>
-      <div style={{position: "fixed", top: 40, left: 50, width: "100%"}}>
-      <Link to="/">
+      <div style={{position: "fixed", top: 40, left: "5%", width: "100%"}}>
+      <Link to="/player2">
         <FontAwesome className="fas fa-chevron-left" style={{color: "#212529"}}/>
       </Link>        
       </div>
+      <div style={{position: "fixed", top: 40, left: "95%", width: "100%"}}>
+      <Link to="/settings">
+        <FontAwesome className="fas fa-cog fa-lg" style={{color: "#212529"}}/>
+      </Link>        
+      </div>
     <div>
-      <h1 style={{ textAlign: "center"}}>Instructions</h1>
+      <h1 style={{ textAlign: "center"}}>Player 3</h1>
       <br />
-      <ul>
-        <li>Learn about quantum game theory by playing games!</li>
-        <li>Choose a game, protocol or custom payoff table</li>
-        <li>Choose a number of players</li>
-        <li>Play the game by dragging your selected gates onto the circuit</li>
-        <li>View your results!</li>
-      </ul>
+      Test
       <br />
       <br />
       <br />
       <br />
       <div style={{textAlign: "center"}}>
-        <Link to="/settings">
+        <Link to="/player4">
           <Button color="link" style={{color: "#212529"}}>
             Next
           </Button>
@@ -38,4 +37,4 @@ const Instructions = () => {
   );
 }
 
-export default Instructions;
+export default Player3;
