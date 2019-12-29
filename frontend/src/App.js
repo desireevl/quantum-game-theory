@@ -1,12 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import HomePage from './pages/Home.js'
 import InstructionPage from './pages/Instructions.js'
 import SettingPage from './pages/Settings.js'
-import Player1Page from './pages/Player1.js'
-import Player2Page from './pages/Player2.js'
-import Player3Page from './pages/Player3.js'
-import Player4Page from './pages/Player4.js'
+import PlayerPage from './pages/Player.js'
 import ResultsPage from './pages/Results.js'
 
 
@@ -22,8 +19,24 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css';
 import './App.css';
 
-
 const App = () => {
+  const [protocolSelected, setProtocolSelected] = useState('EWL');
+  const [gameSelected, setGameSelected] = useState('Prisoners');
+  const [playersSelected, setPlayersSelected] = useState(2);
+  const [payoffSelected, setPayoffSelected] = useState('Defined');
+
+  const [playerData, setPlayerData] = useState({})
+
+  const appState = {
+    settings: {
+      protocolSelected,
+      gameSelected,
+      playersSelected,
+      payoffSelected
+    },
+    playerData
+  }
+  
   return (
     <Container>
         <Row>
@@ -37,19 +50,19 @@ const App = () => {
                   <InstructionPage />
                 </Route>
                 <Route path="/settings">
-                  <SettingPage />
+                  <SettingPage
+                    appState={appState}
+                    setProtocolSelected={setProtocolSelected}
+                    setGameSelected={setGameSelected}
+                    setPlayersSelected={setPlayersSelected}
+                    setPayoffSelected={setPayoffSelected}
+                  />
                 </Route>
-                <Route path="/player1">
-                  <Player1Page />
-                </Route>
-                <Route path="/player2">
-                  <Player2Page />
-                </Route>
-                <Route path="/player3">
-                  <Player3Page />
-                </Route>
-                <Route path="/player4">
-                  <Player4Page />
+                <Route path="/player">
+                  <PlayerPage
+                    appState={appState}
+                    setPlayerData={setPlayerData}
+                  />
                 </Route>
                 <Route path="/results">
                   <ResultsPage />

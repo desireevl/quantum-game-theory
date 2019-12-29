@@ -4,12 +4,15 @@ import { Link } from 'react-router-dom'
 import { Button, ButtonGroup } from 'reactstrap';
 import FontAwesome from 'react-fontawesome'
 
-const Settings = () => {
-  const [ProtocolSelected, setProtocolSelected] = useState(null);
-  const [GameSelected, setGameSelected] = useState(null);
-  const [PlayersSelected, setPlayersSelected] = useState(null);
-  const [PayoffSelected, setPayoffSelected] = useState(null);
-
+const Settings = (props) => {
+  const { 
+    appState, 
+    setProtocolSelected,
+    setGameSelected,
+    setPlayersSelected,
+    setPayoffSelected
+  } = props
+  const { settings } = appState
 
   return (
     <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "100vh"}}>
@@ -23,41 +26,41 @@ const Settings = () => {
       <br />
         <h4>Protocol</h4>
         <ButtonGroup>
-          <Button color="primary" onClick={() => setProtocolSelected('EWL')} active={ProtocolSelected === 'EWL'}>EWL</Button>
-          <Button color="primary" onClick={() => setProtocolSelected('MW')} active={ProtocolSelected === 'MW'}>MW</Button>
+          <Button color="primary" onClick={() => setProtocolSelected('EWL')} active={settings.protocolSelected === 'EWL'}>EWL</Button>
+          <Button color="primary" onClick={() => setProtocolSelected('MW')} active={settings.protocolSelected === 'MW'}>MW</Button>
         </ButtonGroup>
-        <p>Selected: {ProtocolSelected}</p>
+        <p>Selected: {settings.protocolSelected}</p>
 
         <h4>Game</h4>
         <ButtonGroup>
-          <Button color="primary" onClick={() => setGameSelected('Prisoners')} active={GameSelected === 'Prisoners'}>Prisoners</Button>
-          <Button color="primary" onClick={() => setGameSelected('Minority')} active={GameSelected === 'Minority'}>Minority</Button>
-          <Button color="primary" onClick={() => setGameSelected('BoS')} active={GameSelected === 'Bos'}>Bos</Button>
+          <Button color="primary" onClick={() => setGameSelected('Prisoners')} active={settings.gameSelected === 'Prisoners'}>Prisoners</Button>
+          <Button color="primary" onClick={() => setGameSelected('Minority')} active={settings.gameSelected === 'Minority'}>Minority</Button>
+          <Button color="primary" onClick={() => setGameSelected('BoS')} active={settings.gameSelected === 'Bos'}>Bos</Button>
         </ButtonGroup>
-        <p>Selected: {GameSelected}</p>
+        <p>Selected: {settings.gameSelected}</p>
 
         <h4>Players</h4>
         <ButtonGroup>
-          <Button color="primary" onClick={() => setPlayersSelected(1)} active={PlayersSelected === 1}>1</Button>
-          <Button color="primary" onClick={() => setPlayersSelected(2)} active={PlayersSelected === 2}>2</Button>
-          <Button color="primary" onClick={() => setPlayersSelected(3)} active={PlayersSelected === 3}>3</Button>
-          <Button color="primary" onClick={() => setPlayersSelected(4)} active={PlayersSelected === 4}>4</Button>
+          <Button color="primary" onClick={() => setPlayersSelected(1)} active={settings.playersSelected === 1}>1</Button>
+          <Button color="primary" onClick={() => setPlayersSelected(2)} active={settings.playersSelected === 2}>2</Button>
+          <Button color="primary" onClick={() => setPlayersSelected(3)} active={settings.playersSelected === 3}>3</Button>
+          <Button color="primary" onClick={() => setPlayersSelected(4)} active={settings.playersSelected === 4}>4</Button>
         </ButtonGroup>
-        <p>Selected: {PlayersSelected}</p>
+        <p>Selected: {settings.playersSelected}</p>
 
         <h4>Payoff</h4>
         <ButtonGroup>
-          <Button color="primary" onClick={() => setPayoffSelected('Defined')} active={PayoffSelected === 'Defined'}>Defined</Button>
-          <Button color="primary" onClick={() => setPayoffSelected('Custom')} active={PayoffSelected === 'Custom'}>Custom</Button>
+          <Button color="primary" onClick={() => setPayoffSelected('Defined')} active={settings.payoffSelected === 'Defined'}>Defined</Button>
+          <Button color="primary" onClick={() => setPayoffSelected('Custom')} active={settings.payoffSelected === 'Custom'}>Custom</Button>
         </ButtonGroup>
-        <p>Selected: {PayoffSelected}</p>
+        <p>Selected: {settings.payoffSelected}</p>
 
       <br />
       <br />
       <br />
       <br />
       <div style={{textAlign: "center"}}>
-        <Link to="/player1">
+        <Link to="/player">
           <Button color="link" style={{color: "#212529"}}>
             Play
           </Button>
