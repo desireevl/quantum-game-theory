@@ -9,7 +9,7 @@ const Instructions = () => {
     <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "100vh"}}>
       <div style={{position: "fixed", top: 40, left: 50, width: "100%"}}>
       <Link to="/">
-        <FontAwesome className="fas fa-chevron-left" style={{color: "#212529"}}/>
+        <FontAwesome name="back" className="fas fa-chevron-left" style={{color: "#212529"}}/>
       </Link>        
       </div>
     <div>

@@ -36,7 +36,7 @@ const App = () => {
     },
     playerData
   }
-  
+
   return (
     <Container>
         <Row>
