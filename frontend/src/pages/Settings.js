@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { Link } from 'react-router-dom'
-import { Button, ButtonGroup } from 'reactstrap';
+import { Button, ButtonToolbar } from 'reactstrap';
 import FontAwesome from 'react-fontawesome'
 
 const Settings = (props) => {
@@ -25,35 +25,34 @@ const Settings = (props) => {
       <h1 style={{ textAlign: "center"}}>Settings</h1>
       <br />
         <h4>Protocol</h4>
-        <ButtonGroup>
+        <ButtonToolbar>
           <Button color="primary" onClick={() => setProtocolSelected('EWL')} active={settings.protocolSelected === 'EWL'}>EWL</Button>
           <Button color="primary" onClick={() => setProtocolSelected('MW')} active={settings.protocolSelected === 'MW'}>MW</Button>
-        </ButtonGroup>
-        <p>Selected: {settings.protocolSelected}</p>
+        </ButtonToolbar>
+        <br />
 
         <h4>Game</h4>
-        <ButtonGroup>
+        <ButtonToolbar>
           <Button color="primary" onClick={() => setGameSelected('Prisoners')} active={settings.gameSelected === 'Prisoners'}>Prisoners</Button>
           <Button color="primary" onClick={() => setGameSelected('Minority')} active={settings.gameSelected === 'Minority'}>Minority</Button>
           <Button color="primary" onClick={() => setGameSelected('BoS')} active={settings.gameSelected === 'Bos'}>Bos</Button>
-        </ButtonGroup>
-        <p>Selected: {settings.gameSelected}</p>
+        </ButtonToolbar>
+        <br />
 
         <h4>Players</h4>
-        <ButtonGroup>
+        <ButtonToolbar>
           <Button color="primary" onClick={() => setPlayersSelected(1)} active={settings.playersSelected === 1}>1</Button>
           <Button color="primary" onClick={() => setPlayersSelected(2)} active={settings.playersSelected === 2}>2</Button>
           <Button color="primary" onClick={() => setPlayersSelected(3)} active={settings.playersSelected === 3}>3</Button>
           <Button color="primary" onClick={() => setPlayersSelected(4)} active={settings.playersSelected === 4}>4</Button>
-        </ButtonGroup>
-        <p>Selected: {settings.playersSelected}</p>
+        </ButtonToolbar>
+        <br />
 
         <h4>Payoff</h4>
-        <ButtonGroup>
+        <ButtonToolbar>
           <Button color="primary" onClick={() => setPayoffSelected('Defined')} active={settings.payoffSelected === 'Defined'}>Defined</Button>
           <Button color="primary" onClick={() => setPayoffSelected('Custom')} active={settings.payoffSelected === 'Custom'}>Custom</Button>
-        </ButtonGroup>
-        <p>Selected: {settings.payoffSelected}</p>
+        </ButtonToolbar>
 
       <br />
       <br />

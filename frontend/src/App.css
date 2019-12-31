@@ -33,3 +33,16 @@ li:before {
     width: 1.3em;
     color: #6c6c6d;
 }
+
+.btn-primary{
+    background-color: #b9ceeb;
+    border-radius: 0px;
+    margin: 2px;
+    border: None;
+    box-shadow: 0;
+}
+
+.btn:focus{
+    box-shadow: none !important;
+    background-color: black;
+}

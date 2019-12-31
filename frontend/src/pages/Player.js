@@ -13,7 +13,7 @@ const ItemTypes = {
 
 const Gate = ({ name, color }) => {
   const gateStyle = {
-    border: '1px dashed gray',
+    border: '1px gray',
     backgroundColor: color,
     padding: '0.5rem 1rem',
     marginRight: '1.25rem',
@@ -79,21 +79,21 @@ const GateNode = ({
   })
 
   let backgroundColor = 'inherit'
-  let border = '1px dashed rgba(0,0,0,0)' // have this here so px border is consistent
+  let border = '1px solid rgba(0,0,0,0)' // have this here so px border is consistent
   let text = ''
 
   if (gate !== null && curPlayerIndex === playerIndex) {
     text = gate.name
     backgroundColor = gate.color
-    border = '1px dashed black'
+    border = '1px solid black'
   }
 
   if (canDrop && isOver) {
     backgroundColor = 'grey'
-    border = '1px dashed black'
+    border = '1px solid black'
   } else if (canDrop) {
     backgroundColor = 'white'
-    border = '1px dashed grey'
+    border = '1px solid grey'
   }
 
   return (
@@ -118,17 +118,17 @@ const Player = (props) => {
   const { settings, playerData } = appState
 
   const gates = [
-    { name: 'X', color: 'red' },
-    { name: 'Y', color: 'white' },
-    { name: 'Z', color: 'green' },
-    { name: 'H', color: 'blue' },
-    { name: 'S', color: 'yellow' },
-    { name: 'T', color: 'red' },
-    { name: 'I', color: 'white' },
-    { name: 'Rz1', color: 'geren' },
-    { name: 'Rz2', color: 'blue' },
-    { name: 'Ry1', color: 'yellow' },
-    { name: 'W', color: 'red' },
+    { name: 'X', color: '#d3f6f3' },
+    { name: 'Y', color: '#f9fce1' },
+    { name: 'Z', color: '#fee9b2' },
+    { name: 'H', color: '#fbd1b7' },
+    { name: 'S', color: '#f1c6e7' },
+    { name: 'T', color: '#e0f5b9' },
+    { name: 'I', color: '#fddede' },
+    { name: 'Rz1', color: '#fffbbe' },
+    { name: 'Rz2', color: '#dfd3c3' },
+    { name: 'Ry1', color: '#deecff' },
+    { name: 'W', color: '#d4a5a5' },
   ]
 
   const gateNodeNo = 8
@@ -149,7 +149,8 @@ const Player = (props) => {
       </div>
     <div style={{ textAlign: 'center' }}>
       <h1>Player { curPlayerNo }</h1>
-
+      <br />
+      <h4 align='left'>Gates</h4>
       <br />
 
       <div style={{ width: '750px' }}>
