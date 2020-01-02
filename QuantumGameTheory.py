@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 
 from enum import Enum
+from flask import Flask
+from flask_restful import Api, Resource, reqparse
 from qiskit import Aer, execute, IBMQ, QuantumCircuit
 from qiskit.quantum_info import Operator
 from utils import predefined_games, Protocol, unitary_gates
@@ -222,7 +224,7 @@ class Game:
             curr_payoffs = self._get_payoffs(curr_choices)
             payoffs.append(curr_payoffs)
             winners.append(self._get_winners(curr_payoffs))
-        return pd.DataFrame({'outcome': outcome, 'payoffs': payoffs, 'winners': winners, 'num_times': num_times, 'backend': str(self._backend)})
+        return {'outcome': outcome, 'payoffs': payoffs, 'winners': winners, 'num_times': num_times, 'backend': str(self._backend)}
 
     def play_game(self, player_choices, n_times=1):
         """ Main game function that puts together all the components"""
@@ -230,4 +232,52 @@ class Game:
         self.quantum_circuit = self._generate_quantum_circuit(player_choices)
         final_choices = self._generate_final_choices(player_choices, n_times)
         self._final_results = self._generate_final_results(final_choices)
-        return final_choices, self._final_results
+        return self._final_results
+
+class QuantumApi(Resource):
+
+    @classmethod
+    def make_api(self, *args, **kwargs):
+        return self
+
+    @staticmethod
+    def build_parser():
+        parser = reqparse.RequestParser()
+        parser.add_argument('protocol', type=str, location='json', required=True)
+        parser.add_argument('game', type=str, location='json', required=True)
+        parser.add_argument('players', type=int, location='json', required=True)
+        parser.add_argument('payoff', type=list, location='json', required=True)
+        parser.add_argument('player1', type=list, location='json', required=True)
+        parser.add_argument('player2', type=list, location='json', required=True)
+        parser.add_argument('player3', type=list, location='json', required=True)
+        parser.add_argument('player4', type=list, location='json', required=True)
+
+        return parser
+    
+    def run_game(self, game, protocol, all_states):
+        game = Game(game, protocol)
+        results = game.play_game(all_states)
+        return results
+
+    def post(self):
+        args = self.build_parser().parse_args()
+
+        input_info = {}
+        for key, item in args.items():
+            input_info[key] = item
+        
+        all_states = [input_info['player1'], input_info['player2'], input_info['player3'], input_info['player4']]
+        results = self.run_game(input_info['game'], input_info['protocol'], all_states)
+
+        print(results)
+        return results
+
+
+
+app = Flask(__name__)
+api = Api(app)
+api.add_resource(QuantumApi, '/')
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
