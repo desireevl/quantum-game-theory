@@ -58,8 +58,10 @@ class QuantumApi(Resource):
         return results
 
 
+app = Flask(__name__)
+api = Api(app)
+api.add_resource(QuantumApi, '/')
+
+
 if __name__ == '__main__':
-    app = Flask(__name__)
-    api = Api(app)
-    api.add_resource(QuantumApi, '/')
     app.run(debug=True)
