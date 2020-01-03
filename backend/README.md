@@ -1,6 +1,6 @@
 # Quantum Game Theory
 
-### Running with Gunicorn (background workers)
+### Deploying with Gunicorn (background workers)
 ```
 pip install gunicorn
 
