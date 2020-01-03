@@ -1,4 +1,4 @@
-from QuantumGameTheory import Game
+from quantum_game_theory.logic import Game
 
 GAME = '4-minority'
 PROTOCOL = 'EWL'
