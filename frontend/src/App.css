@@ -44,5 +44,4 @@ li:before {
 
 .btn:focus{
     box-shadow: none !important;
-    background-color: black;
 }
