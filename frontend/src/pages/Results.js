@@ -5,7 +5,9 @@ import { Button } from 'reactstrap';
 import FontAwesome from 'react-fontawesome'
 import axios from 'axios'
 
-const Player3 = () => {
+const Results = ({ appState }) => {
+  console.log(appState)
+
   return (
     <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "100vh"}}>
     <div>
@@ -54,4 +56,4 @@ const Player3 = () => {
   );
 }
 
-export default Player3;
+export default Results;
