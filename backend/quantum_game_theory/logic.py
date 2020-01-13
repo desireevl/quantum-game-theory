@@ -1,17 +1,17 @@
 import numpy as np
 import pandas as pd
 
-from enum import Enum
 from flask import Flask
 from flask_restful import Api, Resource, reqparse
 from qiskit import Aer, execute, IBMQ, QuantumCircuit
 from qiskit.quantum_info import Operator
-from utils import predefined_games, Protocol, unitary_gates
+
+from quantum_game_theory.utils import predefined_games, Protocol, unitary_gates
 
 
 class PayoffTable:
     """
-    Stores the data of the game 
+    Stores the data of the game
     """
 
     def __init__(self, n_players=2, n_choices=2, payoff=None):
@@ -19,7 +19,7 @@ class PayoffTable:
         Args:
             n_players (int): number of players
             n_choices (int): number of choices
-            payoff (dict): custom payoff, otherwise uses default 
+            payoff (dict): custom payoff, otherwise uses default
         """
         self.n_players = n_players
         self.n_choices = n_choices
@@ -41,7 +41,7 @@ class PayoffTable:
 
 class QuantumGame:
     """
-    Handles the quantum side of the game including creating the custom gates 
+    Handles the quantum side of the game including creating the custom gates
     and defining the circuit.
     """
 
@@ -70,7 +70,6 @@ class QuantumGame:
         Jdg = Operator(1 / np.sqrt(2) * (I - 1j * tensorX))
 
         return J, Jdg
-
 
     def _make_circuit(self, player_gates):
         """ Generates the base circuit """
@@ -121,7 +120,7 @@ class Game:
         self._final_results = None
         self._backend = self._set_backend(group, backend)
 
-    def set_protocol(self, protocol, group='open',backend='qasm_simulator'):
+    def set_protocol(self, protocol, group='open', backend='qasm_simulator'):
         self._protocol = Protocol[protocol]
         self._backend = self._set_backend(group, backend)
 
@@ -193,10 +192,10 @@ class Game:
                               self._backend, shots=n_times)
             res_sim = job_sim.result()
             counts = res_sim.get_counts(self._quantum_game.circ)
-            #now we need to invert the order of the counts because our convention is [P1,P2]
-            counts_inverted={}
+            # now we need to invert the order of the counts because our convention is [P1,P2]
+            counts_inverted = {}
             for key, value in counts.items():
-                counts_inverted[key[::-1]]=value
+                counts_inverted[key[::-1]] = value
             return counts_inverted
 
     def _get_payoffs(self, choices):
@@ -233,51 +232,3 @@ class Game:
         final_choices = self._generate_final_choices(player_choices, n_times)
         self._final_results = self._generate_final_results(final_choices)
         return self._final_results
-
-class QuantumApi(Resource):
-
-    @classmethod
-    def make_api(self, *args, **kwargs):
-        return self
-
-    @staticmethod
-    def build_parser():
-        parser = reqparse.RequestParser()
-        parser.add_argument('protocol', type=str, location='json', required=True)
-        parser.add_argument('game', type=str, location='json', required=True)
-        parser.add_argument('players', type=int, location='json', required=True)
-        parser.add_argument('payoff', type=list, location='json', required=True)
-        parser.add_argument('player1', type=list, location='json', required=True)
-        parser.add_argument('player2', type=list, location='json', required=True)
-        parser.add_argument('player3', type=list, location='json', required=True)
-        parser.add_argument('player4', type=list, location='json', required=True)
-
-        return parser
-    
-    def run_game(self, game, protocol, all_states):
-        game = Game(game, protocol)
-        results = game.play_game(all_states)
-        return results
-
-    def post(self):
-        args = self.build_parser().parse_args()
-
-        input_info = {}
-        for key, item in args.items():
-            input_info[key] = item
-        
-        all_states = [input_info['player1'], input_info['player2'], input_info['player3'], input_info['player4']]
-        results = self.run_game(input_info['game'], input_info['protocol'], all_states)
-
-        print(results)
-        return results
-
-
-
-app = Flask(__name__)
-api = Api(app)
-api.add_resource(QuantumApi, '/')
-
-
-if __name__ == '__main__':
-    app.run(debug=True)

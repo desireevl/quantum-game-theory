@@ -43,6 +43,7 @@ const Gate = ({ name, color }) => {
 
 const GateNode = ({ 
   curPlayerIndex,
+  playerGateData,
   playerIndex,
   gateIndex,
   setCurGateNo,
@@ -68,7 +69,13 @@ const GateNode = ({
     drop: (x) => {
       if (curPlayerIndex === playerIndex && gateIndex <= curGateNo) {
         setGate(x)
-        setCurGateNo(gateIndex + 1)
+
+        if (gateIndex === curGateNo) {
+          setCurGateNo(curGateNo + 1)
+        } else {
+          setCurGateNo(curGateNo)
+        }
+
         setPlayerGateData(x.name)
       }
     },
@@ -82,7 +89,9 @@ const GateNode = ({
   let border = '1px solid rgba(0,0,0,0)' // have this here so px border is consistent
   let text = ''
 
-  if (gate !== null && curPlayerIndex === playerIndex) {
+  const cp = playerGateData[curPlayerIndex] || {}
+  const cpg = cp[gateIndex]
+  if (gate !== null && curPlayerIndex === playerIndex && cpg !== undefined && cpg !== null) {
     text = gate.name
     backgroundColor = gate.color
     border = '1px solid black'
@@ -133,8 +142,6 @@ const Player = (props) => {
 
   const gateNodeNo = 8
 
-  console.log(playerGateData)
-
   return (
     <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "100vh"}}>
       <div style={{position: "fixed", top: 40, left: "5%", width: "100%"}}>
@@ -182,6 +189,7 @@ const Player = (props) => {
                       .map((_, gateIdx) => {
                         return <GateNode
                           key={gateIdx}
+                          playerGateData={playerGateData}
                           curPlayerIndex={curPlayerNo - 1}
                           playerIndex={playerIdx}
                           gateIndex={gateIdx}
@@ -189,6 +197,11 @@ const Player = (props) => {
                           setCurGateNo={setCurGateNo}
                           setPlayerGateData={(g) => {
                             let newPlayerGateData = playerGateData
+
+                            if (newPlayerGateData[curPlayerNo - 1] === undefined) {
+                              newPlayerGateData[curPlayerNo - 1] = {}
+                            }
+
                             newPlayerGateData[curPlayerNo - 1][curGateNo] = g
 
                             setPlayerGateData(newPlayerGateData)
@@ -206,14 +219,40 @@ const Player = (props) => {
       <br />
       <br />
       <br />
-      <br />
 
+      <div style={{textAlign: 'center'}}>
+        <Button
+          color="link"
+          style={{ fontSize: '12px', color: "#212529"}}
+          onClick={() => {
+            let newPlayerData = Object.assign({}, playerData)
+            newPlayerData[curPlayerNo - 1] = {}
+
+            setPlayerGateData(newPlayerData)
+            setCurGateNo(0)
+          }}
+        >
+          Clear All
+        </Button>
+      </div>
+      <br />
       <div style={{textAlign: "center"}}>
         {
           curPlayerNo === settings.playersSelected ?
           (
             <Link to="/results">
-              <Button color="link" style={{color: "#212529"}}>
+              <Button
+                color="link"
+                style={{color: "#212529"}}
+                onClick={() => {
+                  let newPlayerData = playerData
+                  newPlayerData[curPlayerNo - 1] = playerGateData[curPlayerNo - 1]
+
+                  setPlayerData(newPlayerData)
+                  setCurPlayerNo(curPlayerNo + 1)
+                  setCurGateNo(0)
+                }}
+              >
                 Next
               </Button>
             </Link>

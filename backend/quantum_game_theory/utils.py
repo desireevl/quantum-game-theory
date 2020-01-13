@@ -1,6 +1,8 @@
-from qiskit.extensions import XGate, YGate, SGate, ZGate, HGate, TGate, RZGate, RYGate, IdGate
-from enum import Enum
 import numpy as np
+
+from enum import Enum
+
+from qiskit.extensions import XGate, YGate, SGate, ZGate, HGate, TGate, RZGate, RYGate, IdGate
 from qiskit.circuit import Gate
 from qiskit.circuit import QuantumRegister
 
@@ -12,11 +14,11 @@ predefined_games = {"chicken": {'00': (0, 0),
                                  '01': (-3, 0),
                                  '10': (0, -3),
                                  '11': (-2, -2)},
-                    "BoS": {'00': (3, 2), 
-                            '01': (0, 0), 
-                            '10': (0, 0), 
+                    "BoS": {'00': (3, 2),
+                            '01': (0, 0),
+                            '10': (0, 0),
                             '11': (2, 3)},
-                    "4-minority": {'0000': (0, 0, 0, 0), 
+                    "4-minority": {'0000': (0, 0, 0, 0),
                                    '0001': (0, 0, 0, 1),
                                    '0010': (0, 0, 1, 0),
                                    '0011': (0, 0, 0, 0),
@@ -32,6 +34,7 @@ predefined_games = {"chicken": {'00': (0, 0),
                                    '1101': (0, 0, 1, 0),
                                    '1110': (0, 0, 0, 1),
                                    '1111': (0, 0, 0, 0)}}
+
 
 class WGate(Gate):
     """ Creates the custom W gate """
@@ -73,7 +76,7 @@ unitary_gates = {"X": XGate(),
 
 class Protocol(Enum):
     """
-    The various different quantum/classical game theory game protocols 
+    The various different quantum/classical game theory game protocols
     """
     EWL = "EWL quantization protocol"
     MW = "MW quantization protocol"

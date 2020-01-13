@@ -65,7 +65,9 @@ const App = () => {
                   />
                 </Route>
                 <Route path="/results">
-                  <ResultsPage />
+                  <ResultsPage
+                    appState={appState}
+                  />
                 </Route>
               </Switch>
             </Router>

@@ -1,0 +1,7 @@
+flask==1.1.1
+flask-cors==3.0.8
+flask-restful==0.3.7
+matplotlib==3.1.1
+numpy==1.17.1
+qiskit_aer==0.3.0
+qiskit==0.13.0
