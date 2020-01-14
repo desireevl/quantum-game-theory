@@ -1,11 +1,43 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Link } from 'react-router-dom'
 import { Button } from 'reactstrap';
 import FontAwesome from 'react-fontawesome'
 import axios from 'axios'
 
-const Player3 = () => {
+const Results = (props) => {
+  const { appState } = props
+  const { protocolSelected, gameSelected, playersSelected } = appState.settings
+  const [data, setData] = useState(null)
+
+  useEffect(() => {
+    const f = async () => {
+      try {
+        const { data } = await axios.post(
+          'https://api-quantum-game.desireevl.com/',
+          {
+            "protocol": protocolSelected,
+            "game": gameSelected,
+            "payoff": null,
+            "players": playersSelected,
+            "player1": ["X", "Y"],
+            "player2": ["X", "S"],
+            "player3": ["X", "S"],
+            "player4": ["X", "S"]
+          }
+        )
+        setData(data)
+        console.log(data)
+      } catch (e) {
+        console.log(`${e}`)
+      }
+    }
+
+    if (data === null) {
+      f()
+    }
+  })
+
   return (
     <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "100vh"}}>
     <div>
@@ -21,29 +53,6 @@ const Player3 = () => {
             color="link"
             style={{color: "#212529"}}
             onClick={() => {
-              const f = async () => {
-                try {
-                  const { data } = await axios.post(
-                    'https://api-quantum-game.desireevl.com/',
-                    {
-                      "protocol": "EWL",
-                      "game": "4-minority",
-                      "payoff": null,
-                      "players": 4,
-                      "player1": ["X", "Y"],
-                      "player2": ["X", "S"],
-                      "player3": ["X", "S"],
-                      "player4": ["X", "S"]
-                    }
-                  )
-
-                  console.log(data)
-                } catch (e) {
-                  console.log(`${e}`)
-                }
-              }
-              
-              f()
             }}
           >
             Play Again
@@ -54,4 +63,4 @@ const Player3 = () => {
   );
 }
 
-export default Player3;
+export default Results;
