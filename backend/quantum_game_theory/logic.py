@@ -179,7 +179,7 @@ class Game:
         self._quantum_game = QuantumGame(player_gate_objects, self._protocol)
         circ_img = self._quantum_game.circ.draw(output='mpl')
         buffered = BytesIO()
-        circ_img.savefig(buffered, format="JPEG")
+        circ_img.savefig(buffered, format="png")
         circ_str = base64.b64encode(buffered.getvalue())
         circ_str = circ_str.decode("utf-8") 
         return self._quantum_game.circ, circ_str
