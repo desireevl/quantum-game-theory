@@ -1,3 +1,4 @@
+import base64
 import numpy as np
 import pandas as pd
 
@@ -5,6 +6,7 @@ from flask import Flask
 from flask_restful import Api, Resource, reqparse
 from qiskit import Aer, execute, IBMQ, QuantumCircuit
 from qiskit.quantum_info import Operator
+from io import BytesIO
 
 from quantum_game_theory.utils import predefined_games, Protocol, unitary_gates
 
@@ -175,8 +177,12 @@ class Game:
             for j in player_gates[i]:
                 player_gate_objects[i].append(unitary_gates[j])
         self._quantum_game = QuantumGame(player_gate_objects, self._protocol)
-        self._quantum_game.circ.draw()
-        return self._quantum_game.circ
+        circ_img = self._quantum_game.circ.draw(output='mpl')
+        buffered = BytesIO()
+        circ_img.savefig(buffered, format="JPEG")
+        circ_str = base64.b64encode(buffered.getvalue())
+        circ_str = circ_str.decode("utf-8") 
+        return self._quantum_game.circ, circ_str
 
     def _generate_final_choices(self, player_choices, n_times):
         """ Executes the either the classical game or the quantum circuit on the simulator """
@@ -211,7 +217,7 @@ class Game:
             winners += 'P' + str(i+1) + ' '
         return winners
 
-    def _generate_final_results(self, results):
+    def _generate_final_results(self, results, circ_str):
         """ Returns DataFrame of outcome and number of times, payoff, winner and backend used """
         outcome = []
         num_times = []
@@ -223,12 +229,12 @@ class Game:
             curr_payoffs = self._get_payoffs(curr_choices)
             payoffs.append(curr_payoffs)
             winners.append(self._get_winners(curr_payoffs))
-        return {'outcome': outcome, 'payoffs': payoffs, 'winners': winners, 'num_times': num_times, 'backend': str(self._backend)}
+        return {'outcome': outcome, 'payoffs': payoffs, 'winners': winners, 'num_times': num_times, 'backend': str(self._backend), 'full_circ_str': circ_str}
 
     def play_game(self, player_choices, n_times=1):
         """ Main game function that puts together all the components"""
         player_choices = self.format_choices(player_choices)
-        self.quantum_circuit = self._generate_quantum_circuit(player_choices)
+        self.quantum_circuit, circ_str = self._generate_quantum_circuit(player_choices)
         final_choices = self._generate_final_choices(player_choices, n_times)
-        self._final_results = self._generate_final_results(final_choices)
+        self._final_results = self._generate_final_results(final_choices, circ_str)
         return self._final_results
