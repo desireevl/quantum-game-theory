@@ -98,7 +98,7 @@ class QuantumGame:
 
     def draw_circuit(self):
         """ Saves the circuit image to specified filepath """
-        self.circ.draw(output='mpl')
+        return self.circ.draw(output='mpl')
 
 
 class Game:
