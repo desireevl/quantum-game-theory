@@ -6,6 +6,7 @@ from flask import Flask
 from flask_restful import Api, Resource, reqparse
 from qiskit import Aer, execute, IBMQ, QuantumCircuit
 from qiskit.quantum_info import Operator
+from qiskit.visualization import plot_histogram
 from io import BytesIO
 
 from quantum_game_theory.utils import predefined_games, Protocol, unitary_gates
@@ -191,7 +192,13 @@ class Game:
             for player_choice in player_choices:
                 for choice in player_choice:
                     player_choices_str += str(choice)
-            return {player_choices_str: n_times}
+            final_choices = {player_choices_str: n_times}
+            img = plot_histogram(final_choices)
+            buf = BytesIO()
+            img.savefig(buf, format="png")
+            graph_str = base64.b64encode(buf.getvalue())
+            graph_str = graph_str.decode("utf-8") 
+            return final_choices, graph_str
         else:
             # runs the circuit on an IBMQ device or simulator
             job_sim = execute(self._quantum_game.circ,
@@ -202,7 +209,12 @@ class Game:
             counts_inverted = {}
             for key, value in counts.items():
                 counts_inverted[key[::-1]] = value
-            return counts_inverted
+            img = plot_histogram(counts_inverted)
+            buf = BytesIO()
+            img.savefig(buf, format="png")
+            graph_str = base64.b64encode(buf.getvalue())
+            graph_str = graph_str.decode("utf-8") 
+            return counts_inverted, graph_str
 
     def _get_payoffs(self, choices):
         return self._payoff_table.get_payoffs(choices)
@@ -214,10 +226,10 @@ class Game:
             return 'no winners'
         winners = ''
         for i in argmaxes:
-            winners += 'P' + str(i+1) + ' '
+            winners += 'P' + str(i+1)
         return winners
 
-    def _generate_final_results(self, results, circ_str):
+    def _generate_final_results(self, results, circ_str, graph_str):
         """ Returns DataFrame of outcome and number of times, payoff, winner and backend used """
         outcome = []
         num_times = []
@@ -229,12 +241,12 @@ class Game:
             curr_payoffs = self._get_payoffs(curr_choices)
             payoffs.append(curr_payoffs)
             winners.append(self._get_winners(curr_payoffs))
-        return {'outcome': outcome, 'payoffs': payoffs, 'winners': winners, 'num_times': num_times, 'backend': str(self._backend), 'full_circ_str': circ_str}
+        return {'outcome': outcome, 'payoffs': payoffs, 'winners': winners, 'num_times': num_times, 'backend': str(self._backend), 'full_circ_str': circ_str, 'graph_str': graph_str}
 
     def play_game(self, player_choices, n_times=1):
         """ Main game function that puts together all the components"""
         player_choices = self.format_choices(player_choices)
         self.quantum_circuit, circ_str = self._generate_quantum_circuit(player_choices)
-        final_choices = self._generate_final_choices(player_choices, n_times)
-        self._final_results = self._generate_final_results(final_choices, circ_str)
-        return self._final_results
+        final_choices, graph_str = self._generate_final_choices(player_choices, n_times)
+        self._final_results = self._generate_final_results(final_choices, circ_str, graph_str)
+        return self._final_results, final_choices
