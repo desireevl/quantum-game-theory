@@ -1,9 +1,10 @@
 from quantum_game_theory.logic import Game
 
-GAME = '4-minority'
+GAME = 'minority'
+NUM_PLAYERS = 4
 PROTOCOL = 'EWL'
 
-game = Game(GAME, PROTOCOL)
+game = Game(GAME, PROTOCOL, NUM_PLAYERS)
 
 print(f'Running game: {GAME}')
 print('-'*25)

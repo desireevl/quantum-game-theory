@@ -9,7 +9,7 @@ from qiskit.quantum_info import Operator
 from qiskit.visualization import plot_histogram
 from io import BytesIO
 
-from quantum_game_theory.utils import predefined_games, Protocol, unitary_gates
+from quantum_game_theory.utils import gen_predefined_payoffs, Protocol, unitary_gates
 
 
 class PayoffTable:
@@ -106,7 +106,7 @@ class Game:
     Handles all the game logic and execution of the quantum game and final output of the results.
     """
 
-    def __init__(self, game_name, protocol, payoff_table=None, group='open', backend='qasm_simulator'):
+    def __init__(self, game_name, protocol, num_players=None, payoff_table=None, group='open', backend='qasm_simulator'):
         """
         Args:
             game_name (str): name of game to be played
@@ -117,7 +117,7 @@ class Game:
         """
         self._game_name = game_name
         self._n_players, self._n_choices, self._payoff_table = self._generate_payoff_table(
-            game_name, payoff_table)
+            game_name, payoff_table, num_players)
         self._protocol = Protocol[protocol]
         self._quantum_game = None
         self._final_results = None
@@ -137,10 +137,10 @@ class Game:
             provider = IBMQ.get_provider(group=group)
             return provider.get_backend(backend)
 
-    def _generate_payoff_table(self, game_name, payoff_table):
+    def _generate_payoff_table(self, game_name, payoff_table, num_players):
         """ Creates the payoff table object used to store choices """
         if payoff_table == None:
-            payoff_table = predefined_games[game_name]
+            payoff_table = gen_predefined_payoffs(game_name, num_players)
 
         n_players = len(list(payoff_table.keys())[0])
         n_choices = int(len(payoff_table)**(1/n_players))
