@@ -13,6 +13,7 @@ const Settings = (props) => {
     setPayoffSelected
   } = props
   const { settings } = appState
+  const { gameSelected } = settings
 
   return (
     <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "100vh"}}>
@@ -33,18 +34,28 @@ const Settings = (props) => {
 
         <h4>Game</h4>
         <ButtonToolbar>
-          <Button color="primary" onClick={() => setGameSelected('Prisoners')} active={settings.gameSelected === 'Prisoners'}>Prisoners</Button>
-          <Button color="primary" onClick={() => setGameSelected('Minority')} active={settings.gameSelected === '4-minority'}>Minority</Button>
-          <Button color="primary" onClick={() => setGameSelected('BoS')} active={settings.gameSelected === 'Bos'}>Bos</Button>
+          <Button color="primary" onClick={() => setGameSelected('prisoner')} active={settings.gameSelected === 'prisoner'}>Prisoners</Button>
+          <Button color="primary" onClick={() => setGameSelected('minority')} active={settings.gameSelected === 'minority'}>Minority</Button>
+          <Button color="primary" onClick={() => {
+            setGameSelected('chicken')
+            setPlayersSelected(2)
+          }} active={settings.gameSelected === 'chicken'}>Chicken</Button>
+          <Button color="primary" onClick={() => {
+            setGameSelected('BoS')
+            setPlayersSelected(2)
+          }} active={settings.gameSelected === 'BoS'}>Bos</Button>
         </ButtonToolbar>
         <br />
 
         <h4>Players</h4>
         <ButtonToolbar>
-          <Button color="primary" onClick={() => setPlayersSelected(1)} active={settings.playersSelected === 1}>1</Button>
           <Button color="primary" onClick={() => setPlayersSelected(2)} active={settings.playersSelected === 2}>2</Button>
-          <Button color="primary" onClick={() => setPlayersSelected(3)} active={settings.playersSelected === 3}>3</Button>
-          <Button color="primary" onClick={() => setPlayersSelected(4)} active={settings.playersSelected === 4}>4</Button>
+          <Button 
+            disabled={gameSelected === "chicken" || gameSelected === "BoS"}
+            color="primary" onClick={() => setPlayersSelected(3)} active={settings.playersSelected === 3}>3</Button>
+          <Button
+            disabled={gameSelected === "chicken" || gameSelected === "BoS"}
+            color="primary" onClick={() => setPlayersSelected(4)} active={settings.playersSelected === 4}>4</Button>
         </ButtonToolbar>
         <br />
 

@@ -42,6 +42,10 @@ li:before {
     box-shadow: 0;
 }
 
+.btn-primary.disabled {
+    background-color: black;
+}
+
 .btn:focus{
     box-shadow: none !important;
 }

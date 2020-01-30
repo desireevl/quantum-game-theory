@@ -1,14 +1,28 @@
 import React, { useState, useEffect } from 'react';
 
 import { Link } from 'react-router-dom'
-import { Button } from 'reactstrap';
+import { Button, Spinner } from 'reactstrap';
 import FontAwesome from 'react-fontawesome'
 import axios from 'axios'
 
 const Results = (props) => {
   const { appState } = props
+  const { playerData } = appState
   const { protocolSelected, gameSelected, playersSelected } = appState.settings
   const [data, setData] = useState(null)
+
+  const toArray = (o) => {
+    let arr = []
+
+    let i = 0
+    while (i in o) {
+      arr.push(o[i])
+
+      i++
+    }
+
+    return arr
+  }
 
   useEffect(() => {
     const f = async () => {
@@ -21,10 +35,10 @@ const Results = (props) => {
             "game": gameSelected,
             "payoff": null,
             "players": playersSelected,
-            "player1": ["X", "Y"],
-            "player2": ["X", "Y"],
-            "player3": ["X", "S"],
-            "player4": ["X", "S"]
+            "player1": toArray(playerData[0]),
+            "player2": toArray(playerData[1]),
+            "player3": toArray(playerData[2]),
+            "player4": toArray(playerData[3]),
           }
         )
         setData(data)
@@ -46,7 +60,6 @@ const Results = (props) => {
   const circuitImg = data != null ? data["full_circ_str"]: null
   const graphImg = data != null ? data["graph_str"]: null
 
-
   console.log(appState)
 
   return (
@@ -54,15 +67,34 @@ const Results = (props) => {
     <div style={{ textAlign: "center"}}>
       <h1 style={{ textAlign: "center"}}>Results</h1>
       <br />
-      <h4>Congratulations to {winnerNum} {playerDict[winner]}!</h4>
 
-      {/* {data["winners"].length != 0 ? "No winners": "Congrats to winner"} */}
+      {
+        winnerNum > 0 ?
+        <h4>Congratulations to {winnerNum} {playerDict[winner]}!</h4> :
+        <h4>No one won :(</h4>
+      }
 
       <h4>Probability graph</h4>
-      <img src={`data:image/png;base64,${encodeURIComponent(graphImg)}`} width={"60%"}/>
+      {
+        graphImg === null ?
+        (
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        ) :
+        <img src={`data:image/png;base64,${encodeURIComponent(graphImg)}`} width={"60%"}/>
+      }
 
       <h4>Full circuit for {numPlayers} players</h4>
-      <img src={`data:image/jpeg;base64,${encodeURIComponent(circuitImg)}`} width={"100%"}/>
+      {
+        circuitImg === null ?
+        (
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        ) :
+        <img src={`data:image/jpeg;base64,${encodeURIComponent(circuitImg)}`} width={"100%"}/>
+      }
 
       <br />
       <br />

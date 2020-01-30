@@ -106,7 +106,7 @@ class Game:
     Handles all the game logic and execution of the quantum game and final output of the results.
     """
 
-    def __init__(self, game_name, protocol, num_players=None, payoff_table=None, group='open', backend='qasm_simulator'):
+    def __init__(self, game_name, protocol, num_players, payoff_table=None, group='open', backend='qasm_simulator'):
         """
         Args:
             game_name (str): name of game to be played
@@ -140,7 +140,7 @@ class Game:
     def _generate_payoff_table(self, game_name, payoff_table, num_players):
         """ Creates the payoff table object used to store choices """
         if payoff_table == None:
-            payoff_table = gen_predefined_payoffs(game_name, num_players)
+            payoff_table = gen_predefined_payoffs(game_name, int(num_players))
 
         n_players = len(list(payoff_table.keys())[0])
         n_choices = int(len(payoff_table)**(1/n_players))

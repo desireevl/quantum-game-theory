@@ -30,29 +30,26 @@ class QuantumApi(Resource):
                             location='json', required=True)
         return parser
 
-    def run_game(self, game, protocol, all_states):
-        game = Game(game, protocol)
+    def run_game(self, game, protocol, all_states, player_num):
+        game = Game(game, protocol, player_num)
         results = game.play_game(all_states)
         return results
 
     def post(self):
         args = self.build_parser().parse_args()
 
-        input_info = {}
-        for key, item in args.items():
-            input_info[key] = item
-
         all_states = [
-            input_info['player1'],
-            input_info['player2'],
-            input_info['player3'],
-            input_info['player4']
+            args['player1'],
+            args['player2'],
+            args['player3'],
+            args['player4']
         ]
 
         results = self.run_game(
-            input_info['game'],
-            input_info['protocol'],
-            all_states
+            args['game'],
+            args['protocol'],
+            all_states,
+            args['players']
         )
 
         # print(results)

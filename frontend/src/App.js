@@ -21,7 +21,7 @@ import './App.css';
 
 const App = () => {
   const [protocolSelected, setProtocolSelected] = useState('EWL');
-  const [gameSelected, setGameSelected] = useState('4-minority');
+  const [gameSelected, setGameSelected] = useState('minority');
   const [playersSelected, setPlayersSelected] = useState(4);
   const [payoffSelected, setPayoffSelected] = useState('Defined');
 
@@ -67,7 +67,7 @@ const App = () => {
                 <Route path="/results">
                   <ResultsPage
                     appState={appState}
-                  />
+                   />
                 </Route>
               </Switch>
             </Router>
