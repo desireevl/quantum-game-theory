@@ -35,10 +35,10 @@ const Results = (props) => {
             "game": gameSelected,
             "payoff": null,
             "players": playersSelected,
-            "player1": toArray(playerData[0]),
-            "player2": toArray(playerData[1]),
-            "player3": toArray(playerData[2]),
-            "player4": toArray(playerData[3]),
+            "player1": toArray(playerData[0] || {}),
+            "player2": toArray(playerData[1] || {}),
+            "player3": toArray(playerData[2] || {}),
+            "player4": toArray(playerData[3] || {}),
           }
         )
         setData(data)
@@ -67,14 +67,6 @@ const Results = (props) => {
     <div style={{ textAlign: "center"}}>
       <h1 style={{ textAlign: "center"}}>Results</h1>
       <br />
-
-      {
-        winnerNum > 0 ?
-        <h4>Congratulations to {winnerNum} {playerDict[winner]}!</h4> :
-        <h4>No one won :(</h4>
-      }
-
-      <h4>Probability graph</h4>
       {
         graphImg === null ?
         (
@@ -82,18 +74,19 @@ const Results = (props) => {
             <span className="sr-only">Loading...</span>
           </Spinner>
         ) :
-        <img src={`data:image/png;base64,${encodeURIComponent(graphImg)}`} width={"60%"}/>
-      }
-
-      <h4>Full circuit for {numPlayers} players</h4>
-      {
-        circuitImg === null ?
         (
-          <Spinner animation="border" role="status">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
-        ) :
-        <img src={`data:image/jpeg;base64,${encodeURIComponent(circuitImg)}`} width={"100%"}/>
+          <>
+            {
+              winnerNum > 0 ?
+              <h2>Congratulations to {winnerNum} {playerDict[winner]}!</h2> :
+              <h2>No winners :(</h2>
+           }
+           <hr />      
+           <img src={`data:image/jpeg;base64,${encodeURIComponent(circuitImg)}`} width={"100%"}/>
+           <img src={`data:image/png;base64,${encodeURIComponent(graphImg)}`} width={"60%"}/>
+          </>
+        )
+        
       }
 
       <br />

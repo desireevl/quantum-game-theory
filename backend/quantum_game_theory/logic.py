@@ -180,6 +180,7 @@ class Game:
         self._quantum_game = QuantumGame(player_gate_objects, self._protocol)
         circ_img = self._quantum_game.circ.draw(output='mpl')
         buffered = BytesIO()
+        circ_img.suptitle("Full Circuit for Players", fontsize=25)
         circ_img.savefig(buffered, format="png")
         circ_str = base64.b64encode(buffered.getvalue())
         circ_str = circ_str.decode("utf-8") 
@@ -193,7 +194,13 @@ class Game:
                 for choice in player_choice:
                     player_choices_str += str(choice)
             final_choices = {player_choices_str: n_times}
-            img = plot_histogram(final_choices)
+
+            img = plot_histogram(final_choices, title="Probability Graph")
+            img.suptitle("Probability Graph", fontsize=25)
+            axes = img.get_axes()
+            for t in axes[0].get_xticklabels():
+                t.set_rotation(0)
+
             buf = BytesIO()
             img.savefig(buf, format="png")
             graph_str = base64.b64encode(buf.getvalue())
@@ -209,7 +216,13 @@ class Game:
             counts_inverted = {}
             for key, value in counts.items():
                 counts_inverted[key[::-1]] = value
+                
             img = plot_histogram(counts_inverted)
+            img.suptitle("Probability Graph", fontsize=25)
+            axes = img.get_axes()
+            for t in axes[0].get_xticklabels():
+                t.set_rotation(0)
+            
             buf = BytesIO()
             img.savefig(buf, format="png")
             graph_str = base64.b64encode(buf.getvalue())
