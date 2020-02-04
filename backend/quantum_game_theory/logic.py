@@ -1,5 +1,6 @@
 import base64
 import numpy as np
+import operator
 import pandas as pd
 
 from flask import Flask
@@ -9,7 +10,7 @@ from qiskit.quantum_info import Operator
 from qiskit.visualization import plot_histogram
 from io import BytesIO
 
-from quantum_game_theory.utils import gen_predefined_payoffs, Protocol, unitary_gates
+from quantum_game_theory.utils import gen_predefined_payoffs, predefined_games, Protocol, unitary_gates
 
 
 class PayoffTable:
@@ -117,13 +118,13 @@ class Game:
         """
         self._game_name = game_name
         self._n_players, self._n_choices, self._payoff_table = self._generate_payoff_table(
-            game_name, payoff_table, num_players)
+            game_name, num_players)
         self._protocol = Protocol[protocol]
         self._quantum_game = None
         self._final_results = None
         self._backend = self._set_backend(group, backend)
 
-    def set_protocol(self, protocol, group='open', backend='qasm_simulator'):
+    def set_protocol(self, protocol, group='open',backend='qasm_simulator'):
         self._protocol = Protocol[protocol]
         self._backend = self._set_backend(group, backend)
 
@@ -137,10 +138,9 @@ class Game:
             provider = IBMQ.get_provider(group=group)
             return provider.get_backend(backend)
 
-    def _generate_payoff_table(self, game_name, payoff_table, num_players):
+    def _generate_payoff_table(self, game_name, num_players):
         """ Creates the payoff table object used to store choices """
-        if payoff_table == None:
-            payoff_table = gen_predefined_payoffs(game_name, int(num_players))
+        payoff_table = gen_predefined_payoffs(game_name, num_players)
 
         n_players = len(list(payoff_table.keys())[0])
         n_choices = int(len(payoff_table)**(1/n_players))
@@ -178,13 +178,8 @@ class Game:
             for j in player_gates[i]:
                 player_gate_objects[i].append(unitary_gates[j])
         self._quantum_game = QuantumGame(player_gate_objects, self._protocol)
-        circ_img = self._quantum_game.circ.draw(output='mpl')
-        buffered = BytesIO()
-        circ_img.suptitle("Full Circuit for Players", fontsize=25)
-        circ_img.savefig(buffered, format="png")
-        circ_str = base64.b64encode(buffered.getvalue())
-        circ_str = circ_str.decode("utf-8") 
-        return self._quantum_game.circ, circ_str
+        self._quantum_game.circ.draw()
+        return self._quantum_game.circ
 
     def _generate_final_choices(self, player_choices, n_times):
         """ Executes the either the classical game or the quantum circuit on the simulator """
@@ -193,73 +188,77 @@ class Game:
             for player_choice in player_choices:
                 for choice in player_choice:
                     player_choices_str += str(choice)
-            final_choices = {player_choices_str: n_times}
-
-            img = plot_histogram(final_choices, title="Probability Graph")
-            img.suptitle("Probability Graph", fontsize=25)
-            axes = img.get_axes()
-            for t in axes[0].get_xticklabels():
-                t.set_rotation(0)
-
-            buf = BytesIO()
-            img.savefig(buf, format="png")
-            graph_str = base64.b64encode(buf.getvalue())
-            graph_str = graph_str.decode("utf-8") 
-            return final_choices, graph_str
+            return {player_choices_str: n_times}
         else:
             # runs the circuit on an IBMQ device or simulator
             job_sim = execute(self._quantum_game.circ,
                               self._backend, shots=n_times)
             res_sim = job_sim.result()
             counts = res_sim.get_counts(self._quantum_game.circ)
-            # now we need to invert the order of the counts because our convention is [P1,P2]
-            counts_inverted = {}
+            #now we need to invert the order of the counts because our convention is [P1,P2]
+            counts_inverted={}
             for key, value in counts.items():
-                counts_inverted[key[::-1]] = value
-                
-            img = plot_histogram(counts_inverted)
-            img.suptitle("Probability Graph", fontsize=25)
-            axes = img.get_axes()
-            for t in axes[0].get_xticklabels():
-                t.set_rotation(0)
-            
-            buf = BytesIO()
-            img.savefig(buf, format="png")
-            graph_str = base64.b64encode(buf.getvalue())
-            graph_str = graph_str.decode("utf-8") 
-            return counts_inverted, graph_str
+                counts_inverted[key[::-1]]=value
+            return counts_inverted
 
     def _get_payoffs(self, choices):
         return self._payoff_table.get_payoffs(choices)
 
-    def _get_winners(self, payoffs):
+    def _get_winners(self, payoff):
         """ Finds the winner from the payoff """
-        argmaxes = np.argwhere(payoffs == np.max(payoffs)).flatten()
-        if len(argmaxes) == len(payoffs):  # if all 0, then all are max, returns n_player arr
+        argmaxes = np.argwhere(payoff == np.max(payoff)).flatten()
+        if len(argmaxes) == 1:
+            return 'P' + str(argmaxes[0] + 1)
+        else:
             return 'no winners'
-        winners = ''
-        for i in argmaxes:
-            winners += 'P' + str(i+1)
-        return winners
 
-    def _generate_final_results(self, results, circ_str, graph_str):
+
+    def _generate_final_results(self, results):
         """ Returns DataFrame of outcome and number of times, payoff, winner and backend used """
         outcome = []
         num_times = []
         payoffs = []
         winners = []
+
+        highest_prob = max(results.items(), key=operator.itemgetter(1))[0]
+        curr_payoffs = self._get_payoffs(highest_prob)
+        payoffs.append(curr_payoffs)
+        winners.append(self._get_winners(curr_payoffs))
+
         for curr_choices, curr_num_times in results.items():
             outcome.append(curr_choices)
             num_times.append(curr_num_times)
-            curr_payoffs = self._get_payoffs(curr_choices)
-            payoffs.append(curr_payoffs)
-            winners.append(self._get_winners(curr_payoffs))
-        return {'outcome': outcome, 'payoffs': payoffs, 'winners': winners, 'num_times': num_times, 'backend': str(self._backend), 'full_circ_str': circ_str, 'graph_str': graph_str}
 
-    def play_game(self, player_choices, n_times=1):
+        return {'outcome': outcome, 'payoffs': payoffs, 'winners': winners, 'num_times': num_times, 'backend': str(self._backend)}
+
+    def base64_figure(self, fig):
+        buf = BytesIO()
+        fig.savefig(buf, format="png")
+        fig_str = base64.b64encode(buf.getvalue())
+        fig_str = fig_str.decode("utf-8")
+
+        return fig_str
+
+    def play_game(self, player_choices, n_times=100):
         """ Main game function that puts together all the components"""
         player_choices = self.format_choices(player_choices)
-        self.quantum_circuit, circ_str = self._generate_quantum_circuit(player_choices)
-        final_choices, graph_str = self._generate_final_choices(player_choices, n_times)
-        self._final_results = self._generate_final_results(final_choices, circ_str, graph_str)
-        return self._final_results, final_choices
+        self.quantum_circuit = self._generate_quantum_circuit(player_choices)
+        final_choices = self._generate_final_choices(player_choices, n_times)
+        print('player', player_choices)
+        print('final', final_choices)
+        self._final_results = self._generate_final_results(final_choices)
+
+        # Generate graph(s)
+        circuit_fig = self.quantum_circuit.draw(output='mpl')
+        circuit_fig.suptitle("Full Circuit for Players", fontsize=25)
+
+        probability_graph_img = plot_histogram(final_choices)
+        probability_graph_img.suptitle("Probability Graph", fontsize=25)
+        axes = probability_graph_img.get_axes()
+        for t in axes[0].get_xticklabels():
+            t.set_rotation(0)
+
+        self._final_results['full_circ_str'] = self.base64_figure(circuit_fig)
+        self._final_results['graph_str'] = self.base64_figure(probability_graph_img)
+
+        return final_choices, self._final_results

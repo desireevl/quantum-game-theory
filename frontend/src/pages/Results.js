@@ -39,7 +39,9 @@ const Results = (props) => {
             "player2": toArray(playerData[1] || {}),
             "player3": toArray(playerData[2] || {}),
             "player4": toArray(playerData[3] || {}),
-          }
+          }// 
+// 
+// 
         )
         setData(data)
         console.log(data)
@@ -55,7 +57,6 @@ const Results = (props) => {
 
   const numPlayers = data != null ? data["players"] : null
   const winner = data != null ? data["winners"]: []
-  const winnerNum = data != null ? (data["winners"].length > 1 ? "winners": "winner"): null
   const playerDict = {"P1": "Player 1", "P2": "Player 2", "P3": "Player 3", "P4": "Player 4"}
   const circuitImg = data != null ? data["full_circ_str"]: null
   const graphImg = data != null ? data["graph_str"]: null
@@ -77,8 +78,8 @@ const Results = (props) => {
         (
           <>
             {
-              winnerNum > 0 ?
-              <h2>Congratulations to {winnerNum} {playerDict[winner]}!</h2> :
+              winner != 'no winners' ?
+              <h2>Congratulations to winner {playerDict[winner]}!</h2>:
               <h2>No winners :(</h2>
            }
            <hr />      

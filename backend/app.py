@@ -45,14 +45,13 @@ class QuantumApi(Resource):
             args['player4']
         ]
 
-        results = self.run_game(
+        outcomes, results = self.run_game(
             args['game'],
             args['protocol'],
             all_states,
             args['players']
         )
-
-        # print(results)
+        
         return results
 
 

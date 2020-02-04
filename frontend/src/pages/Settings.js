@@ -65,7 +65,7 @@ const Settings = (props) => {
             <Button color="primary" onClick={() => {
               setGameSelected('BoS')
               setPlayersSelected(2)
-            }} active={settings.gameSelected === 'BoS'}>Bos</Button>
+            }} active={settings.gameSelected === 'BoS'}>BoS</Button>
           </ButtonToolbar>
           <br />
 
@@ -103,14 +103,21 @@ const Settings = (props) => {
       <InfoModal
         modal={protocolModal}
         setModal={setProcotolModal}
-        title={"Protocol"}
-        content={"The quantum protocol follows two rules: <h1>test</h1>"}
+        title={"Quantum Protocol"}
+        content={(<div>The quantum protocol follows two rules. Rule 1:  It has to distribute maximally entangled qubits to the players, Rule 2: it has to generalize the classical version of the game. EWL protocol: The first quantum game theory protocol invented by <a href="https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.83.3077">Eisert, Wilkens & Lewenstein</a>. MW protocol: A secondary protocol created by Marinatto-Weber [2].<br /><br /><a href="https://link.springer.com/article/10.1007/s11128-018-2082-8">Khan et al (2018)</a> has a comprehensive review on quantum protocols.</div>)}
       />
       <InfoModal
         modal={gameModal}
         setModal={setGameModal}
         title={"Game"}
-        content={"Ok thi s is some content"}
+        content={(<div>
+          <ul>
+            <li><a href="https://en.wikipedia.org/wiki/Prisoner%27s_dilemma">Prisoner's Dilemma</a>: All players are involved in committing a crime and get caught, but not quite red handed. In order to get a confession from all players, the police separate each player into different rooms and present two options: one, to remain silent, and two, to confess and maybe receive a reduced sentence.</li>
+            <li><a href="https://en.wikipedia.org/wiki/El_Farol_Bar_problem">Minority Game</a>: A simple game in which a player wins the game if their outcome is different to everyone else's.</li>
+            <li><a href="https://en.wikipedia.org/wiki/Chicken_(game)">Chicken Game</a>: Two players are heading towards each other. If the players both continue on the same path, they collide with each other. If one swerves out of the way and the other doesn't, the swerver loses and is labelled the chicken, while the other, implicitly braver player, wins.</li>
+            <li><a href="https://en.wikipedia.org/wiki/Battle_of_the_sexes_(game_theory)">Bach or Stravinksy</a>: Two player want to go to concert together. One player prefers Bach and the other Stravinksy, however they would both prefer to attend a concert together than alone.</li>
+          </ul>
+          </div>)}
       />
     </div>
   );
