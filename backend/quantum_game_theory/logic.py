@@ -15,7 +15,7 @@ from quantum_game_theory.utils import gen_predefined_payoffs, Protocol, unitary_
 
 class PayoffTable:
     """
-    Stores the data of the game
+    For if you want to create a custom payoff table. This is not in use and not implemented 
     """
 
     def __init__(self, n_players=2, n_choices=2, payoff=None):
@@ -203,7 +203,7 @@ class Game:
             return counts_inverted
 
     def _get_payoffs(self, choices):
-        return self._payoff_table.get_payoffs(choices)
+        return self._payoff_table[choices]
 
     def _get_winners(self, payoff):
         """ Finds the winner from the payoff """
