@@ -56,12 +56,12 @@ const Settings = (props) => {
 
           <h4>Game<Button color="link" onClick={() => setGameModal(true)}><FontAwesome className="fas fa-info-circle" style={{color: "#212529"}}/></Button></h4>
           <ButtonToolbar>
-            <Button color="primary" onClick={() => setGameSelected('prisoner')} active={settings.gameSelected === 'prisoner'}>Prisoners</Button>
+            <Button color="primary" onClick={() => setGameSelected('chicken')} active={settings.gameSelected === 'chicken'}>Chicken</Button>
             <Button color="primary" onClick={() => setGameSelected('minority')} active={settings.gameSelected === 'minority'}>Minority</Button>
             <Button color="primary" onClick={() => {
-              setGameSelected('chicken')
+              setGameSelected('prisoner')
               setPlayersSelected(2)
-            }} active={settings.gameSelected === 'chicken'}>Chicken</Button>
+            }} active={settings.gameSelected === 'prisoner'}>Prisoners</Button>
             <Button color="primary" onClick={() => {
               setGameSelected('BoS')
               setPlayersSelected(2)
@@ -73,10 +73,10 @@ const Settings = (props) => {
           <ButtonToolbar>
             <Button color="primary" onClick={() => setPlayersSelected(2)} active={settings.playersSelected === 2}>2</Button>
             <Button 
-              disabled={gameSelected === "chicken" || gameSelected === "BoS"}
+              disabled={gameSelected === "prisoner" || gameSelected === "BoS"}
               color="primary" onClick={() => setPlayersSelected(3)} active={settings.playersSelected === 3}>3</Button>
             <Button
-              disabled={gameSelected === "chicken" || gameSelected === "BoS"}
+              disabled={gameSelected === "prisoner" || gameSelected === "BoS"}
               color="primary" onClick={() => setPlayersSelected(4)} active={settings.playersSelected === 4}>4</Button>
           </ButtonToolbar>
           <br />
