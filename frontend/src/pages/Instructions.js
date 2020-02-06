@@ -17,8 +17,7 @@ const Instructions = () => {
       <br />
       <ul>
         <li>Learn about quantum game theory by playing games!</li>
-        <li>Choose a game, protocol or custom payoff table</li>
-        <li>Choose a number of players</li>
+        <li>Choose a game, protocol and number of players</li>
         <li>Play the game by dragging your selected gates onto the circuit</li>
         <li>View your results!</li>
       </ul>
