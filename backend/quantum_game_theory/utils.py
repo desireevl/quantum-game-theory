@@ -25,7 +25,7 @@ def gen_predefined_payoffs(game_name: str, num_players: int):
                     win_ind = outcome.find('1')
                     payoff[win_ind] = 1
                     payoff_table[outcome] = tuple(payoff)
-    if game_name == "chicken":
+    elif game_name == "chicken":
         for i in range(2**num_players):
             outcome = format(i, '0'+str(num_players)+'b')
             if outcome.count('1') == 0:
@@ -46,47 +46,17 @@ def gen_predefined_payoffs(game_name: str, num_players: int):
                     else:
                         payoff = np.append(payoff, -10)
                 payoff_table[outcome] = tuple(payoff)
-    if game_name == 'prisoner':
+    elif game_name == 'prisoner':
         return {'00': (-1, -1),
                 '01': (-3, 0),
                 '10': (0, -3),
                 '11': (-2, -2)}
-    if game_name == 'BoS':
+    elif game_name == 'BoS':
         return {'00': (3, 2),
                 '01': (0, 0),
                 '10': (0, 0),
                 '11': (2, 3)}
     return payoff_table
-
-
-predefined_games = {"chicken": {'00': (0, 0),
-                                '01': (-1, 1),
-                                '10': (1, -1),
-                                '11': (-10, -10)},
-                    "prisoner": {'00': (-1, -1),
-                                 '01': (-3, 0),
-                                 '10': (0, -3),
-                                 '11': (-2, -2)},
-                    "minority": {'0000': (0, 0, 0, 0),
-                                 '0001': (0, 0, 0, 1),
-                                 '0010': (0, 0, 1, 0),
-                                 '0011': (0, 0, 0, 0),
-                                 '0100': (0, 1, 0, 0),
-                                 '0101': (0, 0, 0, 0),
-                                 '0110': (0, 0, 0, 0),
-                                 '0111': (1, 0, 0, 0),
-                                 '1000': (1, 0, 0, 0),
-                                 '1001': (0, 0, 0, 0),
-                                 '1010': (0, 0, 0, 0),
-                                 '1011': (0, 1, 0, 0),
-                                 '1100': (0, 0, 0, 0),
-                                 '1101': (0, 0, 1, 0),
-                                 '1110': (0, 0, 0, 1),
-                                 '1111': (0, 0, 0, 0)},
-                    "BoS": {'00': (3, 2),
-                            '01': (0, 0),
-                            '10': (0, 0),
-                            '11': (2, 3)}}
 
 
 class WGate(Gate):
