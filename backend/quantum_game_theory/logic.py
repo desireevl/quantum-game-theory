@@ -117,8 +117,9 @@ class Game:
             backend (str): backend name to execute circuit
         """
         self._game_name = game_name
+        self._num_players = num_players
         self._n_players, self._n_choices, self._payoff_table = self._generate_payoff_table(
-            game_name, num_players)
+            self._game_name, self._num_players)
         self._protocol = Protocol[protocol]
         self._quantum_game = None
         self._final_results = None
@@ -144,7 +145,7 @@ class Game:
 
         n_players = len(list(payoff_table.keys())[0])
         n_choices = int(len(payoff_table)**(1/n_players))
-        payoff_table = PayoffTable(n_players, n_choices, payoff_table)
+        # payoff_table = PayoffTable(n_players, n_choices, payoff_table)
         return n_players, n_choices, payoff_table
 
     def display_payoffs(self):
