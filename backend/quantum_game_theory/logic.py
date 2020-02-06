@@ -10,7 +10,7 @@ from qiskit.quantum_info import Operator
 from qiskit.visualization import plot_histogram
 from io import BytesIO
 
-from quantum_game_theory.utils import gen_predefined_payoffs, predefined_games, Protocol, unitary_gates
+from quantum_game_theory.utils import gen_predefined_payoffs, Protocol, unitary_gates
 
 
 class PayoffTable:
