@@ -106,10 +106,9 @@ const Settings = (props) => {
         title={"Protocol"}
         content={(<div>A protocol is a method to convert a classical game to a quantum game. A quantum protocol needs to one, distribute maximally entangled qubits to the players, and two, generalise the classical version of the game. There are two protocols implemented here: 
           <ul>
-            <li>EWL protocol: The first quantum game theory protocol invented by <a href="https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.83.3077">Eisert, Wilkens & Lewenstein</a> utilising a J operator entangling gate to create a superposition between players and J&#8224; disentangling operator</li>
-            <li>MW protocol: A secondary protocol created by <a href="https://arxiv.org/abs/quant-ph/0004081">Marinatto and Weber</a> with the only difference to the EWL protocol being the absence of the disentangling gate</li>
+            <li style={{fontSize: "16px"}}>EWL protocol: The first quantum game theory protocol invented by <a href="https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.83.3077">Eisert, Wilkens & Lewenstein</a> utilising a J operator entangling gate to create a superposition between players and J&#8224; disentangling operator</li>
+            <li style={{fontSize: "16px"}}>MW protocol: A secondary protocol created by <a href="https://arxiv.org/abs/quant-ph/0004081">Marinatto and Weber</a> with the only difference to the EWL protocol being the absence of the disentangling gate</li>
           </ul>
-          <br /><br />
           <a href="https://link.springer.com/article/10.1007/s11128-018-2082-8">Khan et al (2018)</a> has a comprehensive review on quantum protocols.</div>)}
       />
       <InfoModal
@@ -118,10 +117,10 @@ const Settings = (props) => {
         title={"Game"}
         content={(<div>
           <ul>
-            <li><a href="https://en.wikipedia.org/wiki/Prisoner%27s_dilemma">Prisoner's Dilemma</a>: All players are involved in committing a crime and get caught, but not quite red handed. In order to get a confession from all players, the police separate each player into different rooms and present two options: one, to remain silent, and two, to confess and maybe receive a reduced sentence.</li>
-            <li><a href="https://en.wikipedia.org/wiki/El_Farol_Bar_problem">Minority Game</a>: A simple game in which a player wins the game if their outcome is different to everyone else's.</li>
-            <li><a href="https://en.wikipedia.org/wiki/Chicken_(game)">Chicken Game</a>: Two players are heading towards each other. If the players both continue on the same path, they collide with each other. If one swerves out of the way and the other doesn't, the swerver loses and is labelled the chicken, while the other, implicitly braver player, wins.</li>
-            <li><a href="https://en.wikipedia.org/wiki/Battle_of_the_sexes_(game_theory)">Bach or Stravinksy</a>: Two player want to go to concert together. One player prefers Bach and the other Stravinksy, however they would both prefer to attend a concert together than alone.</li>
+            <li style={{fontSize: "16px"}}><a href="https://en.wikipedia.org/wiki/Prisoner%27s_dilemma">Prisoner's Dilemma</a>: All players are involved in committing a crime and get caught, but not quite red handed. In order to get a confession from all players, the police separate each player into different rooms and present two options: one, to remain silent, and two, to confess and maybe receive a reduced sentence.</li>
+            <li style={{fontSize: "16px"}}><a href="https://en.wikipedia.org/wiki/El_Farol_Bar_problem">Minority Game</a>: A simple game in which a player wins the game if their outcome is different to everyone else's.</li>
+            <li style={{fontSize: "16px"}}><a href="https://en.wikipedia.org/wiki/Chicken_(game)">Chicken Game</a>: Two players are heading towards each other. If the players both continue on the same path, they collide with each other. If one swerves out of the way and the other doesn't, the swerver loses and is labelled the chicken, while the other, implicitly braver player, wins.</li>
+            <li style={{fontSize: "16px"}}><a href="https://en.wikipedia.org/wiki/Battle_of_the_sexes_(game_theory)">Bach or Stravinksy</a>: Two player want to go to concert together. One player prefers Bach and the other Stravinksy, however they would both prefer to attend a concert together than alone.</li>
           </ul>
           </div>)}
       />
