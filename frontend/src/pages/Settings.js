@@ -103,8 +103,14 @@ const Settings = (props) => {
       <InfoModal
         modal={protocolModal}
         setModal={setProcotolModal}
-        title={"Quantum Protocol"}
-        content={(<div>The quantum protocol follows two rules. Rule 1:  It has to distribute maximally entangled qubits to the players, Rule 2: it has to generalize the classical version of the game. EWL protocol: The first quantum game theory protocol invented by <a href="https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.83.3077">Eisert, Wilkens & Lewenstein</a>. MW protocol: A secondary protocol created by Marinatto-Weber [2].<br /><br /><a href="https://link.springer.com/article/10.1007/s11128-018-2082-8">Khan et al (2018)</a> has a comprehensive review on quantum protocols.</div>)}
+        title={"Protocol"}
+        content={(<div>A protocol is a method to convert a classical game to a quantum game. A quantum protocol needs to one, distribute maximally entangled qubits to the players, and two, generalise the classical version of the game. There are two protocols implemented here: 
+          <ul>
+            <li>EWL protocol: The first quantum game theory protocol invented by <a href="https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.83.3077">Eisert, Wilkens & Lewenstein</a> utilising a J operator entangling gate to create a superposition between players and J&#8224; disentangling operator</li>
+            <li>MW protocol: A secondary protocol created by <a href="https://arxiv.org/abs/quant-ph/0004081">Marinatto and Weber</a> with the only difference to the EWL protocol being the absence of the disentangling gate</li>
+          </ul>
+          <br /><br />
+          <a href="https://link.springer.com/article/10.1007/s11128-018-2082-8">Khan et al (2018)</a> has a comprehensive review on quantum protocols.</div>)}
       />
       <InfoModal
         modal={gameModal}
