@@ -9,7 +9,7 @@ from qiskit.circuit import QuantumRegister
 
 def gen_predefined_payoffs(game_name: str, num_players: int):
     '''Generates payoff table based on game name'''
-    num_players = 4
+    num_players = num_players
     payoff_table = {}
     if game_name == "minority":
         for i in range(2**num_players):
