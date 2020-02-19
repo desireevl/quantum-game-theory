@@ -9,7 +9,7 @@ const Home = () => {
       <div>
         <h1 style={{ textAlign: "center"}}>Quantum Game Theory</h1>
         <br />
-        <h5 style={{ textAlign: "center"}}>Rajiv Krishnakumar, Kendrick Tan, Severin Tschui, <br /> Desiree Vogt-Lee, George Woodman, Jansen Zhao</h5>
+        <h5 style={{ textAlign: "center"}}>Desiree Vogt-Lee, Kendrick Tan, Rajiv Krishnakumar, <br /> George Woodman, Severin Tschui, Jansen Zhao</h5>
         <br />
         <br />
         <br />

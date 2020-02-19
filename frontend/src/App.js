@@ -24,7 +24,12 @@ const App = () => {
   const [gameSelected, setGameSelected] = useState('minority');
   const [playersSelected, setPlayersSelected] = useState(4);
   const [deviceSelected, setDeviceSelected] = useState('simulator');
-  const [payoffSelected, setPayoffSelected] = useState({});
+  const [payoffMatrix, setPayoffMatrix] = useState({
+      "00": "0,0",
+      "10": "5, 10",
+      "01": "10,5",
+      "11": "0,0"
+    })
 
   const [playerData, setPlayerData] = useState({})
 
@@ -34,7 +39,7 @@ const App = () => {
       gameSelected,
       playersSelected,
       deviceSelected,
-      payoffSelected
+      payoffMatrix,
     },
     playerData
   }
@@ -58,7 +63,7 @@ const App = () => {
                     setGameSelected={setGameSelected}
                     setPlayersSelected={setPlayersSelected}
                     setDeviceselected={setDeviceSelected}
-                    setPayoffSelected={setPayoffSelected}
+                    setPayoffMatrix={setPayoffMatrix}
                   />
                 </Route>
                 <Route path="/player">

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { Link } from 'react-router-dom'
-import { Button, ButtonToolbar, Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { Input, Table, Button, ButtonToolbar, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import FontAwesome from 'react-fontawesome'
 
 const InfoModal = (props) => {
@@ -27,17 +27,37 @@ const Settings = (props) => {
     setProtocolSelected,
     setGameSelected,
     setPlayersSelected,
-    setDeviceSelected,
-    setPayoffSelected
+    setDeviceSelected, 
+    setPayoffMatrix
   } = props
   const { settings } = appState
   const { gameSelected } = settings
+  const { payoffMatrix } = settings
 
   // Hide modal by default
   const [protocolModal, setProcotolModal] = useState(false)
   const [gameModal, setGameModal] = useState(false)
 
 
+  // Generate inputs to accept payoff matrix inputs
+  const genPayoffMatrixYX = (y, x) => {
+    return <Input
+      value={payoffMatrix[`${y}${x}`]}
+      onChange={(e) => {
+        try {
+          e.target.value
+            .split(",")
+            .filter(y => y.length > 0)
+            .map(y => parseInt(y))
+          
+          const newPayoffMatrix = Object.assign({}, payoffMatrix)
+          newPayoffMatrix[`${y}${x}`] = e.target.value
+          setPayoffMatrix(newPayoffMatrix)
+        } catch {}
+      }}
+    />
+  }
+  
   return (
     <div style={{display: "flex", alignItems: "center", justifyContent: "center", height: "100vh"}}>
       <div style={{position: "fixed", top: 40, left: 50, width: "100%"}}>
@@ -79,6 +99,31 @@ const Settings = (props) => {
               setPlayersSelected(2)
             }} active={settings.gameSelected === 'custom'}>Custom</Button>
           </ButtonToolbar>
+          {
+            settings.gameSelected === 'custom' ?
+            <Table>
+              <br />
+              <tbody>
+                <tr>
+                  <th scope="row"></th>
+                  <td>0</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <th scope="row">0</th>
+                  <td>{genPayoffMatrixYX(0, 0)}</td>
+                  <td>{genPayoffMatrixYX(1, 0)}</td>
+                </tr>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>{genPayoffMatrixYX(0, 1)}</td>
+                  <td>{genPayoffMatrixYX(1, 1)}</td>
+                </tr>
+              </tbody>
+            </Table>
+            :
+            null
+          }
           <br />
 
           <h4>Number of Players</h4>
