@@ -11,7 +11,7 @@ from qiskit.quantum_info import Operator
 from qiskit.visualization import plot_histogram
 from io import BytesIO
 
-from quantum_game_theory.utils import gen_predefined_payoffs, Protocol, unitary_gates
+from utils import gen_predefined_payoffs, Protocol, unitary_gates
 
 
 class PayoffTable:
@@ -120,7 +120,7 @@ class Game:
         self._game_name = game_name
         self._num_players = num_players
         self._n_players, self._n_choices, self._payoff_table = self._generate_payoff_table(
-            self._game_name, self._num_players)
+            self._game_name, self._num_players, payoff_table)
         self._protocol = Protocol[protocol]
         self._quantum_game = None
         self._final_results = None
@@ -145,13 +145,13 @@ class Game:
 
             return least_busy_device
 
-    def _generate_payoff_table(self, game_name, num_players):
+    def _generate_payoff_table(self, game_name, num_players, payoff_table):
         """ Creates the payoff table object used to store choices """
-        payoff_table = gen_predefined_payoffs(game_name, num_players)
-
-        n_players = len(list(payoff_table.keys())[0])
+        if payoff_table == None:
+            payoff_table = gen_predefined_payoffs(game_name, num_players)
+        n_players = num_players
         n_choices = int(len(payoff_table)**(1/n_players))
-        # payoff_table = PayoffTable(n_players, n_choices, payoff_table)
+        payoff_table = PayoffTable(n_players, n_choices, payoff_table)
         return n_players, n_choices, payoff_table
 
     def display_payoffs(self):
@@ -209,7 +209,7 @@ class Game:
             return counts_inverted
 
     def _get_payoffs(self, choices):
-        return self._payoff_table[choices]
+        return self._payoff_table.get_payoffs(choices)
 
     def _get_winners(self, payoff):
         """ Finds the winner from the payoff """
@@ -256,16 +256,17 @@ class Game:
         self._final_results = self._generate_final_results(final_choices)
 
         # Generate graph(s)
-        circuit_fig = self.quantum_circuit.draw(output='mpl')
-        circuit_fig.suptitle("Full Circuit for Players", fontsize=25)
+        if self._protocol != Protocol.Classical:
+            circuit_fig = self.quantum_circuit.draw(output='mpl')
+            circuit_fig.suptitle("Full Circuit for Players", fontsize=25)
 
-        probability_graph_img = plot_histogram(final_choices)
-        probability_graph_img.suptitle("Probability Graph", fontsize=25)
-        axes = probability_graph_img.get_axes()
-        for t in axes[0].get_xticklabels():
-            t.set_rotation(0)
+            probability_graph_img = plot_histogram(final_choices)
+            probability_graph_img.suptitle("Probability Graph", fontsize=25)
+            axes = probability_graph_img.get_axes()
+            for t in axes[0].get_xticklabels():
+                t.set_rotation(0)
 
-        self._final_results['full_circ_str'] = self.base64_figure(circuit_fig)
-        self._final_results['graph_str'] = self.base64_figure(probability_graph_img)
+            self._final_results['full_circ_str'] = self.base64_figure(circuit_fig)
+            self._final_results['graph_str'] = self.base64_figure(probability_graph_img)
 
         return final_choices, self._final_results
