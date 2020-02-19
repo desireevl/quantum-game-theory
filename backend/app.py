@@ -18,8 +18,6 @@ class QuantumApi(Resource):
         parser.add_argument('game', type=str, location='json', required=True)
         parser.add_argument('players', type=int,
                             location='json', required=True)
-        parser.add_argument('payoff', type=list,
-                            location='json', required=True)
         parser.add_argument('player1', type=list,
                             location='json', required=True)
         parser.add_argument('player2', type=list,
@@ -28,10 +26,12 @@ class QuantumApi(Resource):
                             location='json', required=True)
         parser.add_argument('player4', type=list,
                             location='json', required=True)
+        parser.add_argument('payoff', type=dict,
+                            location='json', required=True)
         return parser
 
-    def run_game(self, game, protocol, all_states, player_num):
-        game = Game(game, protocol, player_num)
+    def run_game(self, game, protocol, all_states, player_num, payoff):
+        game = Game(game, protocol, player_num, payoff)
         results = game.play_game(all_states)
         return results
 
@@ -49,7 +49,8 @@ class QuantumApi(Resource):
             args['game'],
             args['protocol'],
             all_states,
-            args['players']
+            args['players'],
+            args['payoff']
         )
         
         return results

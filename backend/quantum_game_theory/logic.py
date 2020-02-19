@@ -154,7 +154,7 @@ class Game:
 
     def _generate_payoff_table(self, game_name, num_players, payoff_table):
         """ Creates the payoff table object used to store choices """
-        if payoff_table == None:
+        if not payoff_table: # checks if payoff_table dictionary is empty
             payoff_table = gen_predefined_payoffs(game_name, num_players)
         n_players = num_players
         n_choices = int(len(payoff_table)**(1/n_players))

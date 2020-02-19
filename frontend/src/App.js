@@ -24,7 +24,7 @@ const App = () => {
   const [gameSelected, setGameSelected] = useState('minority');
   const [playersSelected, setPlayersSelected] = useState(4);
   const [deviceSelected, setDeviceSelected] = useState('simulator');
-  const [payoffSelected, setPayoffSelected] = useState('Defined');
+  const [payoffSelected, setPayoffSelected] = useState({});
 
   const [playerData, setPlayerData] = useState({})
 

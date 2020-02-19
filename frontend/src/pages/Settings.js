@@ -48,6 +48,13 @@ const Settings = (props) => {
       <div>
         <h1 style={{ textAlign: "center"}}>Settings</h1>
         <br />
+        <h4>Device</h4>
+          <ButtonToolbar>
+            <Button color="primary" onClick={() => setDeviceSelected("simulator")} active={settings.deviceSelected === 'simulator'}>Simulator</Button>
+            <Button color="primary" onClick={() => setDeviceSelected("real")} active={settings.deviceSelected === 'real'}>Real</Button>
+          </ButtonToolbar>
+          <br />
+
           <h4>Protocol<Button color="link" onClick={() => setProcotolModal(true)}><FontAwesome className="fas fa-info-circle" style={{color: "#212529"}}/></Button></h4>
           <ButtonToolbar>
             <Button color="primary" onClick={() => setProtocolSelected('EWL')} active={settings.protocolSelected === 'EWL'}>EWL</Button>
@@ -67,34 +74,24 @@ const Settings = (props) => {
               setGameSelected('BoS')
               setPlayersSelected(2)
             }} active={settings.gameSelected === 'BoS'}>BoS</Button>
+            <Button color="primary" onClick={() => {
+              setGameSelected('custom')
+              setPlayersSelected(2)
+            }} active={settings.gameSelected === 'custom'}>Custom</Button>
           </ButtonToolbar>
           <br />
 
-          <h4>Players</h4>
+          <h4>Number of Players</h4>
           <ButtonToolbar>
             <Button color="primary" onClick={() => setPlayersSelected(2)} active={settings.playersSelected === 2}>2</Button>
             <Button 
-              disabled={gameSelected === "prisoner" || gameSelected === "BoS"}
+              disabled={gameSelected === "prisoner" || gameSelected === "BoS" || gameSelected === "custom"}
               color="primary" onClick={() => setPlayersSelected(3)} active={settings.playersSelected === 3}>3</Button>
             <Button
-              disabled={gameSelected === "prisoner" || gameSelected === "BoS"}
+              disabled={gameSelected === "prisoner" || gameSelected === "BoS" || gameSelected === "custom"}
               color="primary" onClick={() => setPlayersSelected(4)} active={settings.playersSelected === 4}>4</Button>
           </ButtonToolbar>
           <br />
-
-          <h4>Device</h4>
-          <ButtonToolbar>
-            <Button color="primary" onClick={() => setDeviceSelected("simulator")} active={settings.deviceSelected === 'simulator'}>Simulator</Button>
-            <Button color="primary" onClick={() => setDeviceSelected("real")} active={settings.deviceSelected === 'real'}>Real</Button>
-          </ButtonToolbar>
-          <br />
-
-
-          {/* <h4>Payoff</h4>
-          <ButtonToolbar>
-            <Button color="primary" onClick={() => setPayoffSelected('Defined')} active={settings.payoffSelected === 'Defined'}>Defined</Button>
-            <Button color="primary" onClick={() => setPayoffSelected('Custom')} active={settings.payoffSelected === 'Custom'}>Custom</Button>
-          </ButtonToolbar> */}
 
         <br />
         <br />
