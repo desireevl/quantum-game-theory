@@ -23,6 +23,7 @@ const App = () => {
   const [protocolSelected, setProtocolSelected] = useState('EWL');
   const [gameSelected, setGameSelected] = useState('minority');
   const [playersSelected, setPlayersSelected] = useState(4);
+  const [deviceSelected, setDeviceSelected] = useState('simulator');
   const [payoffSelected, setPayoffSelected] = useState('Defined');
 
   const [playerData, setPlayerData] = useState({})
@@ -32,6 +33,7 @@ const App = () => {
       protocolSelected,
       gameSelected,
       playersSelected,
+      deviceSelected,
       payoffSelected
     },
     playerData
@@ -55,6 +57,7 @@ const App = () => {
                     setProtocolSelected={setProtocolSelected}
                     setGameSelected={setGameSelected}
                     setPlayersSelected={setPlayersSelected}
+                    setDeviceselected={setDeviceSelected}
                     setPayoffSelected={setPayoffSelected}
                   />
                 </Route>

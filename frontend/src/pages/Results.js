@@ -28,8 +28,8 @@ const Results = (props) => {
     const f = async () => {
       try {
         const { data } = await axios.post(
-          'https://api-quantum-game.desireevl.com/',
-          // 'http://127.0.0.1:5000/',
+          // 'https://api-quantum-game.desireevl.com/',
+          'http://127.0.0.1:5000/',
           {
             "protocol": protocolSelected,
             "game": gameSelected,

@@ -6,6 +6,7 @@ import pandas as pd
 from flask import Flask
 from flask_restful import Api, Resource, reqparse
 from qiskit import Aer, execute, IBMQ, QuantumCircuit
+from qiskit.providers.ibmq import least_busy
 from qiskit.quantum_info import Operator
 from qiskit.visualization import plot_histogram
 from io import BytesIO
@@ -107,7 +108,7 @@ class Game:
     Handles all the game logic and execution of the quantum game and final output of the results.
     """
 
-    def __init__(self, game_name, protocol, num_players, payoff_table=None, group='open', backend='qasm_simulator'):
+    def __init__(self, game_name, protocol, num_players, payoff_table=None, group='open', backend='qasm_simulator'): # CHANGE THIS IF REAL DEVICE
         """
         Args:
             game_name (str): name of game to be played
@@ -125,7 +126,7 @@ class Game:
         self._final_results = None
         self._backend = self._set_backend(group, backend)
 
-    def set_protocol(self, protocol, group='open',backend='qasm_simulator'):
+    def set_protocol(self, protocol, group='open', backend='qasm_simulator'): # CHANGE THIS IF REAL DEVICE
         self._protocol = Protocol[protocol]
         self._backend = self._set_backend(group, backend)
 
@@ -136,8 +137,13 @@ class Game:
             return Aer.get_backend("qasm_simulator")
         else:
             IBMQ.load_account()
-            provider = IBMQ.get_provider(group=group)
-            return provider.get_backend(backend)
+            provider = IBMQ.get_provider(hub='ibm-q')
+            small_devices = provider.backends(filters=lambda x: x.configuration().n_qubits == 5
+                                   and not x.configuration().simulator)
+            least_busy_device = least_busy(small_devices)
+            print(f'DEVICE {least_busy_device}')
+
+            return least_busy_device
 
     def _generate_payoff_table(self, game_name, num_players):
         """ Creates the payoff table object used to store choices """

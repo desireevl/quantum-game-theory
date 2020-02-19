@@ -27,6 +27,7 @@ const Settings = (props) => {
     setProtocolSelected,
     setGameSelected,
     setPlayersSelected,
+    setDeviceSelected,
     setPayoffSelected
   } = props
   const { settings } = appState
@@ -80,6 +81,14 @@ const Settings = (props) => {
               color="primary" onClick={() => setPlayersSelected(4)} active={settings.playersSelected === 4}>4</Button>
           </ButtonToolbar>
           <br />
+
+          <h4>Device</h4>
+          <ButtonToolbar>
+            <Button color="primary" onClick={() => setDeviceSelected("simulator")} active={settings.deviceSelected === 'simulator'}>Simulator</Button>
+            <Button color="primary" onClick={() => setDeviceSelected("real")} active={settings.deviceSelected === 'real'}>Real</Button>
+          </ButtonToolbar>
+          <br />
+
 
           {/* <h4>Payoff</h4>
           <ButtonToolbar>
