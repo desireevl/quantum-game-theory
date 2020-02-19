@@ -70,6 +70,7 @@ const App = () => {
                 <Route path="/results">
                   <ResultsPage
                     appState={appState}
+                    setPlayerData={setPlayerData}
                    />
                 </Route>
               </Switch>

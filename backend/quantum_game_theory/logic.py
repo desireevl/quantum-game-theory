@@ -11,7 +11,7 @@ from qiskit.quantum_info import Operator
 from qiskit.visualization import plot_histogram
 from io import BytesIO
 
-from utils import gen_predefined_payoffs, Protocol, unitary_gates
+from quantum_game_theory.utils import gen_predefined_payoffs, Protocol, unitary_gates
 
 
 class PayoffTable:
@@ -19,7 +19,7 @@ class PayoffTable:
     For if you want to create a custom payoff table. This is not in use and not implemented 
     """
 
-    def __init__(self, n_players=2, n_choices=2, payoff=None):
+    def __init__(self, n_players, n_choices, payoff=None):
         """
         Args:
             n_players (int): number of players
@@ -58,9 +58,16 @@ class QuantumGame:
         """
         self.protocol = protocol
         self.player_gates = player_gates
-        self.num_players = len(player_gates)
+        self.num_players = self._get_num_players()
         self.J, self.Jdg = self._make_J_operators()
         self.circ = self._make_circuit(player_gates)
+
+    def _get_num_players(self):
+        counter = 0
+        for gates in self.player_gates:
+            if len(gates) > 0:
+                counter += 1
+        return counter
 
     def _make_J_operators(self):
         """ Creates the J unitary and its adjoint """

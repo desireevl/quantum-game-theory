@@ -6,7 +6,7 @@ import FontAwesome from 'react-fontawesome'
 import axios from 'axios'
 
 const Results = (props) => {
-  const { appState } = props
+  const { appState, setPlayerData } = props
   const { playerData } = appState
   const { protocolSelected, gameSelected, playersSelected } = appState.settings
   const [data, setData] = useState(null)
@@ -16,7 +16,9 @@ const Results = (props) => {
 
     let i = 0
     while (i in o) {
-      arr.push(o[i])
+      if (Object.keys(o[i]).length > 0) {
+        arr.push(o[i])
+      }
 
       i++
     }
@@ -96,7 +98,12 @@ const Results = (props) => {
       <br />
       <div style={{textAlign: "center"}}>
         <Link to="/">
-          <Button color="link" style={{color: "#212529"}}>
+          <Button  
+          color="link" 
+          style={{color: "#212529"}}
+          onClick={() => {
+            setPlayerData({})
+          }}>
             Play Again
           </Button>
         </Link>

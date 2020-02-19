@@ -251,6 +251,12 @@ const Player = (props) => {
                   setPlayerData(newPlayerData)
                   setCurPlayerNo(curPlayerNo + 1)
                   setCurGateNo(0)
+                  setPlayerGateData({
+                    0: {},
+                    1: {},
+                    2: {},
+                    3: {}
+                  })
                 }}
               >
                 Next
