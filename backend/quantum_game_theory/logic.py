@@ -138,13 +138,14 @@ class Game:
         self._backend = self._set_backend(group, backend)
 
     def _set_backend(self, group, backend):
-        print(f'GAME BACKENDDDDDD: {backend}')
         if self._protocol == Protocol.Classical:
             return "Classical"
         if backend == "simulator":
             return Aer.get_backend("qasm_simulator")
         else:
+            print('Loading IBM Q account ... ')
             IBMQ.load_account()
+            print('Getting least busy device ...')
             provider = IBMQ.get_provider(hub='ibm-q')
             small_devices = provider.backends(filters=lambda x: x.configuration().n_qubits == 5
                                    and not x.configuration().simulator)
@@ -204,8 +205,10 @@ class Game:
             return {player_choices_str: n_times}
         else:
             # runs the circuit on an IBMQ device or simulator
+            print('Executing circuit ....')
             job_sim = execute(self._quantum_game.circ,
                               self._backend, shots=n_times)
+            print('Circuit finished running.')
             res_sim = job_sim.result()
             counts = res_sim.get_counts(self._quantum_game.circ)
             # now we need to invert the order of the counts because our convention is [P1,P2]

@@ -38,6 +38,7 @@ const Settings = (props) => {
   const [protocolModal, setProcotolModal] = useState(false)
   const [deviceModal, setDeviceModal] = useState(false)
   const [gameModal, setGameModal] = useState(false)
+  const [agreementModal, setAgreementModal] = useState(false)
 
 
   // Generate inputs to accept payoff matrix inputs
@@ -72,7 +73,10 @@ const Settings = (props) => {
         <h4>Device<Button color="link" onClick={() => setDeviceModal(true)}><FontAwesome className="fas fa-info-circle" style={{color: "#212529"}}/></Button></h4>
         <ButtonToolbar>
             <Button color="primary" onClick={() => setDeviceSelected('simulator')} active={settings.deviceSelected === 'simulator'}>Simulator</Button>
-            <Button color="primary" onClick={() => setDeviceSelected('real')} active={settings.deviceSelected === 'real'}>Real</Button>
+            <Button color="primary" onClick={() => {
+              setDeviceSelected('real')
+              setAgreementModal(true)
+              }} active={settings.deviceSelected === 'real'}>Real</Button>
         </ButtonToolbar>
           <br />
 
@@ -188,6 +192,12 @@ const Settings = (props) => {
 
           </ul>
           </div>)}
+      />
+      <InfoModal
+        modal={agreementModal}
+        setModal={setAgreementModal}
+        title={"IBM Q User Agreement"}
+        content={(<div>By continuing you agree that you are over 17.</div>)}
       />
     </div>
   );
