@@ -8,7 +8,7 @@ import axios from 'axios'
 const Results = (props) => {
   const { appState, setPlayerData } = props
   const { playerData } = appState
-  const { protocolSelected, gameSelected, playersSelected, payoffSelected } = appState.settings
+  const { protocolSelected, gameSelected, playersSelected, payoffMatrix } = appState.settings
   const [data, setData] = useState(null)
 
   const toArray = (o) => {
@@ -35,7 +35,7 @@ const Results = (props) => {
           {
             "protocol": protocolSelected,
             "game": gameSelected,
-            "payoff": payoffSelected,
+            "payoff": payoffMatrix,
             "players": playersSelected,
             "player1": toArray(playerData[0] || {}),
             "player2": toArray(playerData[1] || {}),

@@ -25,10 +25,10 @@ const App = () => {
   const [playersSelected, setPlayersSelected] = useState(4);
   const [deviceSelected, setDeviceSelected] = useState('simulator');
   const [payoffMatrix, setPayoffMatrix] = useState({
-      "00": "0,0",
-      "10": "5, 10",
-      "01": "10,5",
-      "11": "0,0"
+      "00": "-8, -8",
+      "10": "0, -10",
+      "01": "-10, 0",
+      "11": "-1, -1"
     })
 
   const [playerData, setPlayerData] = useState({})

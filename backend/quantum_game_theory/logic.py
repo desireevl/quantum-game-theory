@@ -152,10 +152,9 @@ class Game:
 
             return least_busy_device
 
-    def _generate_payoff_table(self, game_name, num_players, payoff_table):
+    def _generate_payoff_table(self, game_name, num_players, payoff_input):
         """ Creates the payoff table object used to store choices """
-        if not payoff_table: # checks if payoff_table dictionary is empty
-            payoff_table = gen_predefined_payoffs(game_name, num_players)
+        payoff_table = gen_predefined_payoffs(game_name, num_players, payoff_input)
         n_players = num_players
         n_choices = int(len(payoff_table)**(1/n_players))
         payoff_table = PayoffTable(n_players, n_choices, payoff_table)
@@ -208,7 +207,7 @@ class Game:
                               self._backend, shots=n_times)
             res_sim = job_sim.result()
             counts = res_sim.get_counts(self._quantum_game.circ)
-            #now we need to invert the order of the counts because our convention is [P1,P2]
+            # now we need to invert the order of the counts because our convention is [P1,P2]
             counts_inverted={}
             for key, value in counts.items():
                 counts_inverted[key[::-1]]=value

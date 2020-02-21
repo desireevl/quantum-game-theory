@@ -7,7 +7,7 @@ from qiskit.circuit import Gate
 from qiskit.circuit import QuantumRegister
 
 
-def gen_predefined_payoffs(game_name: str, num_players: int):
+def gen_predefined_payoffs(game_name: str, num_players: int, payoff_input: dict):
     '''Generates payoff table based on game name'''
     num_players = num_players
     payoff_table = {}
@@ -48,15 +48,17 @@ def gen_predefined_payoffs(game_name: str, num_players: int):
                         payoff = np.append(payoff, -10)
                 payoff_table[outcome] = tuple(payoff)
     elif game_name == 'prisoner':
-        return {'00': (-1, -1),
-                '01': (-3, 0),
-                '10': (0, -3),
-                '11': (-2, -2)}
+        payoff_table = {'00': (-1, -1),
+                        '01': (-3, 0),
+                        '10': (0, -3),
+                        '11': (-2, -2)}
     elif game_name == 'BoS':
-        return {'00': (3, 2),
-                '01': (0, 0),
-                '10': (0, 0),
-                '11': (2, 3)}
+        payoff_table =  {'00': (3, 2),
+                        '01': (0, 0),
+                        '10': (0, 0),
+                        '11': (2, 3)}
+    elif game_name == 'custom':
+        payoff_table = {key: tuple(map(int, value.split(','))) for key, value in payoff_input.items()}
     return payoff_table
 
 
