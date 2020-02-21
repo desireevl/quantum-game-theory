@@ -183,7 +183,6 @@ class Game:
 
     def _generate_quantum_circuit(self, player_gates):
         """generates the quantum circuit for the game in qiskit (or returns None if it is a classical game)"""
-        self._protocol
         if self._protocol == Protocol.Classical:
             return None
         player_gate_objects = []
