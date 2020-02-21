@@ -33,17 +33,12 @@ class QuantumApi(Resource):
         return parser
 
     def run_game(self, game, protocol, all_states, player_num, payoff, device):
-        print('HEREEEE1')
         game = Game(game, protocol, player_num, payoff_table=payoff, backend=device)
-        print('HEREEE2')
         results = game.play_game(all_states)
         return results
 
     def post(self):
         args = self.build_parser().parse_args()
-        print('YOOOOO')
-        print(args['game'])
-        print(args['device'])
 
         all_states = [
             args['player1'],

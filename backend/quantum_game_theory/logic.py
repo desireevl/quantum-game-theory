@@ -150,7 +150,7 @@ class Game:
             small_devices = provider.backends(filters=lambda x: x.configuration().n_qubits == 5
                                    and not x.configuration().simulator)
             least_busy_device = least_busy(small_devices)
-            print(f'DEVICE {least_busy_device}')
+            print(f'Least busy device: {least_busy_device}')
 
             return least_busy_device
 
