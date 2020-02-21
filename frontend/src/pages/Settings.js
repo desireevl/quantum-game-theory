@@ -70,10 +70,10 @@ const Settings = (props) => {
         <h1 style={{ textAlign: "center"}}>Settings</h1>
         <br />
         <h4>Device<Button color="link" onClick={() => setDeviceModal(true)}><FontAwesome className="fas fa-info-circle" style={{color: "#212529"}}/></Button></h4>
-          <ButtonToolbar>
-            <Button color="primary" onClick={() => setDeviceSelected("simulator")} active={settings.deviceSelected === 'simulator'}>Simulator</Button>
-            <Button color="primary" onClick={() => setDeviceSelected("real")} active={settings.deviceSelected === 'real'}>Real</Button>
-          </ButtonToolbar>
+        <ButtonToolbar>
+            <Button color="primary" onClick={() => setDeviceSelected('simulator')} active={settings.deviceSelected === 'simulator'}>Simulator</Button>
+            <Button color="primary" onClick={() => setDeviceSelected('real')} active={settings.deviceSelected === 'real'}>Real</Button>
+        </ButtonToolbar>
           <br />
 
           <h4>Protocol<Button color="link" onClick={() => setProcotolModal(true)}><FontAwesome className="fas fa-info-circle" style={{color: "#212529"}}/></Button></h4>

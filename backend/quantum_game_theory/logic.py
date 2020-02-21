@@ -115,7 +115,7 @@ class Game:
     Handles all the game logic and execution of the quantum game and final output of the results.
     """
 
-    def __init__(self, game_name, protocol, num_players, payoff_table=None, group='open', backend='qasm_simulator'): # CHANGE THIS IF REAL DEVICE
+    def __init__(self, game_name, protocol, num_players, payoff_table=None, group='open', backend='simulator'):
         """
         Args:
             game_name (str): name of game to be played
@@ -133,14 +133,15 @@ class Game:
         self._final_results = None
         self._backend = self._set_backend(group, backend)
 
-    def set_protocol(self, protocol, group='open', backend='qasm_simulator'): # CHANGE THIS IF REAL DEVICE
+    def set_protocol(self, protocol, backend, group='open'):
         self._protocol = Protocol[protocol]
         self._backend = self._set_backend(group, backend)
 
     def _set_backend(self, group, backend):
+        print(f'GAME BACKENDDDDDD: {backend}')
         if self._protocol == Protocol.Classical:
             return "Classical"
-        if backend == "qasm_simulator":
+        if backend == "simulator":
             return Aer.get_backend("qasm_simulator")
         else:
             IBMQ.load_account()

@@ -62,7 +62,7 @@ const App = () => {
                     setProtocolSelected={setProtocolSelected}
                     setGameSelected={setGameSelected}
                     setPlayersSelected={setPlayersSelected}
-                    setDeviceselected={setDeviceSelected}
+                    setDeviceSelected={setDeviceSelected}
                     setPayoffMatrix={setPayoffMatrix}
                   />
                 </Route>

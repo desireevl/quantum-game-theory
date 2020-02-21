@@ -8,7 +8,7 @@ import axios from 'axios'
 const Results = (props) => {
   const { appState, setPlayerData } = props
   const { playerData } = appState
-  const { protocolSelected, gameSelected, playersSelected, payoffMatrix } = appState.settings
+  const { protocolSelected, gameSelected, playersSelected, payoffMatrix, deviceSelected } = appState.settings
   const [data, setData] = useState(null)
 
   const toArray = (o) => {
@@ -30,13 +30,14 @@ const Results = (props) => {
     const f = async () => {
       try {
         const { data } = await axios.post(
-          'https://api-quantum-game.desireevl.com/',
-          // 'http://127.0.0.1:5000/',
+          // 'https://api-quantum-game.desireevl.com/',
+          'http://127.0.0.1:5000/',
           {
             "protocol": protocolSelected,
             "game": gameSelected,
             "payoff": payoffMatrix,
             "players": playersSelected,
+            "device": deviceSelected,
             "player1": toArray(playerData[0] || {}),
             "player2": toArray(playerData[1] || {}),
             "player3": toArray(playerData[2] || {}),
@@ -80,7 +81,7 @@ const Results = (props) => {
         (
           <>
             {
-              winner !== 'no winners' ?
+              winner != 'no winners' ?
               <h2>Congratulations to winner {playerDict[winner]}!</h2>:
               <h2>No winners :(</h2>
            }
