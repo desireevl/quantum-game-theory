@@ -36,6 +36,7 @@ const Settings = (props) => {
 
   // Hide modal by default
   const [protocolModal, setProcotolModal] = useState(false)
+  const [deviceModal, setDeviceModal] = useState(false)
   const [gameModal, setGameModal] = useState(false)
 
 
@@ -68,7 +69,7 @@ const Settings = (props) => {
       <div>
         <h1 style={{ textAlign: "center"}}>Settings</h1>
         <br />
-        <h4>Device</h4>
+        <h4>Device<Button color="link" onClick={() => setDeviceModal(true)}><FontAwesome className="fas fa-info-circle" style={{color: "#212529"}}/></Button></h4>
           <ButtonToolbar>
             <Button color="primary" onClick={() => setDeviceSelected("simulator")} active={settings.deviceSelected === 'simulator'}>Simulator</Button>
             <Button color="primary" onClick={() => setDeviceSelected("real")} active={settings.deviceSelected === 'real'}>Real</Button>
@@ -163,6 +164,17 @@ const Settings = (props) => {
           <a href="https://link.springer.com/article/10.1007/s11128-018-2082-8">Khan et al (2018)</a> has a comprehensive review on quantum protocols.</div>)}
       />
       <InfoModal
+        modal={deviceModal}
+        setModal={setDeviceModal}
+        title={"Device"}
+        content={(<div>There are two ways that the quantum circuit can be executed:
+          <ul>
+            <li style={{fontSize: "16px"}}>Simulator: On the <a href="https://qiskit.org/aer/">Qiskit Aer quantum simulator</a> which allows for rapid execution of quantum circuits.</li>
+            <li style={{fontSize: "16px"}}>Real: On the <a href="https://quantum-computing.ibm.com/">IBM Q Experience</a> quantum computers available for public usage. The computations are subject to real noise. Please note this option may take a while to run depending on how busy the least busy device is.</li>
+          </ul>
+        </div>)}
+      />
+      <InfoModal
         modal={gameModal}
         setModal={setGameModal}
         title={"Game"}
@@ -172,6 +184,8 @@ const Settings = (props) => {
             <li style={{fontSize: "16px"}}><a href="https://en.wikipedia.org/wiki/El_Farol_Bar_problem">Minority Game</a>: A simple game in which a player wins the game if their outcome is different to everyone else's.</li>
             <li style={{fontSize: "16px"}}><a href="https://en.wikipedia.org/wiki/Chicken_(game)">Chicken Game</a>: Two players are heading towards each other. If the players both continue on the same path, they collide with each other. If one swerves out of the way and the other doesn't, the swerver loses and is labelled the chicken, while the other, implicitly braver player, wins.</li>
             <li style={{fontSize: "16px"}}><a href="https://en.wikipedia.org/wiki/Battle_of_the_sexes_(game_theory)">Bach or Stravinksy</a>: Two player want to go to concert together. One player prefers Bach and the other Stravinksy, however they would both prefer to attend a concert together than alone.</li>
+            <li style={{fontSize: "16px"}}>Custom: Create your own game by deciding on the payoff matrix!</li>
+
           </ul>
           </div>)}
       />
