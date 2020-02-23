@@ -30,8 +30,8 @@ const Results = (props) => {
     const f = async () => {
       try {
         const { data } = await axios.post(
-          'https://api-quantum-game.desireevl.com/',
-          // 'http://127.0.0.1:5000/',
+          // 'https://api-quantum-game.desireevl.com/',
+          'http://127.0.0.1:5000/',
           {
             "protocol": protocolSelected,
             "game": gameSelected,
@@ -88,6 +88,12 @@ const Results = (props) => {
            <hr />      
            <img src={`data:image/jpeg;base64,${encodeURIComponent(circuitImg)}`} width={"100%"}/>
            <img src={`data:image/png;base64,${encodeURIComponent(graphImg)}`} width={"60%"}/>
+           <br />
+           {
+              winner != 'no winners' ?
+              <br />:
+              <div>It is possible to have no winners! Check out the payoff table to see why.</div>
+           }
           </>
         )
         

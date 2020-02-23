@@ -16,10 +16,9 @@ const Instructions = () => {
       <h1 style={{ textAlign: "center"}}>Instructions</h1>
       <br />
       <ul>
-        <li>Learn about quantum game theory by playing games!</li>
-        <li>Choose a game, protocol and number of players</li>
-        <li>Play the game by dragging your selected gates onto the circuit</li>
-        <li>View your results!</li>
+        <li>Learn about quantum game theory by playing classical game theory games using quantum methods!</li>
+        <li>First, choose if you would like to play on a simulator or real quantum computer, then select the protocol, game theory game and how many people will play.</li>
+        <li>Each player will get a chance to drag their selected gates onto the circuit whilst the other players cannot see your selection. Use the quantum gates to optimise your strategy against the other players and aim to maximise your payoff to win the game!</li>
       </ul>
       <br />
       <br />

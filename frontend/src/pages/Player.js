@@ -1,11 +1,28 @@
 import React, { useState } from 'react';
 
 import { Link } from 'react-router-dom'
-import { Button } from 'reactstrap';
+import { Input, Table, Button, ButtonToolbar, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import { useDrag, useDrop } from 'react-dnd'
 import Backend from 'react-dnd-html5-backend'
 import FontAwesome from 'react-fontawesome'
 import { DndProvider } from 'react-dnd'
+
+const InfoModal = (props) => {
+  const { modal, setModal, title, content } = props
+
+  const toggle = () => setModal(!modal);
+
+  return (
+    <div>
+      <Modal centered isOpen={modal} toggle={toggle}>
+        <ModalHeader toggle={toggle}>{title}</ModalHeader>
+        <ModalBody>
+          {content}
+        </ModalBody>
+      </Modal>
+    </div>
+  )
+}
 
 const ItemTypes = {
   Gate: 'gate',
@@ -126,6 +143,9 @@ const Player = (props) => {
   const { appState, setPlayerData } = props
   const { settings, playerData } = appState
 
+  // Hide modal by default
+  const [gatesModal, setgatesModal] = useState(false)
+
   const gates = [
     { name: 'X', color: '#d3f6f3' },
     { name: 'Y', color: '#f9fce1' },
@@ -157,7 +177,7 @@ const Player = (props) => {
     <div style={{ textAlign: 'center' }}>
       <h1>Player { curPlayerNo }</h1>
       <br />
-      <h4 align='left'>Gates</h4>
+      <h4 align='left'>Gates<Button color="link" onClick={() => setgatesModal(true)}><FontAwesome className="fas fa-info-circle" style={{color: "#212529"}}/></Button></h4>
       <br />
 
       <div style={{ width: '750px' }}>
@@ -282,6 +302,14 @@ const Player = (props) => {
         }
       </div>
     </div>
+    <InfoModal
+      modal={gatesModal}
+      setModal={setgatesModal}
+      title={" Gates"}
+      content={(<div>Quantum gates are basic operations used to manipulate input states in quantum computing. Here, various gates can be used to try and optimise your outcome for your selected quantum game theory game. For more information on the quantum gates see the <a href="https://qiskit.org/textbook/ch-gates/quantum-gates.html">Qiskit Textbook</a>.
+      <br />
+      The unfamiliar W gate at the end is a <a href="https://arxiv.org/abs/quant-ph/0007038">custom gate</a> that is the nash equilibrium unitary for the Minority Game.</div>)}
+    />
     </div>
   );
 }
