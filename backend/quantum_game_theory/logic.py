@@ -11,7 +11,7 @@ from qiskit.quantum_info import Operator
 from qiskit.visualization import plot_histogram
 from io import BytesIO
 
-from quantum_game_theory.utils import gen_predefined_payoffs, Protocol, unitary_gates
+from utils import gen_predefined_payoffs, Protocol, unitary_gates
 
 
 class PayoffTable:
@@ -82,11 +82,29 @@ class QuantumGame:
         Jdg = Operator(1 / np.sqrt(2) * (I - 1j * tensorX))
 
         return J, Jdg
+    
+    def _make_decomposed_J_operators(self) -> QuantumCircuit:
+        circ = QuantumCircuit(self.num_players + 1)
+        circ.cnot(0, self.num_players)
+        circ.h(0)
+        for i in range(1,self.num_players):
+            circ.cx(0,i)
+        circ.x(self.num_players)
+        for i in range(1,self.num_players):
+            circ.ccx(0,self.num_players,i)
+        circ.x(self.num_players)
+        circ.x(0)
+        for i in range(1,self.num_players):
+            circ.ccx(0,self.num_players,i)
+        circ.x(0)
+        circ.s(0)
+        return circ
 
     def _make_circuit(self, player_gates):
         """ Generates the base circuit """
-        circ = QuantumCircuit(self.num_players, self.num_players)
-        circ.append(self.J, range(self.num_players))
+        circ = QuantumCircuit(self.num_players+1, self.num_players+1)
+        #circ.append(self.J, range(self.num_players))
+        circ += self._make_decomposed_J_operators()
         circ.barrier()
 
         for i in range(self.num_players):
@@ -94,9 +112,10 @@ class QuantumGame:
         circ.barrier()
 
         if self.protocol == Protocol.EWL:
-            circ.append(self.Jdg, range(self.num_players))
+            #circ.append(self.Jdg, range(self.num_players))
+            circ += self._make_decomposed_J_operators().inverse()
             circ.barrier()
-        circ.measure(range(self.num_players), range(self.num_players))
+        circ.measure(range(self.num_players+1), range(self.num_players+1))
         return circ
 
     def _add_player_gates(self, circ, player_num, gates):
@@ -214,7 +233,7 @@ class Game:
             # now we need to invert the order of the counts because our convention is [P1,P2]
             counts_inverted={}
             for key, value in counts.items():
-                counts_inverted[key[::-1]]=value
+                counts_inverted[key[:0:-1]]=value
             return counts_inverted
 
     def _get_payoffs(self, choices):
