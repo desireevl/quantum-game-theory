@@ -113,17 +113,23 @@ const Results = (props) => {
            <br />
            {
               winner != 'no winners' ?
-              <br />:
+              <div>Check out the payoff table <Button color="link" onClick={() => setPayoffModal(true)}>here</Button>!</div>:
               <div>It is possible to have no winners! Check out the <Button color="link" onClick={() => setPayoffModal(true)}>payoff table</Button> to see why.</div>
            }
-            This game runs the circuit 100 times and determines the winner by looking at the highest outcome. 
+            This game runs the circuit 50 times and determines the winner by looking at the highest outcome. 
+           {
+              deviceSelected === 'real' ?
+                numPlayers != 2 ?
+                <div>The real quantum computer requires a decomposition of the J gate proposed by the protocol selected earlier on as well as the use of 1 ancilla qubit. This decomposition can be seen surrounding the selected gates chosen by the players. </div>:
+                <div>The U gate that is seen in the circuit follows the protocol that has been selected.</div>:
+                  <div>The U gate that is seen in the circuit follows the protocol that has been selected.</div>
+           }
             To learn more about quantum game theory check out this <a href="https://github.com/desireevl/quantum-game-theory/blob/master/notebooks/quantum_game_theory.ipynb">Jupyter notebook tutorial</a>.
           </>
         )
         
       }
 
-      <br />
       <br />
       <br />
       <br />
@@ -143,7 +149,7 @@ const Results = (props) => {
         modal={payoffModal}
         setModal={setPayoffModal}
         title={"Payoff"}
-        content={(<div>The payoff for the selected {gameName} game: 
+        content={(<div>The payoff for the selected {gameName} {numPlayers} player game: 
                 <br /> 
                 {payoffMat}
                 <br />

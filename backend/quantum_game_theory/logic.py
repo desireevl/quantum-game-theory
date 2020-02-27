@@ -246,8 +246,9 @@ class Game:
             print('Executing circuit ....')
             job_sim = execute(self._quantum_game.circ,
                               self._backend, shots=n_times)
-            print('Circuit finished running.')
+            print('Circuit running ...')
             res_sim = job_sim.result()
+            print('Circuit finished running, getting counts ...')
             # final_unitary = res_sim.get_unitary
             counts = res_sim.get_counts(self._quantum_game.circ)
             # now we need to invert the order of the counts because our convention is [P1,P2]
@@ -287,7 +288,7 @@ class Game:
             outcome.append(curr_choices)
             num_times.append(curr_num_times)
         payoff_json = json.dumps(self._payoff_table.get_payoff_table())
-        return {'outcome': outcome, 'payoffs': payoffs, 'game': self._game_name, 'payoff_matrix': payoff_json, 'winners': winners, 'num_times': num_times, 'backend': str(self._backend)}
+        return {'outcome': outcome, 'payoffs': payoffs, 'players': self._num_players, 'game': self._game_name, 'payoff_matrix': payoff_json, 'winners': winners, 'num_times': num_times, 'backend': str(self._backend)}
 
     def base64_figure(self, fig):
         buf = BytesIO()
@@ -297,7 +298,7 @@ class Game:
 
         return fig_str
 
-    def play_game(self, player_choices, n_times=100):
+    def play_game(self, player_choices, n_times=50):
         """ Main game function that puts together all the components"""
         player_choices = self.format_choices(player_choices)
         self.quantum_circuit = self._generate_quantum_circuit(player_choices)
