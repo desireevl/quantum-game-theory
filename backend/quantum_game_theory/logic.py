@@ -1,4 +1,5 @@
 import base64
+import json
 import numpy as np
 import operator
 import pandas as pd
@@ -43,6 +44,9 @@ class PayoffTable:
         """ Gets the index from a given tuple of player choices """
         bin_string = ''.join(str(i) for i in choices)
         return int(bin_string, self.n_choices)
+
+    def get_payoff_table(self):
+        return self.payoff
 
 
 class QuantumGame:
@@ -103,21 +107,35 @@ class QuantumGame:
 
     def _make_circuit(self, player_gates):
         """ Generates the base circuit """
-        circ = QuantumCircuit(self.num_players+1, self.num_players+1)
-        #circ.append(self.J, range(self.num_players))
-        circ += self._make_decomposed_J_operators()
-        circ.barrier()
-
-        for i in range(self.num_players):
-            circ = self._add_player_gates(circ, i, player_gates[i])
-        circ.barrier()
-
-        if self.protocol == Protocol.EWL:
-            #circ.append(self.Jdg, range(self.num_players))
-            circ += self._make_decomposed_J_operators().inverse()
+        if self.num_players == 2:
+            circ = QuantumCircuit(self.num_players, self.num_players)
+            circ.append(self.J, range(self.num_players))
             circ.barrier()
-        circ.measure(range(self.num_players+1), range(self.num_players+1))
-        return circ
+
+            for i in range(self.num_players):
+                circ = self._add_player_gates(circ, i, player_gates[i])
+            circ.barrier()
+
+            if self.protocol == Protocol.EWL:
+                circ.append(self.Jdg, range(self.num_players))
+                circ.barrier()
+            circ.measure(range(self.num_players), range(self.num_players))
+            return circ
+
+        else: 
+            circ = QuantumCircuit(self.num_players+1, self.num_players+1)
+            circ += self._make_decomposed_J_operators()
+            circ.barrier()
+
+            for i in range(self.num_players):
+                circ = self._add_player_gates(circ, i, player_gates[i])
+            circ.barrier()
+
+            if self.protocol == Protocol.EWL:
+                circ += self._make_decomposed_J_operators().inverse()
+                circ.barrier()
+            circ.measure(range(self.num_players+1), range(self.num_players+1))
+            return circ
 
     def _add_player_gates(self, circ, player_num, gates):
         """ Adds the gates chosen by player to the cirucit """
@@ -230,11 +248,15 @@ class Game:
                               self._backend, shots=n_times)
             print('Circuit finished running.')
             res_sim = job_sim.result()
+            # final_unitary = res_sim.get_unitary
             counts = res_sim.get_counts(self._quantum_game.circ)
             # now we need to invert the order of the counts because our convention is [P1,P2]
             counts_inverted={}
             for key, value in counts.items():
-                counts_inverted[key[:0:-1]]=value
+                if self._num_players == 2:
+                    counts_inverted[key[::-1]]=value
+                else:
+                    counts_inverted[key[:0:-1]]=value
             return counts_inverted
 
     def _get_payoffs(self, choices):
@@ -264,8 +286,8 @@ class Game:
         for curr_choices, curr_num_times in results.items():
             outcome.append(curr_choices)
             num_times.append(curr_num_times)
-
-        return {'outcome': outcome, 'payoffs': payoffs, 'winners': winners, 'num_times': num_times, 'backend': str(self._backend)}
+        payoff_json = json.dumps(self._payoff_table.get_payoff_table())
+        return {'outcome': outcome, 'payoffs': payoffs, 'game': self._game_name, 'payoff_matrix': payoff_json, 'winners': winners, 'num_times': num_times, 'backend': str(self._backend)}
 
     def base64_figure(self, fig):
         buf = BytesIO()

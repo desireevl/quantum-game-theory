@@ -1,15 +1,34 @@
 import React, { useState, useEffect } from 'react';
 
 import { Link } from 'react-router-dom'
-import { Button, Spinner } from 'reactstrap';
+import { Button, Spinner, Modal, ModalHeader, ModalBody } from 'reactstrap';
 import FontAwesome from 'react-fontawesome'
 import axios from 'axios'
+
+const InfoModal = (props) => {
+  const { modal, setModal, title, content } = props
+
+  const toggle = () => setModal(!modal);
+
+  return (
+    <div>
+      <Modal centered isOpen={modal} toggle={toggle}>
+        <ModalHeader toggle={toggle}>{title}</ModalHeader>
+        <ModalBody>
+          {content}
+        </ModalBody>
+      </Modal>
+    </div>
+  )
+}
 
 const Results = (props) => {
   const { appState, setPlayerData } = props
   const { playerData } = appState
   const { protocolSelected, gameSelected, playersSelected, payoffMatrix, deviceSelected } = appState.settings
   const [data, setData] = useState(null)
+
+  const [payoffModal, setPayoffModal] = useState(false)
 
   const toArray = (o) => {
     let arr = []
@@ -64,6 +83,9 @@ const Results = (props) => {
   const circuitImg = data != null ? data["full_circ_str"]: null
   const graphImg = data != null ? data["graph_str"]: null
 
+  const payoffMat = data != null ? data["payoff_matrix"]: null
+  const gameName = data != null ? data["game"]: null
+
   console.log(appState)
 
   return (
@@ -92,8 +114,10 @@ const Results = (props) => {
            {
               winner != 'no winners' ?
               <br />:
-              <div>It is possible to have no winners! Check out the payoff table to see why.</div>
+              <div>It is possible to have no winners! Check out the <Button color="link" onClick={() => setPayoffModal(true)}>payoff table</Button> to see why.</div>
            }
+            This game runs the circuit 100 times and determines the winner by looking at the highest outcome. 
+            To learn more about quantum game theory check out this <a href="https://github.com/desireevl/quantum-game-theory/blob/master/notebooks/quantum_game_theory.ipynb">Jupyter notebook tutorial</a>.
           </>
         )
         
@@ -115,6 +139,17 @@ const Results = (props) => {
           </Button>
         </Link>
       </div>
+      <InfoModal
+        modal={payoffModal}
+        setModal={setPayoffModal}
+        title={"Payoff"}
+        content={(<div>The payoff for the selected {gameName} game: 
+                <br /> 
+                {payoffMat}
+                <br />
+                <br />
+                Match the the outcome with the highest probability to the key in the following table to see the payoff for each player (in order of [Player 1, Player 2 ...]).</div>)}
+      />
     </div>
     </div>
   );

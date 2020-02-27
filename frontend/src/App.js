@@ -6,7 +6,6 @@ import SettingPage from './pages/Settings.js'
 import PlayerPage from './pages/Player.js'
 import ResultsPage from './pages/Results.js'
 
-
 import {
   BrowserRouter as Router,
   Switch,
