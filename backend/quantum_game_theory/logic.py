@@ -11,7 +11,8 @@ from qiskit.quantum_info import Operator
 from qiskit.visualization import plot_histogram
 from io import BytesIO
 
-from utils import gen_predefined_payoffs, Protocol, unitary_gates
+# if you need to use "from utils import ..." please don't push that and keep this line the same
+from quantum_game_theory.utils import gen_predefined_payoffs, Protocol, unitary_gates
 
 
 class PayoffTable:
@@ -85,7 +86,7 @@ class QuantumGame:
     
     def _make_decomposed_J_operators(self) -> QuantumCircuit:
         circ = QuantumCircuit(self.num_players + 1)
-        circ.cnot(0, self.num_players)
+        circ.cx(0, self.num_players)
         circ.h(0)
         for i in range(1,self.num_players):
             circ.cx(0,i)

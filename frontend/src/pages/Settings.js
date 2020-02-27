@@ -77,7 +77,6 @@ const Settings = (props) => {
             <Button color="primary" onClick={() => {
               setDeviceSelected('real')
               setAgreementModal(true)
-              setPlayersSelected(2)
               }} active={settings.deviceSelected === 'real'}>Real</Button>
         </ButtonToolbar>
           <br />
@@ -137,10 +136,10 @@ const Settings = (props) => {
           <ButtonToolbar>
             <Button color="primary" onClick={() => setPlayersSelected(2)} active={settings.playersSelected === 2}>2</Button>
             <Button 
-              disabled={gameSelected === "prisoner" || gameSelected === "BoS" || gameSelected === "custom" || deviceSelected === "real"}
+              disabled={gameSelected === "prisoner" || gameSelected === "BoS" || gameSelected === "custom"}
               color="primary" onClick={() => setPlayersSelected(3)} active={settings.playersSelected === 3}>3</Button>
             <Button
-              disabled={gameSelected === "prisoner" || gameSelected === "BoS" || gameSelected === "custom" || deviceSelected === "real"}
+              disabled={gameSelected === "prisoner" || gameSelected === "BoS" || gameSelected === "custom"}
               color="primary" onClick={() => setPlayersSelected(4)} active={settings.playersSelected === 4}>4</Button>
           </ButtonToolbar>
           <br />
