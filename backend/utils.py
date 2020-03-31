@@ -86,18 +86,24 @@ class WGate(Gate):
             definition.append(inst)
         self.definition = definition
 
-
-unitary_gates = {"X": XGate(),
-                 "Y": YGate(),
-                 "S": SGate(),
-                 "Z": ZGate(),
-                 "H": HGate(),
-                 "T": TGate(),
-                 "I": IdGate(),
-                 "W": WGate(),
-                 "Rz1": RZGate(-3 * np.pi / 8),
-                 "Rz2": RZGate(np.pi/2),
-                 "Ry1": RYGate(np.pi/2)}
+def get_unitary_gates(gate_name: str):
+    # Rx, Ry and Rz gates
+    if gate_name[0]=='R' and gate_name[2]=='(':
+        if gate_name[1]=='x':
+            angle = float()
+        elif gate_name[1] == 'y'
+        elif gate_name[1] == 'z'
+    unitary_gates = {"X": XGate(),
+                     "Y": YGate(),
+                     "S": SGate(),
+                     "Z": ZGate(),
+                     "H": HGate(),
+                    "T": TGate(),
+                    "I": IdGate(),
+                    "W": WGate(),
+                    "Rz1": RZGate(-3 * np.pi / 8),
+                    "Rz2": RZGate(np.pi/2),
+                    "Ry1": RYGate(np.pi/2)}
 
 
 class Protocol(Enum):
