@@ -1,4 +1,4 @@
-from quantum_game_theory.logic import Game
+from backend.logic import Game
 
 GAME = 'minority'
 NUM_PLAYERS = 4
