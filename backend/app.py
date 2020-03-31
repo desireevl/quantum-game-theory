@@ -2,7 +2,7 @@ from flask import Flask
 from flask_restful import Api, Resource, reqparse
 from flask_cors import CORS
 
-from quantum_game_theory.logic import Game
+from backend.logic import Game
 
 
 class QuantumApi(Resource):
