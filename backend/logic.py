@@ -31,7 +31,7 @@ class PayoffTable:
         self.n_choices = n_choices
         self.payoff = payoff
 
-    def set_payoff(self, choices: str, payoff: Tuple):
+    def set_payoffs(self, choices: str, payoff: Tuple):
         """ Sets the payoff value for a given tuple of player choices """
         self.payoff[choices] = payoff
 
