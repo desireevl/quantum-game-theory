@@ -4,21 +4,19 @@ import numpy as np
 import operator
 import pandas as pd
 
-from flask import Flask
-from flask_restful import Api, Resource, reqparse
 from qiskit import Aer, execute, IBMQ, QuantumCircuit
 from qiskit.providers.ibmq import least_busy
 from qiskit.quantum_info import Operator
 from qiskit.visualization import plot_histogram
 from io import BytesIO
+from typing import Tuple
 
-# if you need to use "from utils import ..." please don't push that and keep this line the same
-from quantum_game_theory.utils import gen_predefined_payoffs, Protocol, unitary_gates
+from backend.utils import gen_predefined_payoffs, Protocol, unitary_gates
 
 
 class PayoffTable:
     """
-    For if you want to create a custom payoff table. This is not in use and not implemented 
+    For if you want to create a custom payoff table. This is not in use and not implemented
     """
 
     def __init__(self, n_players, n_choices, payoff=None):
@@ -32,18 +30,13 @@ class PayoffTable:
         self.n_choices = n_choices
         self.payoff = payoff
 
-    def set_payoff(self, tuple, payoff):
+    def set_payoffs(self, choices: str, payoff: Tuple):
         """ Sets the payoff value for a given tuple of player choices """
-        self.payoff[self._get_index(tuple), :] = payoff
+        self.payoff[choices] = payoff
 
-    def get_payoffs(self, choices):
+    def get_payoffs(self, choices: str):
         """ Access the payoff tuple for a given tuple of choices """
         return self.payoff[choices]
-
-    def _get_index(self, choices):
-        """ Gets the index from a given tuple of player choices """
-        bin_string = ''.join(str(i) for i in choices)
-        return int(bin_string, self.n_choices)
 
     def get_payoff_table(self):
         return self.payoff
@@ -87,20 +80,20 @@ class QuantumGame:
         Jdg = Operator(1 / np.sqrt(2) * (I - 1j * tensorX))
 
         return J, Jdg
-    
+
     def _make_decomposed_J_operators(self) -> QuantumCircuit:
         circ = QuantumCircuit(self.num_players + 1)
         circ.cx(0, self.num_players)
         circ.h(0)
-        for i in range(1,self.num_players):
-            circ.cx(0,i)
+        for i in range(1, self.num_players):
+            circ.cx(0, i)
         circ.x(self.num_players)
-        for i in range(1,self.num_players):
-            circ.ccx(0,self.num_players,i)
+        for i in range(1, self.num_players):
+            circ.ccx(0, self.num_players, i)
         circ.x(self.num_players)
         circ.x(0)
-        for i in range(1,self.num_players):
-            circ.ccx(0,self.num_players,i)
+        for i in range(1, self.num_players):
+            circ.ccx(0, self.num_players, i)
         circ.x(0)
         circ.s(0)
         return circ
@@ -122,8 +115,8 @@ class QuantumGame:
             circ.measure(range(self.num_players), range(self.num_players))
             return circ
 
-        else: 
-            circ = QuantumCircuit(self.num_players+1, self.num_players+1)
+        else:
+            circ = QuantumCircuit(self.num_players + 1, self.num_players + 1)
             circ += self._make_decomposed_J_operators()
             circ.barrier()
 
@@ -134,7 +127,7 @@ class QuantumGame:
             if self.protocol == Protocol.EWL:
                 circ += self._make_decomposed_J_operators().inverse()
                 circ.barrier()
-            circ.measure(range(self.num_players+1), range(self.num_players+1))
+            circ.measure(range(self.num_players + 1), range(self.num_players + 1))
             return circ
 
     def _add_player_gates(self, circ, player_num, gates):
@@ -158,7 +151,7 @@ class Game:
         Args:
             game_name (str): name of game to be played
             protocol (str): name of the protocol to be used
-            payoff_table (dict): custom payoff table, otherwise uses default 
+            payoff_table (dict): custom payoff table, otherwise uses default
             group (str): IBMQ group type
             backend (str): backend name to execute circuit
         """
@@ -186,7 +179,7 @@ class Game:
             print('Getting least busy device ...')
             provider = IBMQ.get_provider(hub='ibm-q')
             small_devices = provider.backends(filters=lambda x: x.configuration().n_qubits == 5
-                                   and not x.configuration().simulator)
+                                                                and not x.configuration().simulator)
             least_busy_device = least_busy(small_devices)
             print(f'Least busy device: {least_busy_device}')
 
@@ -196,7 +189,7 @@ class Game:
         """ Creates the payoff table object used to store choices """
         payoff_table = gen_predefined_payoffs(game_name, num_players, payoff_input)
         n_players = num_players
-        n_choices = int(len(payoff_table)**(1/n_players))
+        n_choices = int(len(payoff_table) ** (1 / n_players))
         payoff_table = PayoffTable(n_players, n_choices, payoff_table)
         return n_players, n_choices, payoff_table
 
@@ -252,12 +245,12 @@ class Game:
             # final_unitary = res_sim.get_unitary
             counts = res_sim.get_counts(self._quantum_game.circ)
             # now we need to invert the order of the counts because our convention is [P1,P2]
-            counts_inverted={}
+            counts_inverted = {}
             for key, value in counts.items():
                 if self._num_players == 2:
-                    counts_inverted[key[::-1]]=value
+                    counts_inverted[key[::-1]] = value
                 else:
-                    counts_inverted[key[:0:-1]]=value
+                    counts_inverted[key[:0:-1]] = value
             return counts_inverted
 
     def _get_payoffs(self, choices):
@@ -270,7 +263,6 @@ class Game:
             return 'P' + str(argmaxes[0] + 1)
         else:
             return 'no winners'
-
 
     def _generate_final_results(self, results):
         """ Returns DataFrame of outcome and number of times, payoff, winner and backend used """
@@ -288,7 +280,8 @@ class Game:
             outcome.append(curr_choices)
             num_times.append(curr_num_times)
         payoff_json = json.dumps(self._payoff_table.get_payoff_table())
-        return {'outcome': outcome, 'payoffs': payoffs, 'players': self._num_players, 'game': self._game_name, 'payoff_matrix': payoff_json, 'winners': winners, 'num_times': num_times, 'backend': str(self._backend)}
+        return {'outcome': outcome, 'payoffs': payoffs, 'players': self._num_players, 'game': self._game_name,
+                'payoff_matrix': payoff_json, 'winners': winners, 'num_times': num_times, 'backend': str(self._backend)}
 
     def base64_figure(self, fig):
         buf = BytesIO()
