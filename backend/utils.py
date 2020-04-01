@@ -1,6 +1,6 @@
-import numpy as np
-
 from enum import Enum
+
+import numpy as np
 
 from qiskit.extensions import XGate, YGate, SGate, ZGate, HGate, TGate, RZGate, RYGate, IdGate
 from qiskit.circuit import Gate
@@ -8,7 +8,7 @@ from qiskit.circuit import QuantumRegister
 
 
 def gen_predefined_payoffs(game_name: str, num_players: int, payoff_input: dict):
-    '''Generates payoff table based on game name'''
+    """Generates payoff table based on game name"""
     num_players = num_players
     payoff_table = {}
     if game_name == "minority":
@@ -53,7 +53,7 @@ def gen_predefined_payoffs(game_name: str, num_players: int, payoff_input: dict)
                         '10': (0, -3),
                         '11': (-2, -2)}
     elif game_name == 'BoS':
-        payoff_table =  {'00': (3, 2),
+        payoff_table = {'00': (3, 2),
                         '01': (0, 0),
                         '10': (0, 0),
                         '11': (2, 3)}
@@ -87,7 +87,7 @@ class WGate(Gate):
         self.definition = definition
 
 
-unitary_gates = {"X": XGate(),
+UNITARY_GATES = {"X": XGate(),
                  "Y": YGate(),
                  "S": SGate(),
                  "Z": ZGate(),
