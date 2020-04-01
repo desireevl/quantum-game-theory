@@ -109,5 +109,5 @@ class Protocol(Enum):
     Classical = "Classical protocol"
 
     def describe(self):
-        # self is the member here
+        # Self is the member here
         return self.name, self.value
