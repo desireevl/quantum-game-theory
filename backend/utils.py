@@ -144,7 +144,7 @@ def parse_angle(angle_str: str) -> float:
 def generate_unitary_gate(gate_name: str) -> Gate:
     # Rx, Ry and Rz gates that look like 'Rx(pi/2)
     if gate_name[0] == 'R':
-        angle = parse_angle(gate_name[2:-1])
+        angle = parse_angle(gate_name[3:-1])
         if gate_name[1] == 'x':
             return RXGate(angle)
         elif gate_name[1] == 'y':
