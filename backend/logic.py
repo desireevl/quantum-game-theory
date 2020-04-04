@@ -212,6 +212,9 @@ class Game:
                 formatted_player_choices.append(choice)
             else:
                 formatted_player_choices.append([choice])
+        if len(formatted_player_choices) != self._n_players:
+            raise ValueError(f'The number of choices ({len(formatted_player_choices)}) does not match the number of'
+                             f' players ({self._n_players})')
         return formatted_player_choices
 
     def _generate_quantum_circuit(self, player_gates):
