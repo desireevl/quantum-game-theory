@@ -11,7 +11,7 @@ from qiskit.visualization import plot_histogram
 from io import BytesIO
 from typing import Tuple
 
-from backend.utils import gen_predefined_payoffs, Protocol, UNITARY_GATES
+from backend.utils import gen_predefined_payoffs, Protocol, generate_unitary_gate
 
 
 class PayoffTable:
@@ -21,6 +21,7 @@ class PayoffTable:
 
     def __init__(self, n_players, n_choices, payoff=None):
         """
+        Args:
         Args:
             n_players (int): number of players
             n_choices (int): number of choices
@@ -100,6 +101,7 @@ class QuantumGame:
 
     def _make_circuit(self, player_gates):
         """ Generates the base circuit """
+
         if self.num_players == 2:
             circ = QuantumCircuit(self.num_players, self.num_players)
             circ.append(self.J, range(self.num_players))
@@ -211,6 +213,9 @@ class Game:
                 formatted_player_choices.append(choice)
             else:
                 formatted_player_choices.append([choice])
+        if len(formatted_player_choices) != self._n_players:
+            raise ValueError(f'The number of choices ({len(formatted_player_choices)}) does not match the number of'
+                             f' players ({self._n_players})')
         return formatted_player_choices
 
     def _generate_quantum_circuit(self, player_gates):
@@ -221,7 +226,7 @@ class Game:
         for i in range(len(player_gates)):
             player_gate_objects.append([])
             for j in player_gates[i]:
-                player_gate_objects[i].append(UNITARY_GATES[j])
+                player_gate_objects[i].append(generate_unitary_gate(j))
         self._quantum_game = QuantumGame(player_gate_objects, self._protocol)
         self._quantum_game.circ.draw()
         return self._quantum_game.circ
