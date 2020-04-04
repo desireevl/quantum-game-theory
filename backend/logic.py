@@ -22,6 +22,7 @@ class PayoffTable:
     def __init__(self, n_players, n_choices, payoff=None):
         """
         Args:
+        Args:
             n_players (int): number of players
             n_choices (int): number of choices
             payoff (dict): custom payoff, otherwise uses default
