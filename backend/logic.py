@@ -100,6 +100,7 @@ class QuantumGame:
 
     def _make_circuit(self, player_gates):
         """ Generates the base circuit """
+
         if self.num_players == 2:
             circ = QuantumCircuit(self.num_players, self.num_players)
             circ.append(self.J, range(self.num_players))
