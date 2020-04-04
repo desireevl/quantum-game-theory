@@ -2,7 +2,7 @@ from enum import Enum
 
 import numpy as np
 
-from qiskit.extensions import XGate, YGate, SGate, ZGate, HGate, TGate, RZGate, RYGate, IdGate
+from qiskit.extensions import XGate, YGate, SGate, ZGate, HGate, TGate, RXGate, RYGate, RZGate, IdGate
 from qiskit.circuit import Gate
 from qiskit.circuit import QuantumRegister
 
@@ -87,39 +87,70 @@ class WGate(Gate):
         self.definition = definition
 
 def parse_angle(angle_str: str) -> float:
-    numbers=['']
+    numbers = []
+    ops = []
+    no_dec = True
+    prev_char = None
     for i in range(len(angle_str)):
-        if angle_str[i].isdigit() or angle_str[i]=='.' or (angle_str[i]=='-' and i==0):
-            numbers[-1] = numbers[-1]+angle_str[i]
-        elif angle_str[i]=='*' and angle_str[i-1].isdigit() and angle_str[i+1].isdigit():
-            numbers.append('')
-        elif angle_str[i] =='p':
-            if i==0:
-                pass
-            elif angle_str[i-1].isdigit():
-                pass
-            else:
-                raise ValueError(f'input {angle_str} is invalid (can only contain digits, ".", "*" and "pi", '
-                                 f'and cannot start or end with "*")')
-        elif angle_str[i] =='i' and angle_str[i-1] =='p':
-            numbers.append(np.pi)
-            if i != len(angle_str):
+        # If the character is a digit either append it to the previous digit or make a new string of digits starting
+        # with that if the previous is not a string of digits
+        if angle_str[i].isdigit():
+            if prev_char is None:
                 numbers.append('')
+            numbers[-1] += angle_str[i]
+            prev_char = 'number'
+        # If the character is a decimal append it to the previous digit as long as there are no decimals already or make
+        # a new set string of digits starting with that if the previous is not a string of digits
+        elif angle_str[i] == '.' and no_dec:
+            if prev_char is None:
+                numbers.append('')
+            numbers[-1] += angle_str[i]
+            prev_char = 'number'
+            no_dec = False
+        # If the first character is a minus sign make a new set string of digits starting with that character
+        elif angle_str[i] == '-' and prev_char is None:
+            numbers.append('-')
+            prev_char = 'operator'
+        # If the character is a multiplication or division sign make a new empty string of digits and add operator
+        elif (angle_str[i] == '*' or angle_str[i] == '/') and prev_char == 'number' and (angle_str[i+1].isdigit() or
+                                                                                         angle_str[i+1] == '.' or
+                                                                                         angle_str[i+1] == 'p'):
+            ops.append(angle_str[i])
+            numbers.append('')
+            prev_char = 'operator'
+            no_dec = True
+        # If the characters are 'pi', add np.pi to the numbers list
+        elif angle_str[i] =='p' and angle_str[i+1] == 'i':
+            pass
+        elif angle_str[i] == 'i' and angle_str[i-1] == 'p':
+            if prev_char is None:
+                numbers.append('')
+            numbers[-1] = np.pi
+            prev_char = 'number'
         else:
-            raise ValueError(f'{angle_str} is invalid (can only contain digits, ".", "*" and "pi"')
-    angle = 1
-    for number in numbers:
-        angle *= float(number)
+            raise ValueError(f'{angle_str} is invalid')
+    # Combine numbers given operators
+    angle = float(numbers[0])
+    if len(numbers) == 1:
+        return angle
+    for i in range(len(numbers)-1):
+        if ops[i] == '*':
+            angle *= float(numbers[i+1])
+        elif ops[i] == '/':
+            angle /= float(numbers[i+1])
     return angle
 
 
 def generate_unitary_gate(gate_name: str) -> Gate:
-    # Rx, Ry and Rz gates
-    if gate_name[0]=='R' and gate_name[2]=='(':
+    # Rx, Ry and Rz gates that look like 'Rx(pi/2)
+    if gate_name[0] == 'R':
         angle = parse_angle(gate_name[2:-1])
-        if gate_name[1]=='x':
-        elif gate_name[1] == 'y'
-        elif gate_name[1] == 'z'
+        if gate_name[1] == 'x':
+            return RXGate(angle)
+        elif gate_name[1] == 'y':
+            return RYGate(angle)
+        elif gate_name[1] == 'z':
+            return RZGate(angle)
     else:
         unitary_gates = {"X": XGate(),
                          "Y": YGate(),
