@@ -11,5 +11,5 @@ def test_PayoffTable():
     assert payoff_table.get_payoff_table() == sample_payoff_table
     for key, value in sample_payoff_table.items():
         assert payoff_table.get_payoffs(key) == value
-        payoff_table.set_payoffs(key, (0, 0))
-        assert payoff_table.get_payoffs(key) == (0, 0)
+        payoff_table.set_payoffs(key, (int(key,2), int(key,2)))
+        assert payoff_table.get_payoffs(key) == (int(key,2), int(key,2))
