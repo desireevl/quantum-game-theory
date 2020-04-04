@@ -86,11 +86,38 @@ class WGate(Gate):
             definition.append(inst)
         self.definition = definition
 
+def parse_angle(angle_str: str) -> float:
+    numbers=['']
+    for i in range(len(angle_str)):
+        if angle_str[i].isdigit() or angle_str[i]=='.' or (angle_str[i]=='-' and i==0):
+            numbers[-1] = numbers[-1]+angle_str[i]
+        elif angle_str[i]=='*' and angle_str[i-1].isdigit() and angle_str[i+1].isdigit():
+            numbers.append('')
+        elif angle_str[i] =='p':
+            if i==0:
+                pass
+            elif angle_str[i-1].isdigit():
+                pass
+            else:
+                raise ValueError(f'input {angle_str} is invalid (can only contain digits, ".", "*" and "pi", '
+                                 f'and cannot start or end with "*")')
+        elif angle_str[i] =='i' and angle_str[i-1] =='p':
+            numbers.append(np.pi)
+            if i != len(angle_str):
+                numbers.append('')
+        else:
+            raise ValueError(f'{angle_str} is invalid (can only contain digits, ".", "*" and "pi"')
+    angle = 1
+    for number in numbers:
+        angle *= float(number)
+    return angle
+
+
 def generate_unitary_gate(gate_name: str) -> Gate:
     # Rx, Ry and Rz gates
     if gate_name[0]=='R' and gate_name[2]=='(':
+        angle = parse_angle(gate_name[2:-1])
         if gate_name[1]=='x':
-            angle = parse_angle(gate_name[])
         elif gate_name[1] == 'y'
         elif gate_name[1] == 'z'
     else:
