@@ -198,7 +198,7 @@ const Settings = (props) => {
         modal={agreementModal}
         setModal={setAgreementModal}
         title={"IBM Q User Agreement"}
-        content={(<div>By continuing you agree that you are over 17.</div>)}
+        content={(<div>By continuing you agree that you are over 17. ***Please note that currently the real device option does not work due to issue in latest qiskit update. See the issue <a href="https://github.com/Qiskit/qiskit-ibmq-provider/issues/617">Here</a>*** </div>)}
       />
     </div>
   );
