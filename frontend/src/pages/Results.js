@@ -61,7 +61,7 @@ const Results = (props) => {
             "player2": toArray(playerData[1] || {}),
             "player3": toArray(playerData[2] || {}),
             "player4": toArray(playerData[3] || {}),
-          }// 
+          }, { timeout: 600000 } 
 // 
 // 
         )
