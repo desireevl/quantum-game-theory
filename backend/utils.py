@@ -87,6 +87,7 @@ class WGate(Gate):
         self.definition = definition
 
 def parse_angle(angle_str: str) -> float:
+    angle_str = angle_str.replace(" ", "")
     numbers = []
     ops = []
     no_dec = True

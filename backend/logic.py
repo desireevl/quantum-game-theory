@@ -71,7 +71,7 @@ class QuantumGame:
     def _make_J_operators(self):
         """ Creates the J unitary and its adjoint """
         I = np.identity(1 << self.num_players)
-        X = np.matrix([[0, 1], [1, 0]])
+        X = np.array([[0, 1], [1, 0]])
         tensorX = X
 
         for i in range(self.num_players - 1):

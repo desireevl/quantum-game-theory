@@ -23,17 +23,24 @@ def test_PayoffTable():
         assert payoff_table.get_payoffs(key) == (int(key,2), int(key,2))
 
 
-def make_QuantumGame_2_player_cases() -> List[Tuple]:
-    gates_and_amplitudes = [([[IdGate()], [XGate()]], [0, 0, 1, 0]),
-                            ([[XGate()], [IdGate()]], [0, 1, 0, 0]),
-                            ([[HGate()], [HGate()]], [0.5, 0.5, 0.5, 0.5])]
-    return gates_and_amplitudes
+def make_QuantumGame_test_cases() -> List[Tuple]:
+    gates = [[[IdGate()], [XGate()]],
+             [[XGate()], [IdGate()]],
+             [[HGate()], [HGate()]]]
+    amplitudes = {"EWL": [[0, 0, 1, 0],
+                          [0, 1, 0, 0],
+                          [0.5, 0.5, 0.5, 0.5]]}
+    cases = []
+    for protocol in amplitudes.keys():
+        for i in range(len(gates)):
+            cases.append((gates[i], protocol, amplitudes[protocol][i]))
+    return cases
 
 
-@pytest.mark.parametrize("player_gates, amplitudes", make_QuantumGame_2_player_cases())
-def test_QuantumGame_2_player(player_gates: List, amplitudes: List):
+@pytest.mark.parametrize("player_gates, protocol, amplitudes", make_QuantumGame_test_cases())
+def test_QuantumGame(player_gates: List, protocol: str, amplitudes: List):
     # EWL Protocol
-    quantum_game = QuantumGame(player_gates, Protocol['EWL'])
+    quantum_game = QuantumGame(player_gates, Protocol[protocol])
     quantum_game.circ.remove_final_measurements()
     backend = Aer.get_backend('statevector_simulator')
     job_sim = execute(quantum_game.circ, backend)
