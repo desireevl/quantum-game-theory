@@ -255,7 +255,7 @@ class Game:
                 if self._num_players == 2:
                     counts_inverted[key[::-1]] = value
                 else:
-                    counts_inverted[key[:0:-1]] = value
+                    counts_inverted[key[:0:-1]] += counts_inverted.get(key[:0:-1], 0)
             return counts_inverted
 
     def _get_payoffs(self, choices):
