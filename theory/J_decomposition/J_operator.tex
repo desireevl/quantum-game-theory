@@ -51,7 +51,7 @@ In fact, for any \textit{n}-qubit state that has its first qubit as $\ket{0}$ on
 where $\ket{\bar{x}_i}$ indicates \textit{not} $x_i$, and where $x_1$ is set to $0$, we can draw the circuit as \\
 
 \begin{quantikz}
-	\lstick{$\ket{x_1}$} & \gate{H} & \ctrl{1} & \ctrl{2} & \cdots & \ctrl{4} & \gate{R_z(\pi/4)} & \qw\\
+	\lstick{$\ket{x_1}$} & \gate{H} & \ctrl{1} & \ctrl{2} & \cdots & \ctrl{4} & \gate{S} & \qw\\
 	\lstick{$\ket{x_2}$} & \qw & \targ{} & \qw & \cdots & \qw & \qw & \qw\\
 	\lstick{$\ket{x_3}$} & \qw & \qw & \targ{} & \cdots & \qw & \qw & \qw \\
 	&\vdots & & & & & \vdots  \\
@@ -63,14 +63,14 @@ where $\ket{\bar{x}_i}$ indicates \textit{not} $x_i$, and where $x_1$ is set to 
 Now what about states that have their first qubit set to $\ket{1}$? To start with, let's look at trying to find a circuit for  \cref{eq:J_2_10,eq:J_2_11}. What we can do is flip the first qubit, repeat the same circuit as we did for \cref{eq:J_2_00,eq:J_2_01}, and flip first the qubit back. This would look like\\
 
 \begin{quantikz}
-	\lstick{$\ket{x_1}$} & \gate{X} & \gate{H} & \ctrl{1} & \gate{R_z(\pi/4)} & \gate{X} & \qw\\
+	\lstick{$\ket{x_1}$} & \gate{X} & \gate{H} & \ctrl{1} & \gate{S} & \gate{X} & \qw\\
 	\lstick{$\ket{x_2}$} & \qw & \qw & \targ{} & \qw & \qw & \qw
 \end{quantikz} \\
 
 So now for any \textit{n}-qubit state that has its first qubit as $\ket{1}$ on which we want to act the $J$ operator on (which takes  us back to \cref{eq:J_op_act} except this time  $x_1$ is set to $1$), we can draw the circuit as \\
 
 \begin{quantikz}
-	\lstick{$\ket{x_1}$} & \gate{X} & \gate{H} & \ctrl{1} & \ctrl{2} & \cdots & \ctrl{4} & \gate{R_z(\pi/4)} & \gate{X} & \qw\\
+	\lstick{$\ket{x_1}$} & \gate{X} & \gate{H} & \ctrl{1} & \ctrl{2} & \cdots & \ctrl{4} & \gate{S} & \gate{X} & \qw\\
 	\lstick{$\ket{x_2}$} & \qw & \qw & \targ{} & \qw & \cdots & \qw & \qw & \qw & \qw\\
 	\lstick{$\ket{x_3}$} & \qw & \qw & \qw & \targ{} & \cdots & \qw & \qw & \qw & \qw \\
 	&\vdots & & & & & & \vdots  \\
@@ -80,26 +80,26 @@ So now for any \textit{n}-qubit state that has its first qubit as $\ket{1}$ on w
 So now we want to make a single circuit that works for both cases: (1) when the first qubit is $\ket{0}$ \textit{and} (2) when the first qubit is $\ket{1}$. One naive way to do it is to insert an ancilla qubit that stores the value of the first qubit with a CNOT gate. After that, you flip the ancilla qubit, and now you can implement the whole circuit for case (1) but with the additional feature that all the gates are controlled by the ancilla qubit (in addition to any other qubit they may be controlled by). This will lead to all the gates acting on the qubits if the first qubit was initially a $\ket{0}$, and do nothing if initially the first qubit was a $\ket{1}$. Then you flip the ancilla qubit back and finally implement the whole circuit for case (2) with once again the additional feature of all the gates being controlled by the ancilla qubit. This will lead to all the gates acting on the qubits if the first qubit was initially a $\ket{1}$, and do nothing if initially the first qubit was a $\ket{0}$. The full circuit looks like
 
 \begin{quantikz}
-	\lstick{$\ket{x_1}$} & \qw & \gate{H} & \ctrl{1} & \ctrl{2} & \cdots & \ctrl{4} & \gate{R_z(\pi/4)} & \qw & \gate{X} &  \gate{H} & \ctrl{1} & \ctrl{2} & \cdots & \ctrl{4} & \gate{R_z(\pi/4)} & \gate{X} \\
-	\lstick{$\ket{x_2}$} & \qw & \qw & \targ{} & \qw & \cdots & \qw & \qw & \qw & \qw & \qw & \targ{} & \qw & \cdots & \qw & \qw & \qw\\
-	\lstick{$\ket{x_3}$} & \qw & \qw & \qw & \targ{} & \cdots & \qw & \qw & \qw & \qw & \qw & \qw & \targ{} & \cdots & \qw & \qw & \qw\\
+	\lstick{$\ket{x_1}$} & \ctrl{5} &\qw & \gate{H} & \ctrl{1} & \ctrl{2} & \cdots & \ctrl{4} & \gate{S} & \qw & \gate{X} &  \gate{H} & \ctrl{1} & \ctrl{2} & \cdots & \ctrl{4} & \gate{S} & \gate{X} \\
+	\lstick{$\ket{x_2}$} & \qw & \qw & \qw & \targ{} & \qw & \cdots & \qw & \qw & \qw & \qw & \qw & \targ{} & \qw & \cdots & \qw & \qw & \qw\\
+	\lstick{$\ket{x_3}$} & \qw & \qw & \qw & \qw & \targ{} & \cdots & \qw & \qw & \qw & \qw & \qw & \qw & \targ{} & \cdots & \qw & \qw & \qw\\
 	&\vdots & & & & & & & \vdots & & & & & & & \vdots \\
-	\lstick{$\ket{x_n}$} & \qw & \qw  & \qw & \qw & \cdots & \targ{} & \qw & \qw & \qw & \qw  & \qw & \qw & \cdots & \targ{} & \qw & \qw\\
-	\lstick{$\ket{0}$} & \gate{X} & \ctrl{0} \vqw{-5} & \ctrl{0}\vqw{-4} & \ctrl{0} \vqw{-3} & \cdots & \ctrl{0} \vqw{-1} & \ctrl{0} \vqw{-5} & \gate{X} & \ctrl{0} \vqw{-5} & \ctrl{0} \vqw{-5} & \ctrl{0}\vqw{-4} & \ctrl{0} \vqw{-3} & \cdots & \ctrl{0} \vqw{-1} & \ctrl{0} \vqw{-5} & \ctrl{0} \vqw{-5}
+	\lstick{$\ket{x_n}$} & \qw & \qw & \qw  & \qw & \qw & \cdots & \targ{} & \qw & \qw & \qw & \qw  & \qw & \qw & \cdots & \targ{} & \qw & \qw\\
+	\lstick{$\ket{0}$} &\targ{} & \gate{X} & \ctrl{0} \vqw{-5} & \ctrl{0}\vqw{-4} & \ctrl{0} \vqw{-3} & \cdots & \ctrl{0} \vqw{-1} & \ctrl{0} \vqw{-5} & \gate{X} & \ctrl{0} \vqw{-5} & \ctrl{0} \vqw{-5} & \ctrl{0}\vqw{-4} & \ctrl{0} \vqw{-3} & \cdots & \ctrl{0} \vqw{-1} & \ctrl{0} \vqw{-5} & \ctrl{0} \vqw{-5}
 \end{quantikz} \\
 
-But can we be more efficient than this? Turns out we can a little bit. Firstly we observe that we can remove all control for the two $X$ gates as long as all the gates in between are controlled by the unchanging ancilla qubit. This is because two $X$ gates back-to-back equal the identity. And now we can make a few more subtle changes: we can remove the control on the first $H$ gate, completely remove the middle $H$ and $R_z(\pi/4)$ gates and move the final $R_z(\pi/4)$ gate to the very end of the circuit without a control. For now we can justify the last step of moving the $R_z(\pi/4)$ gate by saying that it cannot be between the two $X$ gates since it is no longer controlled by the ancilla qubit. The final circuit now looks like 
+But can we be more efficient than this? Turns out we can a little bit. Firstly we observe that we can remove all control for the two $X$ gates as long as all the gates in between are controlled by the unchanging ancilla qubit. This is because two $X$ gates back-to-back equal the identity. And now we can make a few more subtle changes: we can remove the control on the first $H$ gate, completely remove the middle $H$ and $S$ gates and move the final $S$ gate to the very end of the circuit without a control. For now we can justify the last step of moving the $S$ gate by saying that it cannot be between the two $X$ gates since it is no longer controlled by the ancilla qubit. The final circuit now looks like 
 
 \begin{quantikz}
-	\lstick{$\ket{x_1}$} & \qw & \gate{H} & \ctrl{1} & \ctrl{2} & \cdots & \ctrl{4} & \qw & \gate{X} & \ctrl{1} & \ctrl{2} & \cdots & \ctrl{4} & \gate{X} & \gate{R_z(\pi/4)} & \qw  \\
-	\lstick{$\ket{x_2}$} & \qw & \qw & \targ{} & \qw & \cdots & \qw & \qw & \qw & \targ{} & \qw & \cdots & \qw & \qw & \qw & \qw\\
-	\lstick{$\ket{x_3}$} & \qw & \qw & \qw & \targ{} & \cdots & \qw & \qw & \qw & \qw & \targ{} & \cdots & \qw & \qw & \qw & \qw\\
+	\lstick{$\ket{x_1}$} & \ctrl{5} & \qw & \gate{H} & \ctrl{1} & \ctrl{2} & \cdots & \ctrl{4} & \qw & \gate{X} & \ctrl{1} & \ctrl{2} & \cdots & \ctrl{4} & \gate{X} & \gate{S} & \qw  \\
+	\lstick{$\ket{x_2}$} & \qw  & \qw & \qw & \targ{} & \qw & \cdots & \qw & \qw & \qw & \targ{} & \qw & \cdots & \qw & \qw & \qw & \qw\\
+	\lstick{$\ket{x_3}$} & \qw  & \qw & \qw & \qw & \targ{} & \cdots & \qw & \qw & \qw & \qw & \targ{} & \cdots & \qw & \qw & \qw & \qw\\
 	&\vdots & & & & & & & \vdots & & & & & & \vdots \\
-	\lstick{$\ket{x_n}$} & \qw & \qw  & \qw & \qw & \cdots & \targ{} & \qw & \qw & \qw & \qw & \cdots & \targ{} & \qw & \qw & \qw\\
-	\lstick{$\ket{0}$} & \gate{X} & \qw & \ctrl{0}\vqw{-4} & \ctrl{0} \vqw{-3} & \cdots & \ctrl{0} \vqw{-1} & \gate{X} &\qw & \ctrl{0}\vqw{-4} & \ctrl{0} \vqw{-3} & \cdots & \ctrl{0} \vqw{-1} & \qw & \qw & \qw
+	\lstick{$\ket{x_n}$} & \qw  & \qw & \qw  & \qw & \qw & \cdots & \targ{} & \qw & \qw & \qw & \qw & \cdots & \targ{} & \qw & \qw & \qw\\
+	\lstick{$\ket{0}$} & \targ{} & \gate{X} & \qw & \ctrl{0}\vqw{-4} & \ctrl{0} \vqw{-3} & \cdots & \ctrl{0} \vqw{-1} & \gate{X} &\qw & \ctrl{0}\vqw{-4} & \ctrl{0} \vqw{-3} & \cdots & \ctrl{0} \vqw{-1} & \qw & \qw & \qw
 \end{quantikz} \\
 
-Does this slightly optmized circuit still do what we want it to do i.e. does it still fullfill \cref{eq:J_op_act}? Let's go back to our two cases. We see that for the case where the first qubit is $\ket{0}$, everything in between the last two $X$ gates can be ignored (and incidentally this means that the last two $X$ gates acting on the first qubit can also be ignored too since they cancel each other out). This then brings us back to the original cicuit for case (1) above, which is exactly what we want. Similarly for case (2), we can ignore all the gates that are in between the \textit{first} two $X$ gates (the ones acting on the ancilla qubits). However this \textit{almost} brings us back to the original circuit for case (2) above. The difference being  the order of the $H$ and first $X$ gates are reversed, as well as the order of the final $X$ and $R_z(\pi/4)$ gates acting on the first qubit are also reversed. It turns out that all this does is add a global phase. When worked out, this modifies \cref{eq:J_op_act} to give
+Does this slightly optmized circuit still do what we want it to do i.e. does it still fullfill \cref{eq:J_op_act}? Let's go back to our two cases. We see that for the case where the first qubit is $\ket{0}$, everything in between the last two $X$ gates can be ignored (and incidentally this means that the last two $X$ gates acting on the first qubit can also be ignored too since they cancel each other out). This then brings us back to the original cicuit for case (1) above, which is exactly what we want. Similarly for case (2), we can ignore all the gates that are in between the \textit{first} two $X$ gates (the ones acting on the ancilla qubits). However this \textit{almost} brings us back to the original circuit for case (2) above. The difference being  the order of the $H$ and first $X$ gates are reversed, as well as the order of the final $X$ and $S$ gates acting on the first qubit are also reversed. It turns out that all this does is add a global phase. When worked out, this modifies \cref{eq:J_op_act} to give
 
 \begin{align*}
 	\ket{x_1x_2...x_n} &\rightarrow \frac{1}{\sqrt{2}}\left(-i\ket{x_1x_2...x_n} + \ket{\bar{x}_1\bar{x}_2...\bar{x}_n}\right) \\
