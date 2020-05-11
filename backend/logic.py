@@ -49,13 +49,14 @@ class QuantumGame:
     and defining the circuit.
     """
 
-    def __init__(self, player_gates, protocol: Protocol = Protocol.EWL):
+    def __init__(self, player_gates, protocol: Protocol = Protocol.EWL, backend: str = 'qasm_simulator'):
         """
         Args:
             player_gates (list): gates chosen by the player
             protocol (enum):
         """
         self.protocol = protocol
+        self.backend = backend
         self.player_gates = player_gates
         self.num_players = self._get_num_players()
         self.J, self.Jdg = self._make_J_operators()
@@ -86,8 +87,6 @@ class QuantumGame:
         circ = QuantumCircuit(self.num_players + 1)
         circ.cx(0, self.num_players)
         circ.h(0)
-        for i in range(1, self.num_players):
-            circ.cx(0, i)
         circ.x(self.num_players)
         for i in range(1, self.num_players):
             circ.ccx(0, self.num_players, i)
@@ -101,8 +100,7 @@ class QuantumGame:
 
     def _make_circuit(self, player_gates):
         """ Generates the base circuit """
-
-        if self.num_players == 2:
+        if self.num_players == 2 or str(self.backend) == 'qasm_simulator':
             circ = QuantumCircuit(self.num_players, self.num_players)
             circ.append(self.J, range(self.num_players))
             circ.barrier()
@@ -227,7 +225,7 @@ class Game:
             player_gate_objects.append([])
             for j in player_gates[i]:
                 player_gate_objects[i].append(generate_unitary_gate(j))
-        self._quantum_game = QuantumGame(player_gate_objects, self._protocol)
+        self._quantum_game = QuantumGame(player_gate_objects, self._protocol, self._backend)
         self._quantum_game.circ.draw()
         return self._quantum_game.circ
 
@@ -252,10 +250,10 @@ class Game:
             # now we need to invert the order of the counts because our convention is [P1,P2]
             counts_inverted = {}
             for key, value in counts.items():
-                if self._num_players == 2:
+                if self._num_players == 2 or str(self._backend) == 'qasm_simulator':
                     counts_inverted[key[::-1]] = value
                 else:
-                    counts_inverted[key[:0:-1]] += counts_inverted.get(key[:0:-1], 0)
+                    counts_inverted[key[:0:-1]] = counts_inverted.get(key[:0:-1], 0) + value
             return counts_inverted
 
     def _get_payoffs(self, choices):
@@ -301,8 +299,6 @@ class Game:
         player_choices = self.format_choices(player_choices)
         self.quantum_circuit = self._generate_quantum_circuit(player_choices)
         final_choices = self._generate_final_choices(player_choices, n_times)
-        print('player', player_choices)
-        print('final', final_choices)
         self._final_results = self._generate_final_results(final_choices)
 
         # Generate graph(s)
@@ -320,3 +316,26 @@ class Game:
             self._final_results['graph_str'] = self.base64_figure(probability_graph_img)
 
         return final_choices, self._final_results
+    
+    def show_results(self):
+        winners = []
+        payoffs = []
+        for i in self._final_results['outcome']:
+            payoff_dict = eval(self._final_results['payoff_matrix'])
+            curr_payoffs = payoff_dict[i]
+            payoffs.append(curr_payoffs)
+            max_payoff = max(curr_payoffs)
+            winning_players = ''
+            total_winners = 0
+            for j in range(len(curr_payoffs)):
+                if curr_payoffs[j] == max_payoff:
+                    total_winners += 1
+                    if winning_players == '':
+                        winning_players += f'Player {j+1}'
+                    else:
+                        winning_players += f' and {j+1}'
+            if total_winners == self._n_players:
+                winning_players = 'No winners'
+            winners.append(winning_players)
+        df = pd.DataFrame({'Outcome':self._final_results['outcome'], 'Payoffs':payoffs, 'Winners':winners, 'num_times':self._final_results['num_times']})
+        return df
