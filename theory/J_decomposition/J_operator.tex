@@ -28,6 +28,7 @@
 \section*{Decomposing the $J$ operator}
 April 2020 \\
 Rajiv Krishnakumar \\
+George Woodman \\
 
 We define the $J$ operator as $\frac{1}{\sqrt{2}}\left(I^{\otimes N} + iX^{\otimes N}\right)$. If we take $N = 2$ we can see that $J$ acts on the 4 basis states as described below:
 \begin{align}
@@ -40,7 +41,7 @@ We define the $J$ operator as $\frac{1}{\sqrt{2}}\left(I^{\otimes N} + iX^{\otim
 Creating a circuit to satisfy \cref{eq:J_2_00,eq:J_2_01}, we can use the following quantum circuit \\
 
 \begin{quantikz}
-	\lstick{$\ket{x_1}$} & \gate{H} & \ctrl{1} & \gate{R_z(\pi/4)} & \qw \\
+	\lstick{$\ket{x_1}$} & \gate{H} & \ctrl{1} & \gate{S} & \qw \\
 	\lstick{$\ket{x_2}$} & \qw & \targ{} & \qw & \qw
 \end{quantikz} \\
 
@@ -99,16 +100,26 @@ But can we be more efficient than this? Turns out we can a little bit. Firstly w
 	\lstick{$\ket{0}$} & \targ{} & \gate{X} & \qw & \ctrl{0}\vqw{-4} & \ctrl{0} \vqw{-3} & \cdots & \ctrl{0} \vqw{-1} & \gate{X} &\qw & \ctrl{0}\vqw{-4} & \ctrl{0} \vqw{-3} & \cdots & \ctrl{0} \vqw{-1} & \qw & \qw & \qw
 \end{quantikz} \\
 
-Does this slightly optmized circuit still do what we want it to do i.e. does it still fullfill \cref{eq:J_op_act}? Let's go back to our two cases. We see that for the case where the first qubit is $\ket{0}$, everything in between the last two $X$ gates can be ignored (and incidentally this means that the last two $X$ gates acting on the first qubit can also be ignored too since they cancel each other out). This then brings us back to the original cicuit for case (1) above, which is exactly what we want. Similarly for case (2), we can ignore all the gates that are in between the \textit{first} two $X$ gates (the ones acting on the ancilla qubits). However this \textit{almost} brings us back to the original circuit for case (2) above. The difference being  the order of the $H$ and first $X$ gates are reversed, as well as the order of the final $X$ and $S$ gates acting on the first qubit are also reversed. It turns out that all this does is add a global phase. When worked out, this modifies \cref{eq:J_op_act} to give
+Does this slightly optmized circuit still do what we want it to do i.e. does it still fulfill \cref{eq:J_op_act}? Let's go back to our two cases. We see that for the case where the first qubit is $\ket{0}$, everything in between the last two $X$ gates can be ignored (and incidentally this means that the last two $X$ gates acting on the first qubit can also be ignored too since they cancel each other out). This then brings us back to the original circuit for case (1) above, which is exactly what we want. Similarly for case (2), we can ignore all the gates that are in between the \textit{first} two $X$ gates (the ones acting on the ancilla qubits). However this \textit{almost} brings us back to the original circuit for case (2) above. The difference being  the order of the $H$ and first $X$ gates are reversed, as well as the order of the final $X$ and $S$ gates acting on the first qubit are also reversed. It turns out that all this does is add a global phase. When worked out, this modifies \cref{eq:J_op_act} to give
 
-\begin{align*}
-	\ket{x_1x_2...x_n} &\rightarrow \frac{1}{\sqrt{2}}\left(-i\ket{x_1x_2...x_n} + \ket{\bar{x}_1\bar{x}_2...\bar{x}_n}\right) \\
+\begin{align}
+	\ket{x_1x_2...x_n} &\rightarrow \frac{1}{\sqrt{2}}\left(-i\ket{x_1x_2...x_n} + \ket{\bar{x}_1\bar{x}_2...\bar{x}_n}\right) \nonumber \\
 	&\rightarrow -i\frac{1}{\sqrt{2}}\left(\ket{x_1x_2...x_n} + i\ket{\bar{x}_1\bar{x}_2...\bar{x}_n}\right)
-\end{align*}
+	\label{eq:J_op_final}
+\end{align}
 
 for the case when the $x_1=1$. Because the $J$ gate acts on all the gates in the system, adding this global phase does not change any of the measurement statistics. This is the decomposition that is currently implemented in the code.\\
 
-This decomposition has the nice properties that the number of gates required scales linearly with the number of qubits and the number of ancillla qubits required is always 1 regardless of the total number of qubits. The downside is that it uses many Toffoli gates which (as all 3-qubit gates) are very noisy in real devices.
+This decomposition has the nice properties that the number of gates required scales linearly with the number of qubits and the number of ancilla qubits required is always 1 regardless of the total number of qubits. The downside is that it uses many Toffoli gates which (as all 3-qubit gates) are very noisy in real devices.\\
+
+A more visual representation of the $J$ operator can be seen here
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=18cm,height=8cm]{4plyr.png}
+    %\caption{4 player J gate results for all possible initial states}
+    \label{fig:4plyr}
+\end{figure}
+A five qubit state was set up with one ancilla qubit. The initial states of the four other qubits were iterated through all possibilities. The states were then passed through the $J$ gate using IBM's qasm simulator and the results plotted. We can see the $J$ gates expected result that satisfies \cref{eq:J_op_final}.
 
 \end{onehalfspace} %End 1.5 spacing before bibliography
 %\bibliographystyle{unsrt}
