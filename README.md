@@ -6,6 +6,7 @@ A tutorial Jupyter Notebook can be found [here](https://github.com/desireevl/qua
 
 ## Playable Game
 If you are just interested in getting your hands on a way to play the game, there is a [user-interface](http://quantum-game.desireevl.com/) where you can simply select the kind of game you would like to play (and adjust desired properties) and run the quantum circuit!
+** update: AWS backend is no longer up and while the UI is still there, the circuit for the game won't execute **
 
 ## Quantum Game Theory
 
